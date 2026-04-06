@@ -18,10 +18,15 @@ from app.core.settings import settings
 from app.middlewares import LoggingMiddleware
 
 
+from app.tasks.nasa_fetcher import generate_faker_data
+import asyncio
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"🚀 {settings.APP_NAME} đang khởi động [{settings.APP_ENV}]")
+    task = asyncio.create_task(generate_faker_data())
     yield
+    task.cancel()
     logger.info("👋 Server đang tắt...")
 
 

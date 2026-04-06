@@ -3,7 +3,7 @@ services:
     build:
       context: ./be
       dockerfile: Dockerfile
-      target: dev
+      target: development
     container_name: fastapi_app
     ports:
       - "8000:8000"
@@ -28,7 +28,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: fastapi_db
     ports:
-      - "5432:5432"
+      - "5436:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -60,7 +60,7 @@ services:
       dockerfile: Dockerfile
       target: dev
     ports:
-      - "5173:5173"
+      - "5176:5173"
     volumes:
       - ./fe:/app
     environment:
@@ -70,7 +70,7 @@ services:
       - app_network
 volumes:
   postgres_data:
-
+  redis_data:
 
 networks:
   app_network:
