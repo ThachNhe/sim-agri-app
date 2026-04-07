@@ -20,20 +20,33 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: '/auth/reset-password',
   },
 
-  // ─── Users ───────────────────────────────────────────────────────────────
-  USERS: {
-    LIST: '/users',
-    BY_ID: (id: string) => `/users/${id}`,
-    CREATE: '/users',
-    UPDATE: (id: string) => `/users/${id}`,
-    DELETE: (id: string) => `/users/${id}`,
-    AVATAR: (id: string) => `/users/${id}/avatar`,
+  // ─── Devices ─────────────────────────────────────────────────────────────
+  DEVICES: {
+    LIST: '/devices',
+    BY_ID: (id: string) => `/devices/${id}`,
+    CREATE: '/devices',
+    UPDATE: (id: string) => `/devices/${id}`,
+    DELETE: (id: string) => `/devices/${id}`,
   },
 
-  // ─── Add more domains below ───────────────────────────────────────────────
-  // PRODUCTS: {
-  //   LIST: '/products',
-  //   BY_ID: (id: string) => `/products/${id}`,
-  //   ...
-  // },
+  // ─── Readings ────────────────────────────────────────────────────────────
+  READINGS: {
+    LIST: '/readings', // requires ?device_id=&from=&to=
+  },
+
+  // ─── Alerts ──────────────────────────────────────────────────────────────
+  ALERTS: {
+    LIST: '/alerts',
+    MARK_READ: (id: string) => `/alerts/${id}/read`,
+  },
+
+  // ─── Dashboard ───────────────────────────────────────────────────────────
+  DASHBOARD: {
+    SUMMARY: '/dashboard/summary',
+  },
+
+  // ─── Admin ───────────────────────────────────────────────────────────────
+  ADMIN: {
+    USERS: '/admin/users',
+  },
 } as const

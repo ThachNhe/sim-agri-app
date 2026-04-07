@@ -1,7 +1,7 @@
 import asyncio
 from sqlalchemy import select
 
-from app.core.database import async_session_maker
+from app.core.database import AsyncSessionLocal
 from app.models.user import User
 from app.models.device import Device
 from app.constants.enums import UserRole, DeviceType
@@ -9,7 +9,7 @@ from app.utils.security import hash_password
 
 
 async def seed():
-    async with async_session_maker() as db:
+    async with AsyncSessionLocal() as db:
         admin_result = await db.execute(select(User).where(User.email == "admin@example.com"))
         if admin_result.scalar_one_or_none():
             print("Admin already exists. Skip seeding to avoid duplication.")

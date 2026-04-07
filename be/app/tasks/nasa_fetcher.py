@@ -3,7 +3,7 @@ import random
 import logging
 from sqlalchemy import select
 
-from app.core.database import async_session_maker
+from app.core.database import AsyncSessionLocal
 from app.models.device import Device
 from app.models.sensor_reading import SensorReading
 from app.models.alert import Alert
@@ -15,7 +15,7 @@ async def generate_faker_data():
     logger.info("Khởi động NASA Fetcher task...")
     while True:
         try:
-            async with async_session_maker() as db:
+            async with AsyncSessionLocal() as db:
                 result = await db.execute(
                     select(Device).where(Device.is_active == True)
                 )

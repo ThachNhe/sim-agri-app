@@ -9,50 +9,153 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LayoutRouteImport } from './routes/_layout'
+import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutUsersRouteImport } from './routes/_layout/users'
+import { Route as LayoutDevicesRouteImport } from './routes/_layout/devices'
+import { Route as LayoutAlertsRouteImport } from './routes/_layout/alerts'
 
-const IndexRoute = IndexRouteImport.update({
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayoutRoute = LayoutRouteImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayoutIndexRoute = LayoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutUsersRoute = LayoutUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutDevicesRoute = LayoutDevicesRouteImport.update({
+  id: '/devices',
+  path: '/devices',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutAlertsRoute = LayoutAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => LayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof LayoutIndexRoute
+  '/login': typeof LoginRoute
+  '/alerts': typeof LayoutAlertsRoute
+  '/devices': typeof LayoutDevicesRoute
+  '/users': typeof LayoutUsersRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/alerts': typeof LayoutAlertsRoute
+  '/devices': typeof LayoutDevicesRoute
+  '/users': typeof LayoutUsersRoute
+  '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_layout': typeof LayoutRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_layout/alerts': typeof LayoutAlertsRoute
+  '/_layout/devices': typeof LayoutDevicesRoute
+  '/_layout/users': typeof LayoutUsersRoute
+  '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/login' | '/alerts' | '/devices' | '/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/login' | '/alerts' | '/devices' | '/users' | '/'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/login'
+    | '/_layout/alerts'
+    | '/_layout/devices'
+    | '/_layout/users'
+    | '/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  LayoutRoute: typeof LayoutRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof LayoutIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/users': {
+      id: '/_layout/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof LayoutUsersRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/devices': {
+      id: '/_layout/devices'
+      path: '/devices'
+      fullPath: '/devices'
+      preLoaderRoute: typeof LayoutDevicesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/alerts': {
+      id: '/_layout/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof LayoutAlertsRouteImport
+      parentRoute: typeof LayoutRoute
     }
   }
 }
 
+interface LayoutRouteChildren {
+  LayoutAlertsRoute: typeof LayoutAlertsRoute
+  LayoutDevicesRoute: typeof LayoutDevicesRoute
+  LayoutUsersRoute: typeof LayoutUsersRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAlertsRoute: LayoutAlertsRoute,
+  LayoutDevicesRoute: LayoutDevicesRoute,
+  LayoutUsersRoute: LayoutUsersRoute,
+  LayoutIndexRoute: LayoutIndexRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  LayoutRoute: LayoutRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
