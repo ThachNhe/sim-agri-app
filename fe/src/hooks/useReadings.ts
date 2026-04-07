@@ -6,18 +6,23 @@ import type { ApiResponse } from '@/types/api.types'
 
 export const useReadings = (
   deviceId: string | undefined,
-  from: string | undefined,
-  to: string | undefined
+  windowHours = 24
 ) => {
   return useQuery({
-    queryKey: ['readings', deviceId, from, to],
-    queryFn: () =>
-      apiGet<ApiResponse<SensorReading[]>>(API_ENDPOINTS.READINGS.LIST, {
+    queryKey: ['readings', deviceId, windowHours],
+    queryFn: () => {
+      const toDate = new Date().toISOString()
+      const fromDate = new Date(
+        Date.now() - windowHours * 60 * 60 * 1000,
+      ).toISOString()
+
+      return apiGet<ApiResponse<SensorReading[]>>(API_ENDPOINTS.READINGS.LIST, {
         device_id: deviceId,
-        from_date: from,
-        to_date: to,
-      }),
-    enabled: !!deviceId && !!from && !!to,
-    refetchInterval: 30000, 
+        from_date: fromDate,
+        to_date: toDate,
+      })
+    },
+    enabled: !!deviceId,
+    refetchInterval: 30000,
   })
 }

@@ -18,7 +18,7 @@ function DashboardPage() {
 
   const { data: devicesRes } = useDevices()
   const devices = devicesRes?.data || []
-  
+
   const sensorDevices = useMemo(() => devices.filter(d => d.type === 'sensor'), [devices])
   const [selectedDevice, setSelectedDevice] = useState<string>('')
 
@@ -28,10 +28,7 @@ function DashboardPage() {
     }
   }, [sensorDevices, selectedDevice])
 
-  const toDate = new Date().toISOString()
-  const fromDate = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // last 24h
-  
-  const { data: readingsRes } = useReadings(selectedDevice || undefined, fromDate, toDate)
+  const { data: readingsRes } = useReadings(selectedDevice || undefined)
   const readings = readingsRes?.data || []
 
   const chartData = useMemo(() => {
@@ -51,25 +48,25 @@ function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard 
-          title="Tổng Thiết Bị" 
-          value={summary?.total_devices ?? 0} 
-          icon={<Cpu className="h-4 w-4 text-primary" />} 
+        <SummaryCard
+          title="Tổng Thiết Bị"
+          value={summary?.total_devices ?? 0}
+          icon={<Cpu className="h-4 w-4 text-primary" />}
         />
-        <SummaryCard 
-          title="Cảnh báo hôm nay" 
-          value={summary?.alerts_today ?? 0} 
-          icon={<BellRing className="h-4 w-4 text-destructive" />} 
+        <SummaryCard
+          title="Cảnh báo hôm nay"
+          value={summary?.alerts_today ?? 0}
+          icon={<BellRing className="h-4 w-4 text-destructive" />}
         />
-        <SummaryCard 
-          title="Nhiệt độ TB (24h)" 
-          value={summary?.avg_temperature ? `${summary.avg_temperature.toFixed(1)}°C` : '--'} 
-          icon={<ThermometerSun className="h-4 w-4 text-orange-500" />} 
+        <SummaryCard
+          title="Nhiệt độ TB (24h)"
+          value={summary?.avg_temperature ? `${summary.avg_temperature.toFixed(1)}°C` : '--'}
+          icon={<ThermometerSun className="h-4 w-4 text-orange-500" />}
         />
-        <SummaryCard 
-          title="Độ ẩm TB (24h)" 
-          value={summary?.avg_humidity ? `${summary.avg_humidity.toFixed(1)}%` : '--'} 
-          icon={<Droplet className="h-4 w-4 text-blue-500" />} 
+        <SummaryCard
+          title="Độ ẩm TB (24h)"
+          value={summary?.avg_humidity ? `${summary.avg_humidity.toFixed(1)}%` : '--'}
+          icon={<Droplet className="h-4 w-4 text-blue-500" />}
         />
       </div>
 
@@ -105,7 +102,7 @@ function DashboardPage() {
                   <XAxis dataKey="time" axisLine={false} tickLine={false} tickMargin={10} minTickGap={30} />
                   <YAxis yAxisId="left" orientation="left" stroke="#8884d8" axisLine={false} tickLine={false} />
                   <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" axisLine={false} tickLine={false} />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ borderRadius: '0.5rem', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   />
                   <Legend />
