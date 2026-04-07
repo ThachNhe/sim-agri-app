@@ -31,25 +31,10 @@ export interface LoginRequest {
   password: string
 }
 
-export interface LoginResponse {
-  accessToken: string
-  refreshToken: string
-  expiresIn: number
-}
-
 export interface RegisterRequest {
   name: string
   email: string
   password: string
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string
-}
-
-export interface RefreshTokenResponse {
-  accessToken: string
-  expiresIn: number
 }
 
 // ─── Query Params helper ───────────────────────────────────────────────────

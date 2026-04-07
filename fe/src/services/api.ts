@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/stores/useAuthStore'
-import type { ApiErrorResponse, RefreshTokenResponse } from '@/types/api.types'
+import type { ApiErrorResponse } from '@/types/api.types'
 import { API_ENDPOINTS } from './endpoints'
 
 // ─── Axios Instance ────────────────────────────────────────────────────────
@@ -11,39 +11,27 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Always send cookies
 })
 
 // ─── Token Refresh Logic ───────────────────────────────────────────────────
 
 let isRefreshing = false
 let failedQueue: Array<{
-  resolve: (token: string) => void
+  resolve: (value?: unknown) => void
   reject: (err: unknown) => void
 }> = []
 
-const processQueue = (error: unknown, token: string | null = null) => {
+const processQueue = (error: unknown) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error)
     } else {
-      prom.resolve(token!)
+      prom.resolve()
     }
   })
   failedQueue = []
 }
-
-// ─── Request Interceptor ───────────────────────────────────────────────────
-
-api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = useAuthStore.getState().token
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => Promise.reject(error),
-)
 
 // ─── Response Interceptor ──────────────────────────────────────────────────
 
@@ -54,46 +42,30 @@ api.interceptors.response.use(
       _retry?: boolean
     }
 
-    // Handle 401 - attempt token refresh
+    // Handle 401 - attempt token refresh via cookie
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // Queue requests while refreshing
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject })
         })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`
-            return api(originalRequest)
-          })
+          .then(() => api(originalRequest))
           .catch((err) => Promise.reject(err))
       }
 
       originalRequest._retry = true
       isRefreshing = true
 
-      const storedToken = localStorage.getItem('auth-storage')
-      const refreshToken = storedToken
-        ? JSON.parse(storedToken)?.state?.token
-        : null
-
-      if (!refreshToken) {
-        useAuthStore.getState().logout()
-        return Promise.reject(error)
-      }
-
       try {
-        const { data } = await axios.post<RefreshTokenResponse>(
-          `${import.meta.env.VITE_API_URL}${API_ENDPOINTS.AUTH.REFRESH}`,
-          { refreshToken },
-        )
-
-        useAuthStore.getState().setToken(data.accessToken)
-        processQueue(null, data.accessToken)
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
+        // Call refresh endpoint — refresh_token cookie is sent automatically
+        await api.post(API_ENDPOINTS.AUTH.REFRESH)
+        processQueue(null)
+        // Retry the original request — new access_token cookie is now set
         return api(originalRequest)
       } catch (refreshError) {
-        processQueue(refreshError, null)
+        processQueue(refreshError)
         useAuthStore.getState().logout()
+        window.location.href = '/login'
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false

@@ -2,7 +2,6 @@ from app.schemas.base_response import BaseResponse, PaginatedResponse
 from app.schemas.auth import (
     RegisterRequest,
     LoginRequest,
-    RefreshTokenRequest,
     ChangePasswordRequest,
     UserResponse,
     TokenResponse,
@@ -14,7 +13,6 @@ __all__ = [
     "PaginatedResponse",
     "RegisterRequest",
     "LoginRequest",
-    "RefreshTokenRequest",
     "ChangePasswordRequest",
     "UserResponse",
     "TokenResponse",

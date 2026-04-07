@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants.enums import TokenType, UserStatus
-from app.constants.messages import ErrorMessage, SuccessMessage
+from app.constants.messages import ErrorMessage
 from app.core.exception import (
     BadRequestException,
     ConflictException,
@@ -13,7 +13,6 @@ from app.schemas.auth import (
     ChangePasswordRequest,
     LoginRequest,
     LoginResponse,
-    RefreshTokenRequest,
     RegisterRequest,
     TokenResponse,
     UserResponse,
@@ -61,8 +60,9 @@ class AuthService:
 
     # ── Refresh token ─────────────────────────────────────────────────────────
 
-    async def refresh_token(self, payload: RefreshTokenRequest) -> TokenResponse:
-        token_data = decode_token(payload.refresh_token)
+    async def refresh_token(self, token: str) -> dict:
+        """Nhận refresh_token string từ cookie, trả về tokens mới + user."""
+        token_data = decode_token(token)
 
         if not token_data or token_data.get("type") != TokenType.REFRESH:
             raise UnauthorizedException(ErrorMessage.TOKEN_INVALID)
@@ -72,7 +72,12 @@ class AuthService:
             raise UnauthorizedException(ErrorMessage.USER_NOT_FOUND)
 
         self._check_user_status(user)
-        return self._generate_tokens(user)
+
+        tokens = self._generate_tokens(user)
+        return {
+            "tokens": tokens,
+            "user": UserResponse.model_validate(user),
+        }
 
     # ── Change password ───────────────────────────────────────────────────────
 

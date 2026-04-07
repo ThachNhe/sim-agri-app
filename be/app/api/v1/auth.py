@@ -1,16 +1,15 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Response, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants.messages import SuccessMessage
 from app.core.database import get_db
+from app.core.settings import settings
 from app.dependencies.auth import CurrentUser
 from app.schemas.auth import (
     ChangePasswordRequest,
     LoginRequest,
     LoginResponse,
-    RefreshTokenRequest,
     RegisterRequest,
-    TokenResponse,
     UserResponse,
 )
 from app.schemas.base_response import BaseResponse
@@ -21,6 +20,34 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 def get_auth_service(db: AsyncSession = Depends(get_db)) -> AuthService:
     return AuthService(db)
+
+
+def _set_token_cookies(response: Response, access_token: str, refresh_token: str):
+    """Set access_token & refresh_token as HttpOnly cookies."""
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=settings.is_production,
+        samesite="lax",
+        max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/",
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=settings.is_production,
+        samesite="lax",
+        max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
+        path="/api/v1/auth",  # only sent to auth endpoints
+    )
+
+
+def _clear_token_cookies(response: Response):
+    """Clear auth cookies."""
+    response.delete_cookie(key="access_token", path="/")
+    response.delete_cookie(key="refresh_token", path="/api/v1/auth")
 
 
 @router.post(
@@ -44,23 +71,47 @@ async def register(
 )
 async def login(
     payload: LoginRequest,
+    response: Response,
     service: AuthService = Depends(get_auth_service),
 ):
     data = await service.login(payload)
-    return BaseResponse.ok(data=data, message=SuccessMessage.LOGIN_SUCCESS)
+    _set_token_cookies(response, data.tokens.access_token, data.tokens.refresh_token)
+    # Only return user info, tokens are in cookies
+    return BaseResponse.ok(
+        data=LoginResponse(user=data.user),
+        message=SuccessMessage.LOGIN_SUCCESS,
+    )
 
 
 @router.post(
     "/refresh",
-    response_model=BaseResponse[TokenResponse],
+    response_model=BaseResponse[UserResponse],
     summary="Làm mới access token",
 )
 async def refresh_token(
-    payload: RefreshTokenRequest,
+    request: Request,
+    response: Response,
     service: AuthService = Depends(get_auth_service),
 ):
-    data = await service.refresh_token(payload)
-    return BaseResponse.ok(data=data)
+    token = request.cookies.get("refresh_token")
+    if not token:
+        from app.core.exception import UnauthorizedException
+        from app.constants.messages import ErrorMessage
+        raise UnauthorizedException(ErrorMessage.TOKEN_INVALID)
+
+    data = await service.refresh_token(token)
+    _set_token_cookies(response, data["tokens"].access_token, data["tokens"].refresh_token)
+    return BaseResponse.ok(data=data["user"])
+
+
+@router.post(
+    "/logout",
+    response_model=BaseResponse,
+    summary="Đăng xuất",
+)
+async def logout(response: Response):
+    _clear_token_cookies(response)
+    return BaseResponse.ok(message="Đăng xuất thành công")
 
 
 @router.get(

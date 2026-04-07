@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, Field
 from app.constants.enums import UserRole, UserStatus
 
 
 # ── Request ───────────────────────────────────────────────────────────────────
+
 
 class RegisterRequest(BaseModel):
     email: EmailStr
@@ -25,10 +26,6 @@ class LoginRequest(BaseModel):
     password: str
 
 
-class RefreshTokenRequest(BaseModel):
-    refresh_token: str
-
-
 class ChangePasswordRequest(BaseModel):
     old_password: str
     new_password: str
@@ -43,6 +40,7 @@ class ChangePasswordRequest(BaseModel):
 
 # ── Response ──────────────────────────────────────────────────────────────────
 
+
 class UserResponse(BaseModel):
     id: uuid.UUID
     email: str
@@ -56,11 +54,14 @@ class UserResponse(BaseModel):
 
 
 class TokenResponse(BaseModel):
+    """Internal use only — not exposed to client."""
+
     access_token: str
     refresh_token: str
-    token_type: str = "bearer"
 
 
 class LoginResponse(BaseModel):
+    """Response trả về client — chỉ chứa user info, tokens nằm trong cookie."""
+
     user: UserResponse
-    tokens: TokenResponse
+    tokens: Optional[TokenResponse] = Field(default=None, exclude=True)

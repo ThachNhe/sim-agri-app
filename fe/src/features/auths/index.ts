@@ -10,7 +10,6 @@ export { authService } from './services/auth.service'
 
 // ─── Types ────────────────────────────────────────────────────────────────
 export type {
-  AuthTokens,
   AuthSession,
   LoginFormValues,
   RegisterFormValues,

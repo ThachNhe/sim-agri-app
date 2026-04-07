@@ -3,15 +3,8 @@ import type { User } from '@/types/common.types'
 
 // ─── Auth State ────────────────────────────────────────────────────────────
 
-export interface AuthTokens {
-  accessToken: string
-  refreshToken: string
-  expiresIn: number
-}
-
 export interface AuthSession {
   user: User
-  tokens: AuthTokens
 }
 
 // ─── Form Values ───────────────────────────────────────────────────────────
@@ -48,9 +41,6 @@ export type RegisterPayload = Omit<RegisterFormValues, 'confirmPassword'>
 
 export interface LoginApiResponse {
   user: User
-  accessToken: string
-  refreshToken: string
-  expiresIn: number
 }
 
 export interface RegisterApiResponse {
