@@ -22,3 +22,5 @@ class SuccessMessage:
     LOGOUT_SUCCESS = "Đăng xuất thành công"
     PASSWORD_CHANGED = "Đổi mật khẩu thành công"
     PROFILE_UPDATED = "Cập nhật thông tin thành công"
+    FARMER_CREATED = "Tạo tài khoản nông dân thành công"
+    USER_STATUS_UPDATED = "Cập nhật trạng thái tài khoản thành công"

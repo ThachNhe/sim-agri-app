@@ -48,5 +48,7 @@ export const API_ENDPOINTS = {
   // ─── Admin ───────────────────────────────────────────────────────────────
   ADMIN: {
     USERS: '/admin/users',
+    CREATE_USER: '/admin/users',
+    UPDATE_USER_STATUS: (id: string) => `/admin/users/${id}/status`,
   },
 } as const

@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta, timezone
+import secrets
+import string
 from typing import Any, Optional
 
 from jose import JWTError, jwt
@@ -19,6 +21,22 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
+
+
+def generate_random_password(length: int = 12) -> str:
+    if length < 8:
+        raise ValueError("Password length must be at least 8 characters")
+
+    alphabet = string.ascii_letters + string.digits
+
+    while True:
+        password = "".join(secrets.choice(alphabet) for _ in range(length))
+        if (
+            any(char.islower() for char in password)
+            and any(char.isupper() for char in password)
+            and any(char.isdigit() for char in password)
+        ):
+            return password
 
 
 # ── JWT ───────────────────────────────────────────────────────────────────────

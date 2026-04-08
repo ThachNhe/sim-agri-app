@@ -1,19 +1,38 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useMemo, useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { useEffect, useMemo, useState } from 'react'
+import { BellRing, Cpu, Droplet, ThermometerSun, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Cpu, BellRing, Droplet, ThermometerSun, Users } from 'lucide-react'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useDashboardSummary } from '@/hooks/useDashboard'
 import { useDevices } from '@/hooks/useDevices'
-import { useUsers } from '@/hooks/useUsers'
 import { useReadings } from '@/hooks/useReadings'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useUsers } from '@/hooks/useUsers'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { formatDate } from '@/lib/utils'
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 
 export const Route = createFileRoute('/_layout/')({
   component: DashboardPage,
 })
+
+function getTodayInputValue() {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
 function DashboardPage() {
   const user = useAuthStore(s => s.user)
@@ -31,6 +50,7 @@ function DashboardPage() {
 
   const sensorDevices = useMemo(() => devices.filter(d => d.type === 'sensor'), [devices])
   const [selectedDevice, setSelectedDevice] = useState<string>('')
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayInputValue())
 
   useEffect(() => {
     if (!selectedDevice && sensorDevices.length > 0) {
@@ -38,15 +58,29 @@ function DashboardPage() {
     }
   }, [sensorDevices, selectedDevice])
 
-  const { data: readingsRes } = useReadings(selectedDevice || undefined)
+  const { data: readingsRes } = useReadings(selectedDevice || undefined, selectedDate)
   const readings = readingsRes?.data || []
 
   const chartData = useMemo(() => {
-    return readings.map(r => ({
-      time: new Date(r.recorded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      ...r
-    })).reverse() // Assuming backend might return oldest first or newest first, make sure it's chronological
+    return readings
+      .slice()
+      .sort(
+        (left, right) =>
+          new Date(left.recorded_at).getTime() - new Date(right.recorded_at).getTime(),
+      )
+      .map(r => ({
+        time: new Date(r.recorded_at).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        ...r,
+      }))
   }, [readings])
+
+  const selectedDateLabel = useMemo(
+    () => formatDate(new Date(`${selectedDate}T00:00:00`)),
+    [selectedDate],
+  )
 
   const activeDeviceCount = activeDevices.length
   const totalDeviceCount = summary?.total_devices ?? 0
@@ -99,28 +133,42 @@ function DashboardPage() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.6fr)]">
         <Card className="border-border/50 bg-card/60 shadow-sm backdrop-blur">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
+          <CardHeader className="flex flex-col gap-4 pb-2 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-1">
               <CardTitle>Biểu đồ Cảm Biến</CardTitle>
-              <CardDescription>Dữ liệu 24 giờ qua</CardDescription>
+              <CardDescription>Dữ liệu trong ngày {selectedDateLabel}</CardDescription>
             </div>
-            {sensorDevices.length > 0 && (
-              <Select value={selectedDevice} onValueChange={setSelectedDevice}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Chọn thiết bị..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {sensorDevices.map(d => (
-                    <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Input
+                type="date"
+                value={selectedDate}
+                onChange={(event) => setSelectedDate(event.target.value)}
+                className="w-[180px]"
+              />
+              {sensorDevices.length > 0 && (
+                <Select value={selectedDevice} onValueChange={setSelectedDevice}>
+                  <SelectTrigger className="w-[220px]">
+                    <SelectValue placeholder="Chọn thiết bị..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sensorDevices.map(device => (
+                      <SelectItem key={device.id} value={device.id}>
+                        {device.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {!selectedDevice ? (
               <div className="flex h-[350px] items-center justify-center text-muted-foreground">
                 Không có thiết bị cảm biến nào.
+              </div>
+            ) : readings.length === 0 ? (
+              <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+                Không có dữ liệu cho ngày đã chọn.
               </div>
             ) : (
               <div className="mt-4 h-[350px] w-full">

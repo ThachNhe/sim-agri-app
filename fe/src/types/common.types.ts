@@ -1,6 +1,7 @@
 // ─── User ─────────────────────────────────────────────────────────────────
 
 export type UserRole = 'admin' | 'user'
+export type UserStatus = 'active' | 'inactive' | 'banned'
 
 export interface User {
   id: string
@@ -8,6 +9,8 @@ export interface User {
   name: string
   avatar?: string
   role: UserRole
+  status: UserStatus
+  isVerified: boolean
   createdAt: string
   updatedAt: string
 }

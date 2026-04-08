@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends, Request
 
-from app.constants.enums import TokenType, UserRole
+from app.constants.enums import TokenType, UserRole, UserStatus
 from app.constants.messages import ErrorMessage
 from app.core.database import get_db
 from app.core.exception import ForbiddenException, UnauthorizedException
@@ -31,6 +31,11 @@ async def get_current_user(
 
     if not user:
         raise UnauthorizedException(ErrorMessage.USER_NOT_FOUND)
+
+    if user.status == UserStatus.INACTIVE:
+        raise UnauthorizedException(ErrorMessage.INACTIVE_USER)
+    if user.status == UserStatus.BANNED:
+        raise UnauthorizedException(ErrorMessage.BANNED_USER)
 
     return user
 

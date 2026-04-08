@@ -22,6 +22,16 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
 
+    # Mail
+    MAIL_HOST: str = "mailhog"
+    MAIL_PORT: int = 1025
+    MAIL_USERNAME: str = ""
+    MAIL_PASSWORD: str = ""
+    MAIL_FROM: str = "noreply@agri-app.local"
+    MAIL_FROM_NAME: str = "AgriSmart"
+    MAIL_USE_TLS: bool = False
+    MAIL_USE_SSL: bool = False
+
     # CORS
     ALLOWED_ORIGINS: str = "http://localhost:3000"
 

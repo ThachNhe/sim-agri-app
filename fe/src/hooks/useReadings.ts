@@ -6,20 +6,24 @@ import type { ApiResponse } from '@/types/api.types'
 
 export const useReadings = (
   deviceId: string | undefined,
-  windowHours = 24
+  selectedDate: string | undefined,
 ) => {
   return useQuery({
-    queryKey: ['readings', deviceId, windowHours],
+    queryKey: ['readings', deviceId, selectedDate],
     queryFn: () => {
-      const toDate = new Date().toISOString()
-      const fromDate = new Date(
-        Date.now() - windowHours * 60 * 60 * 1000,
-      ).toISOString()
+      const baseDate = selectedDate
+        ? new Date(`${selectedDate}T00:00:00`)
+        : new Date()
+      const fromDate = new Date(baseDate)
+      fromDate.setHours(0, 0, 0, 0)
+
+      const toDate = new Date(baseDate)
+      toDate.setHours(23, 59, 59, 999)
 
       return apiGet<ApiResponse<SensorReading[]>>(API_ENDPOINTS.READINGS.LIST, {
         device_id: deviceId,
-        from_date: fromDate,
-        to_date: toDate,
+        from_date: fromDate.toISOString(),
+        to_date: toDate.toISOString(),
       })
     },
     enabled: !!deviceId,

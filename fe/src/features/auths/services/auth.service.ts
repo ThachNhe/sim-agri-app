@@ -8,6 +8,11 @@ import type {
 } from '../types/auth.types'
 import type { User } from '@/types/common.types'
 import type { ApiResponse } from '@/types/api.types'
+import {
+  mapBackendUser,
+  toBackendRegisterPayload,
+  type BackendUserResponse,
+} from '@/lib/mappers/user'
 
 // ─── Auth Service ──────────────────────────────────────────────────────────
 
@@ -16,14 +21,36 @@ export const authService = {
    * Login with email & password
    * Returns user info + tokens
    */
-  login: (payload: LoginPayload) =>
-    apiPost<LoginApiResponse>(API_ENDPOINTS.AUTH.LOGIN, payload),
+  login: async (payload: LoginPayload): Promise<LoginApiResponse> => {
+    const response = await apiPost<ApiResponse<{ user: BackendUserResponse }>>(
+      API_ENDPOINTS.AUTH.LOGIN,
+      payload,
+    )
+
+    return {
+      ...response,
+      data: {
+        user: mapBackendUser(response.data.user),
+      },
+    }
+  },
 
   /**
    * Register a new account
    */
-  register: (payload: RegisterPayload) =>
-    apiPost<RegisterApiResponse>(API_ENDPOINTS.AUTH.REGISTER, payload),
+  register: async (payload: RegisterPayload): Promise<RegisterApiResponse> => {
+    const response = await apiPost<ApiResponse<BackendUserResponse>>(
+      API_ENDPOINTS.AUTH.REGISTER,
+      toBackendRegisterPayload(payload),
+    )
+
+    return {
+      ...response,
+      data: {
+        user: mapBackendUser(response.data),
+      },
+    }
+  },
 
   /**
    * Logout - invalidate token on server
@@ -34,8 +61,13 @@ export const authService = {
   /**
    * Get current authenticated user
    */
-  getMe: () =>
-    apiGet<User>(API_ENDPOINTS.AUTH.ME),
+  getMe: async (): Promise<User> => {
+    const response = await apiGet<ApiResponse<BackendUserResponse>>(
+      API_ENDPOINTS.AUTH.ME,
+    )
+
+    return mapBackendUser(response.data)
+  },
 
   /**
    * Send forgot password email
