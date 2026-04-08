@@ -12,12 +12,15 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import type { Device, DeviceType } from '@/types/common.types'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export const Route = createFileRoute('/_layout/devices')({
   component: DevicesPage,
 })
 
 function DevicesPage() {
+  const user = useAuthStore(s => s.user)
+  const isAdmin = user?.role === 'admin'
   const { data: res, isLoading } = useDevices()
   const devices = res?.data || []
   const deleteDev = useDeleteDevice()
@@ -42,8 +45,14 @@ function DevicesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Quản lý Thiết bị</h2>
-          <p className="text-muted-foreground mt-1">Danh sách các thiết bị cảm biến và bộ điều khiển.</p>
+          <h2 className="text-3xl font-bold tracking-tight">
+            {isAdmin ? 'Quản lý Thiết bị Hệ thống' : 'Thiết bị của tôi'}
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            {isAdmin
+              ? 'Danh sách tất cả thiết bị cảm biến, bộ điều khiển và gateway trong hệ thống.'
+              : 'Danh sách các thiết bị mà bạn đang sở hữu và theo dõi.'}
+          </p>
         </div>
         <Dialog open={isOpen} onOpenChange={(open) => {
           setIsOpen(open)
@@ -55,9 +64,9 @@ function DevicesPage() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DeviceForm 
-              device={editingDevice} 
-              onSuccess={() => setIsOpen(false)} 
+            <DeviceForm
+              device={editingDevice}
+              onSuccess={() => setIsOpen(false)}
             />
           </DialogContent>
         </Dialog>
@@ -115,7 +124,7 @@ function DevicesPage() {
 function DeviceForm({ device, onSuccess }: { device: Device | null, onSuccess: () => void }) {
   const createDev = useCreateDevice()
   const updateDev = useUpdateDevice()
-  
+
   const [formData, setFormData] = useState({
     name: device?.name || '',
     location: device?.location || '',
@@ -151,15 +160,15 @@ function DeviceForm({ device, onSuccess }: { device: Device | null, onSuccess: (
       <div className="space-y-4 py-4">
         <div className="space-y-2">
           <Label>Tên thiết bị</Label>
-          <Input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+          <Input value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
         </div>
         <div className="space-y-2">
           <Label>Vị trí</Label>
-          <Input value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} required />
+          <Input value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
         </div>
         <div className="space-y-2">
           <Label>Loại thiết bị</Label>
-          <Select value={formData.type} onValueChange={(v: DeviceType) => setFormData({...formData, type: v})}>
+          <Select value={formData.type} onValueChange={(v: DeviceType) => setFormData({ ...formData, type: v })}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>

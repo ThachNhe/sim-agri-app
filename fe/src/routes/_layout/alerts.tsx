@@ -5,12 +5,15 @@ import { Button } from '@/components/ui/button'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export const Route = createFileRoute('/_layout/alerts')({
   component: AlertsPage,
 })
 
 function AlertsPage() {
+  const user = useAuthStore(s => s.user)
+  const isAdmin = user?.role === 'admin'
   const { data: res, isLoading } = useAlerts()
   const alerts = res?.data || []
   const markRead = useMarkAlertRead()
@@ -24,15 +27,21 @@ function AlertsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Cảnh báo</h2>
-        <p className="text-muted-foreground mt-1">Danh sách các cảnh báo vượt ngưỡng từ cảm biến.</p>
+        <h2 className="text-3xl font-bold tracking-tight">
+          {isAdmin ? 'Cảnh báo hệ thống' : 'Cảnh báo của tôi'}
+        </h2>
+        <p className="text-muted-foreground mt-1">
+          {isAdmin
+            ? 'Danh sách toàn bộ cảnh báo vượt ngưỡng từ tất cả thiết bị.'
+            : 'Danh sách các cảnh báo vượt ngưỡng liên quan đến thiết bị của bạn.'}
+        </p>
       </div>
 
       {isLoading ? (
         <div className="text-center py-12 text-muted-foreground">Đang tải...</div>
       ) : alerts.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground bg-card/60 backdrop-blur rounded-xl border border-border/50">
-          Không có cảnh báo nào
+          {isAdmin ? 'Không có cảnh báo nào trong hệ thống' : 'Không có cảnh báo nào của bạn'}
         </div>
       ) : (
         <div className="space-y-3">

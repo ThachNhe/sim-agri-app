@@ -1,10 +1,18 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useUsers } from '@/hooks/useUsers'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export const Route = createFileRoute('/_layout/users')({
+  beforeLoad: () => {
+    const role = useAuthStore.getState().user?.role
+
+    if (role !== 'admin') {
+      throw redirect({ to: '/' })
+    }
+  },
   component: UsersPage,
 })
 
@@ -15,8 +23,8 @@ function UsersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Người dùng System</h2>
-        <p className="text-muted-foreground mt-1">Chỉ Admin mới có quyền truy cập trang này.</p>
+        <h2 className="text-3xl font-bold tracking-tight">Người dùng hệ thống</h2>
+        <p className="text-muted-foreground mt-1">Chỉ admin mới có quyền truy cập trang này.</p>
       </div>
 
       <Card className="shadow-sm border-border/50 bg-card/60 backdrop-blur">
