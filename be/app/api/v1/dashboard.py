@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from uuid import UUID
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,8 +30,11 @@ class DashboardSummary(BaseModel):
 )
 async def get_dashboard_summary(
     current_user: CurrentUser,
+    owner_id: UUID | None = None,
     db: AsyncSession = Depends(get_db),
 ):
+    target_owner_id = owner_id if current_user.role == UserRole.ADMIN else current_user.id
+
     # Base query for devices
     devices_q = select(func.count(Device.id))
     
@@ -45,10 +49,10 @@ async def get_dashboard_summary(
         func.avg(SensorReading.humidity).label("avg_hum")
     ).where(SensorReading.recorded_at >= yesterday)
 
-    if current_user.role != UserRole.ADMIN:
-        devices_q = devices_q.where(Device.owner_id == current_user.id)
-        alerts_q = alerts_q.join(Device).where(Device.owner_id == current_user.id)
-        readings_q = readings_q.join(Device).where(Device.owner_id == current_user.id)
+    if target_owner_id is not None:
+        devices_q = devices_q.where(Device.owner_id == target_owner_id)
+        alerts_q = alerts_q.join(Device).where(Device.owner_id == target_owner_id)
+        readings_q = readings_q.join(Device).where(Device.owner_id == target_owner_id)
 
     total_devices = (await db.execute(devices_q)).scalar() or 0
     alerts_today = (await db.execute(alerts_q)).scalar() or 0

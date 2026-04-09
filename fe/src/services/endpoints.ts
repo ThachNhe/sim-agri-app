@@ -38,6 +38,7 @@ export const API_ENDPOINTS = {
   ALERTS: {
     LIST: '/alerts',
     MARK_READ: (id: string) => `/alerts/${id}/read`,
+    SUMMARY: '/alerts/summary',
   },
 
   // ─── Dashboard ───────────────────────────────────────────────────────────

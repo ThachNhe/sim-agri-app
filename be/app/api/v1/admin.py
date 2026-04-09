@@ -29,7 +29,7 @@ def _require_admin(current_user: CurrentUser) -> None:
 @router.get(
     "/users",
     response_model=BaseResponse[List[UserResponse]],
-    summary="Lấy danh sách tài khoản (Admin)",
+    summary="Lấy danh sách farmer (Admin)",
 )
 async def get_all_users(
     current_user: CurrentUser,

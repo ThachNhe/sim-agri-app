@@ -49,6 +49,7 @@ class UserResponse(BaseModel):
     status: UserStatus
     is_verified: bool
     created_at: datetime
+    updated_at: datetime
 
     model_config = {"from_attributes": True}
 

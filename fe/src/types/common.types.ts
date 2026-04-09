@@ -92,6 +92,12 @@ export interface Alert {
   is_read: boolean
 }
 
+export interface AlertSummary {
+  total_alerts: number
+  read_alerts: number
+  unread_alerts: number
+}
+
 // ─── Dashboard ─────────────────────────────────────────────────────────────
 export interface DashboardSummary {
   total_devices: number

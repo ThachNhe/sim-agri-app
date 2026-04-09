@@ -12,3 +12,9 @@ class AlertResponse(BaseModel):
     is_read: bool
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class AlertSummaryResponse(BaseModel):
+    total_alerts: int
+    read_alerts: int
+    unread_alerts: int

@@ -4,11 +4,12 @@ import { API_ENDPOINTS } from '@/services/endpoints'
 import type { DashboardSummary } from '@/types/common.types'
 import type { ApiResponse } from '@/types/api.types'
 
-export const useDashboardSummary = () => {
+export const useDashboardSummary = (ownerId?: string, enabled = true) => {
   return useQuery({
-    queryKey: ['dashboard-summary'],
+    queryKey: ['dashboard-summary', ownerId ?? 'all'],
     queryFn: () =>
-      apiGet<ApiResponse<DashboardSummary>>(API_ENDPOINTS.DASHBOARD.SUMMARY),
+      apiGet<ApiResponse<DashboardSummary>>(API_ENDPOINTS.DASHBOARD.SUMMARY, ownerId ? { owner_id: ownerId } : undefined),
+    enabled,
     refetchInterval: 30000,
   })
 }

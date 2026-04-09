@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { FarmSelectCard } from '@/components/admin/FarmSelectCard'
 import { useDashboardSummary } from '@/hooks/useDashboard'
 import { useDevices } from '@/hooks/useDevices'
 import { useReadings } from '@/hooks/useReadings'
@@ -37,15 +38,40 @@ function getTodayInputValue() {
 function DashboardPage() {
   const user = useAuthStore(s => s.user)
   const isAdmin = user?.role === 'admin'
+  const { data: usersRes, isLoading: isFarmersLoading } = useUsers(Boolean(isAdmin))
+  const farmers = usersRes?.data || []
+  const [selectedFarmId, setSelectedFarmId] = useState('')
 
-  const { data: summaryRes } = useDashboardSummary()
+  useEffect(() => {
+    if (!isAdmin) {
+      return
+    }
+
+    if (farmers.length === 0) {
+      if (selectedFarmId) {
+        setSelectedFarmId('')
+      }
+      return
+    }
+
+    if (!selectedFarmId || !farmers.some(farm => farm.id === selectedFarmId)) {
+      setSelectedFarmId(farmers[0].id)
+    }
+  }, [farmers, isAdmin, selectedFarmId])
+
+  const selectedFarm = useMemo(
+    () => farmers.find(farm => farm.id === selectedFarmId),
+    [farmers, selectedFarmId],
+  )
+
+  const canLoadFarmData = !isAdmin || Boolean(selectedFarmId)
+  const dashboardOwnerId = isAdmin ? selectedFarmId || undefined : undefined
+
+  const { data: summaryRes } = useDashboardSummary(dashboardOwnerId, canLoadFarmData)
   const summary = summaryRes?.data
 
-  const { data: devicesRes } = useDevices()
+  const { data: devicesRes } = useDevices(dashboardOwnerId, canLoadFarmData)
   const devices = devicesRes?.data || []
-  const { data: usersRes } = useUsers(Boolean(isAdmin))
-
-  const totalUsers = usersRes?.data?.length || 0
   const activeDevices = useMemo(() => devices.filter(d => d.is_active), [devices])
 
   const sensorDevices = useMemo(() => devices.filter(d => d.type === 'sensor'), [devices])
@@ -53,12 +79,22 @@ function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState<string>(getTodayInputValue())
 
   useEffect(() => {
-    if (!selectedDevice && sensorDevices.length > 0) {
+    if (sensorDevices.length === 0) {
+      if (selectedDevice) {
+        setSelectedDevice('')
+      }
+      return
+    }
+
+    if (!selectedDevice || !sensorDevices.some(device => device.id === selectedDevice)) {
       setSelectedDevice(sensorDevices[0].id)
     }
   }, [sensorDevices, selectedDevice])
 
-  const { data: readingsRes } = useReadings(selectedDevice || undefined, selectedDate)
+  const { data: readingsRes, isLoading: isReadingsLoading } = useReadings(
+    selectedDevice || undefined,
+    selectedDate,
+  )
   const readings = readingsRes?.data || []
 
   const chartData = useMemo(() => {
@@ -83,50 +119,73 @@ function DashboardPage() {
   )
 
   const activeDeviceCount = activeDevices.length
-  const totalDeviceCount = summary?.total_devices ?? 0
+  const selectedFarmName = selectedFarm?.name ?? 'Chưa chọn farm'
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="space-y-2">
           <div className="inline-flex items-center rounded-full border border-border/50 bg-card/60 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
             {isAdmin ? 'Admin mode' : 'Farmer mode'}
           </div>
           <h2 className="text-3xl font-bold tracking-tight">
-            {isAdmin ? 'Dashboard hệ thống' : 'Dashboard nông trại'}
+            {isAdmin ? 'Dashboard theo farm' : 'Dashboard nông trại'}
           </h2>
           <p className="text-muted-foreground mt-1">
             {isAdmin
-              ? 'Giám sát tổng thể thiết bị, cảnh báo và tài khoản của toàn hệ thống.'
+              ? 'Chọn một farm để xem thống kê, thiết bị và cảnh báo tương ứng.'
               : 'Theo dõi trạng thái thiết bị và cảnh báo thuộc trang trại của bạn.'}
           </p>
         </div>
+
+        {isAdmin && (
+          <FarmSelectCard
+            farms={farmers}
+            value={selectedFarmId}
+            onValueChange={setSelectedFarmId}
+            title="Chọn farm"
+            description="Mọi số liệu bên dưới sẽ thay đổi theo farm được chọn."
+            placeholder="Chọn một farm..."
+            emptyMessage="Chưa có farmer nào trong hệ thống."
+            loadingMessage="Đang tải danh sách farmer..."
+            isLoading={isFarmersLoading}
+            className="w-full xl:max-w-md"
+          />
+        )}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <SummaryCard
           title="Tổng Thiết Bị"
-          value={summary?.total_devices ?? 0}
+          value={canLoadFarmData && summary ? summary.total_devices : '--'}
           icon={<Cpu className="h-4 w-4 text-primary" />}
         />
         <SummaryCard
           title="Thiết bị cảm biến"
-          value={sensorDevices.length}
+          value={canLoadFarmData && summary ? sensorDevices.length : '--'}
           icon={<Cpu className="h-4 w-4 text-sky-500" />}
         />
         <SummaryCard
           title="Cảnh báo hôm nay"
-          value={summary?.alerts_today ?? 0}
+          value={canLoadFarmData && summary ? summary.alerts_today : '--'}
           icon={<BellRing className="h-4 w-4 text-destructive" />}
         />
         <SummaryCard
           title="Nhiệt độ TB (24h)"
-          value={summary?.avg_temperature ? `${summary.avg_temperature.toFixed(1)}°C` : '--'}
+          value={
+            canLoadFarmData && summary && summary.avg_temperature !== null && summary.avg_temperature !== undefined
+              ? `${summary.avg_temperature.toFixed(1)}°C`
+              : '--'
+          }
           icon={<ThermometerSun className="h-4 w-4 text-orange-500" />}
         />
         <SummaryCard
           title="Độ ẩm TB (24h)"
-          value={summary?.avg_humidity ? `${summary.avg_humidity.toFixed(1)}%` : '--'}
+          value={
+            canLoadFarmData && summary && summary.avg_humidity !== null && summary.avg_humidity !== undefined
+              ? `${summary.avg_humidity.toFixed(1)}%`
+              : '--'
+          }
           icon={<Droplet className="h-4 w-4 text-blue-500" />}
         />
       </div>
@@ -136,7 +195,11 @@ function DashboardPage() {
           <CardHeader className="flex flex-col gap-4 pb-2 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-1">
               <CardTitle>Biểu đồ Cảm Biến</CardTitle>
-              <CardDescription>Dữ liệu trong ngày {selectedDateLabel}</CardDescription>
+              <CardDescription>
+                {canLoadFarmData
+                  ? `Dữ liệu trong ngày ${selectedDateLabel}${isAdmin ? ` của ${selectedFarmName}` : ''}`
+                  : 'Chọn farm để xem biểu đồ cảm biến.'}
+              </CardDescription>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Input
@@ -162,9 +225,17 @@ function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {!selectedDevice ? (
+            {!canLoadFarmData ? (
               <div className="flex h-[350px] items-center justify-center text-muted-foreground">
-                Không có thiết bị cảm biến nào.
+                Chọn farm để xem biểu đồ và thiết bị.
+              </div>
+            ) : !selectedDevice ? (
+              <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+                Không có thiết bị cảm biến nào trong farm đã chọn.
+              </div>
+            ) : isReadingsLoading ? (
+              <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+                Đang tải dữ liệu cảm biến...
               </div>
             ) : readings.length === 0 ? (
               <div className="flex h-[350px] items-center justify-center text-muted-foreground">
@@ -194,40 +265,60 @@ function DashboardPage() {
 
         <Card className="border-border/50 bg-card/60 shadow-sm backdrop-blur">
           <CardHeader className="pb-2">
-            <CardTitle>{isAdmin ? 'Trung tâm điều hành' : 'Lối tắt nông trại'}</CardTitle>
+            <CardTitle>{isAdmin ? 'Farm đang xem' : 'Lối tắt nông trại'}</CardTitle>
             <CardDescription>
               {isAdmin
-                ? 'Các lối đi nhanh cho quản trị viên.'
+                ? 'Các hành động bên dưới áp dụng cho farm được chọn.'
                 : 'Các hành động nhanh cho nông dân.'}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-2xl border border-border/50 bg-background/60 p-4">
-              <p className="text-sm text-muted-foreground">
-                {isAdmin ? 'Tổng tài khoản' : 'Thiết bị đang hoạt động'}
-              </p>
-              <p className="mt-2 text-3xl font-bold tracking-tight">
-                {isAdmin ? totalUsers : `${activeDeviceCount}/${totalDeviceCount}`}
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {isAdmin
-                  ? `Thiết bị đang hoạt động: ${activeDeviceCount}/${totalDeviceCount}`
-                  : `Cảm biến đang theo dõi: ${sensorDevices.length}`}
-              </p>
-            </div>
+            {isAdmin ? (
+              <>
+                <div className="rounded-2xl border border-border/50 bg-background/60 p-4">
+                  <p className="text-sm text-muted-foreground">Nông trại</p>
+                  <p className="mt-2 text-3xl font-bold tracking-tight">{selectedFarmName}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {selectedFarm?.email ?? 'Hãy chọn farm để tải dữ liệu.'}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-border/50 bg-background/60 p-4">
+                  <p className="text-sm text-muted-foreground">Thiết bị đang hoạt động</p>
+                  <p className="mt-2 text-3xl font-bold tracking-tight">
+                    {canLoadFarmData && summary ? `${activeDeviceCount}/${summary.total_devices}` : '--'}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {canLoadFarmData
+                      ? `Cảm biến đang theo dõi: ${sensorDevices.length}`
+                      : 'Chọn farm để xem trạng thái thiết bị.'}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="rounded-2xl border border-border/50 bg-background/60 p-4">
+                <p className="text-sm text-muted-foreground">Thiết bị đang hoạt động</p>
+                <p className="mt-2 text-3xl font-bold tracking-tight">
+                  {summary ? `${activeDeviceCount}/${summary.total_devices}` : '--'}
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {summary ? `Cảm biến đang theo dõi: ${sensorDevices.length}` : 'Đang tải số liệu...'}
+                </p>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Button asChild className="w-full justify-start gap-2">
                 <Link to="/devices">
                   <Cpu size={16} />
-                  {isAdmin ? 'Mở quản lý thiết bị' : 'Xem thiết bị của tôi'}
+                  {isAdmin ? 'Mở thiết bị của farm' : 'Xem thiết bị của tôi'}
                 </Link>
               </Button>
 
               <Button asChild variant="outline" className="w-full justify-start gap-2">
                 <Link to="/alerts">
                   <BellRing size={16} />
-                  {isAdmin ? 'Xem cảnh báo hệ thống' : 'Xem cảnh báo của tôi'}
+                  {isAdmin ? 'Xem cảnh báo của farm' : 'Xem cảnh báo của tôi'}
                 </Link>
               </Button>
 
@@ -235,7 +326,7 @@ function DashboardPage() {
                 <Button asChild variant="outline" className="w-full justify-start gap-2">
                   <Link to="/users">
                     <Users size={16} />
-                    Quản lý người dùng
+                    Quản lý nông dân
                   </Link>
                 </Button>
               )}

@@ -19,7 +19,7 @@ class AdminUserService:
         self.user_repo = UserRepository(db)
 
     async def list_users(self) -> list[UserResponse]:
-        users = await self.user_repo.get_all_ordered()
+        users = await self.user_repo.get_farmers_ordered()
         return [UserResponse.model_validate(user) for user in users]
 
     async def create_farmer(self, payload: CreateFarmerRequest) -> UserResponse:

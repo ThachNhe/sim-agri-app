@@ -39,9 +39,10 @@ async def create_device(
 )
 async def get_devices(
     current_user: CurrentUser,
+    owner_id: UUID | None = None,
     service: DeviceService = Depends(get_device_service),
 ):
-    data = await service.get_devices(current_user)
+    data = await service.get_devices(current_user, owner_id)
     return BaseResponse.ok(data=data)
 
 

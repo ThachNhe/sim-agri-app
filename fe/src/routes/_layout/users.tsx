@@ -36,10 +36,6 @@ function getStatusVariant(status: User['status']) {
   return 'destructive' as const
 }
 
-function getRoleLabel(role: User['role']) {
-  return role === 'admin' ? 'Quản trị viên' : 'Nông dân'
-}
-
 function getApiErrorMessage(error: unknown, fallback: string) {
   if (typeof error === 'object' && error !== null && 'response' in error) {
     const response = (error as { response?: { data?: { message?: string } } }).response
@@ -58,7 +54,7 @@ function getApiErrorMessage(error: unknown, fallback: string) {
 function UsersPage() {
   const currentUser = useAuthStore(s => s.user)
   const { data: res, isLoading } = useUsers()
-  const users = res?.data || []
+  const farmers = res?.data || []
   const createUser = useCreateUser()
   const toggleUserStatus = useToggleUserStatus()
 
@@ -119,9 +115,9 @@ function UsersPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Người dùng hệ thống</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Danh sách farmer</h2>
           <p className="text-muted-foreground mt-1">
-            Tạo farmer mới, gửi mật khẩu qua MailHog và khóa/mở khóa tài khoản ngay tại đây.
+            Chỉ hiển thị farmer trong hệ thống. Admin có thể tạo, khóa và mở khóa tài khoản tại đây.
           </p>
         </div>
 
@@ -195,7 +191,6 @@ function UsersPage() {
               <TableRow>
                 <TableHead>Tên</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Vai trò</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead>Ngày đăng ký</TableHead>
                 <TableHead className="text-right">Hành động</TableHead>
@@ -204,18 +199,18 @@ function UsersPage() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     Đang tải...
                   </TableCell>
                 </TableRow>
-              ) : users.length === 0 ? (
+              ) : farmers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    Không có ai
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                    Không có farmer nào
                   </TableCell>
                 </TableRow>
               ) : (
-                users.map((user) => {
+                farmers.map((user) => {
                   const canManage = canToggleUser(user)
 
                   return (
@@ -229,11 +224,6 @@ function UsersPage() {
                         </div>
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={user.role === 'admin' ? 'default' : 'secondary'} className="capitalize">
-                          {getRoleLabel(user.role)}
-                        </Badge>
-                      </TableCell>
                       <TableCell>
                         <Badge variant={getStatusVariant(user.status)}>{getStatusLabel(user.status)}</Badge>
                       </TableCell>

@@ -16,11 +16,16 @@ class DeviceService:
         self.db = db
         self.device_repo = DeviceRepository(db)
 
-    async def get_devices(self, user: User) -> List[DeviceResponse]:
+    async def get_devices(
+        self, user: User, owner_id: UUID | None = None
+    ) -> List[DeviceResponse]:
         if user.role == UserRole.ADMIN:
-            devices = await self.device_repo.get_all()
+            if owner_id is not None:
+                devices = await self.device_repo.get_by_owner_ordered(owner_id)
+            else:
+                devices = await self.device_repo.get_all_ordered()
         else:
-            devices = await self.device_repo.get_by_owner(user.id)
+            devices = await self.device_repo.get_by_owner_ordered(user.id)
         return [DeviceResponse.model_validate(d) for d in devices]
 
     async def get_device_by_id(self, device_id: UUID, user: User) -> DeviceResponse:
@@ -28,6 +33,9 @@ class DeviceService:
         return DeviceResponse.model_validate(device)
 
     async def create_device(self, payload: DeviceCreate, user: User) -> DeviceResponse:
+        if user.role == UserRole.ADMIN:
+            raise ForbiddenException("Admin không có quyền thêm thiết bị")
+
         device = Device(
             name=payload.name,
             location=payload.location,

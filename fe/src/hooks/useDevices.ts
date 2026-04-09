@@ -4,10 +4,12 @@ import { API_ENDPOINTS } from '@/services/endpoints'
 import type { Device } from '@/types/common.types'
 import type { ApiResponse } from '@/types/api.types'
 
-export const useDevices = () => {
+export const useDevices = (ownerId?: string, enabled = true) => {
   return useQuery({
-    queryKey: ['devices'],
-    queryFn: () => apiGet<ApiResponse<Device[]>>(API_ENDPOINTS.DEVICES.LIST),
+    queryKey: ['devices', ownerId ?? 'all'],
+    queryFn: () =>
+      apiGet<ApiResponse<Device[]>>(API_ENDPOINTS.DEVICES.LIST, ownerId ? { owner_id: ownerId } : undefined),
+    enabled,
   })
 }
 
