@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { FarmSelectCard } from '@/components/admin/FarmSelectCard'
+import { cn } from '@/lib/utils'
+import { useAlertSummary, useAlerts } from '@/hooks/useAlerts'
 import { useDashboardSummary } from '@/hooks/useDashboard'
 import { useDevices } from '@/hooks/useDevices'
 import { useReadings } from '@/hooks/useReadings'
@@ -38,6 +40,7 @@ function getTodayInputValue() {
 function DashboardPage() {
   const user = useAuthStore(s => s.user)
   const isAdmin = user?.role === 'admin'
+  const shouldLoadFarmerPreview = !isAdmin
   const { data: usersRes, isLoading: isFarmersLoading } = useUsers(Boolean(isAdmin))
   const farmers = usersRes?.data || []
   const [selectedFarmId, setSelectedFarmId] = useState('')
@@ -75,6 +78,10 @@ function DashboardPage() {
   const activeDevices = useMemo(() => devices.filter(d => d.is_active), [devices])
 
   const sensorDevices = useMemo(() => devices.filter(d => d.type === 'sensor'), [devices])
+  const { data: alertSummaryRes } = useAlertSummary(undefined, shouldLoadFarmerPreview)
+  const alertSummary = alertSummaryRes?.data
+  const { data: recentAlertsRes } = useAlerts(undefined, shouldLoadFarmerPreview, 3)
+  const recentAlerts = recentAlertsRes?.data || []
   const [selectedDevice, setSelectedDevice] = useState<string>('')
   const [selectedDate, setSelectedDate] = useState<string>(getTodayInputValue())
 
@@ -305,6 +312,64 @@ function DashboardPage() {
                   {summary ? `Cảm biến đang theo dõi: ${sensorDevices.length}` : 'Đang tải số liệu...'}
                 </p>
               </div>
+            )}
+
+            {!isAdmin && (
+              <>
+                <div className="rounded-2xl border border-border/50 bg-background/60 p-4">
+                  <p className="text-sm text-muted-foreground">Cảnh báo chưa đọc</p>
+                  <p className="mt-2 text-3xl font-bold tracking-tight">
+                    {alertSummary ? alertSummary.unread_alerts : '--'}
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {alertSummary
+                      ? `Đã đọc ${alertSummary.read_alerts}/${alertSummary.total_alerts} cảnh báo`
+                      : 'Đang tải số liệu cảnh báo...'}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-border/50 bg-background/60 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm text-muted-foreground">Cảnh báo gần đây</p>
+                    <Button asChild variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                      <Link to="/alerts">Xem tất cả</Link>
+                    </Button>
+                  </div>
+
+                  {recentAlerts.length === 0 ? (
+                    <p className="mt-3 text-sm text-muted-foreground">Chưa có cảnh báo mới.</p>
+                  ) : (
+                    <div className="mt-3 space-y-2">
+                      {recentAlerts.map(alert => (
+                        <div
+                          key={alert.id}
+                          className="flex items-start gap-3 rounded-lg border border-border/50 bg-card/40 px-3 py-2"
+                        >
+                          <div className={cn('mt-0.5 rounded-full p-1.5', alert.is_read ? 'bg-muted text-muted-foreground' : 'bg-destructive/10 text-destructive')}>
+                            <BellRing size={12} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium">{alert.message}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(alert.triggered_at).toLocaleString('vi-VN', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                day: '2-digit',
+                                month: '2-digit',
+                              })}
+                            </p>
+                          </div>
+                          {!alert.is_read && (
+                            <span className="shrink-0 rounded-full bg-destructive/10 px-2 py-1 text-[10px] font-medium text-destructive">
+                              Mới
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
 
             <div className="space-y-2">

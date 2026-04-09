@@ -42,7 +42,7 @@ function AlertsPage() {
   const canLoadFarmData = !isAdmin || Boolean(selectedFarmId)
   const alertsOwnerId = isAdmin ? selectedFarmId || undefined : undefined
 
-  const { data: res, isLoading: isAlertsLoading } = useAlerts(alertsOwnerId, !isAdmin)
+  const { data: res, isLoading: isAlertsLoading } = useAlerts(alertsOwnerId, !isAdmin, 12)
   const alerts = res?.data || []
 
   const { data: summaryRes, isLoading: isSummaryLoading } = useAlertSummary(
@@ -142,7 +142,7 @@ function AlertsPage() {
           Không có cảnh báo nào của bạn
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {alerts.map(alert => (
             <Card
               key={alert.id}
@@ -151,19 +151,26 @@ function AlertsPage() {
                 alert.is_read ? 'border-l-border bg-card/40' : 'border-l-destructive bg-destructive/5 shadow-sm',
               )}
             >
-              <CardContent className="p-4 flex items-start justify-between gap-4">
-                <div className="flex gap-4">
+              <CardContent className="p-3 sm:p-4 flex items-start justify-between gap-3">
+                <div className="flex min-w-0 flex-1 gap-3">
                   <div
                     className={cn(
-                      'p-2 rounded-full',
+                      'mt-0.5 rounded-full p-1.5',
                       alert.is_read ? 'bg-muted text-muted-foreground' : 'bg-destructive/10 text-destructive',
                     )}
                   >
-                    <AlertCircle size={24} />
+                    <AlertCircle size={16} />
                   </div>
-                  <div>
-                    <h4 className="font-semibold">{alert.message}</h4>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h4 className="truncate text-sm font-medium">{alert.message}</h4>
+                      {!alert.is_read && (
+                        <span className="shrink-0 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium text-destructive">
+                          Mới
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>Ngưỡng giám sát: {alert.threshold}</span>
                       <span>•</span>
                       <span>{new Date(alert.triggered_at).toLocaleString()}</span>
@@ -174,10 +181,10 @@ function AlertsPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="gap-2 shrink-0"
+                    className="h-8 shrink-0 gap-1 px-2 text-xs"
                     onClick={() => handleMarkRead(alert.id)}
                   >
-                    <CheckCircle2 size={16} /> Đã đọc
+                    <CheckCircle2 size={14} /> Đã đọc
                   </Button>
                 )}
               </CardContent>

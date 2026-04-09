@@ -57,4 +57,4 @@ async def generate_faker_data():
         except Exception as e:
             logger.error(f"Lỗi khi chạy NASA Fetcher: {e}")
 
-        await asyncio.sleep(30)
+        await asyncio.sleep(60)

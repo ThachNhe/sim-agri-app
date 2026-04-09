@@ -4,11 +4,14 @@ import { API_ENDPOINTS } from '@/services/endpoints'
 import type { Alert, AlertSummary } from '@/types/common.types'
 import type { ApiResponse } from '@/types/api.types'
 
-export const useAlerts = (ownerId?: string, enabled = true) => {
+export const useAlerts = (ownerId?: string, enabled = true, limit = 100) => {
   return useQuery({
-    queryKey: ['alerts', ownerId ?? 'all'],
+    queryKey: ['alerts', ownerId ?? 'all', limit],
     queryFn: () =>
-      apiGet<ApiResponse<Alert[]>>(API_ENDPOINTS.ALERTS.LIST, ownerId ? { owner_id: ownerId } : undefined),
+      apiGet<ApiResponse<Alert[]>>(API_ENDPOINTS.ALERTS.LIST, {
+        ...(ownerId ? { owner_id: ownerId } : {}),
+        limit,
+      }),
     enabled,
     refetchInterval: 30000,
   })
