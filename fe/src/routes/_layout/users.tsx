@@ -123,12 +123,12 @@ function UsersPage() {
 
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
+            <Button className="w-full gap-2 md:w-auto">
               <Plus size={16} />
               Thêm farmer
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="w-[calc(100vw-1rem)] max-w-lg sm:max-w-md">
             <form onSubmit={handleCreateFarmer}>
               <DialogHeader>
                 <DialogTitle>Tạo farmer mới</DialogTitle>
@@ -186,70 +186,126 @@ function UsersPage() {
 
       <Card className="shadow-sm border-border/50 bg-card/60 backdrop-blur">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-muted/50">
-              <TableRow>
-                <TableHead>Tên</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Trạng thái</TableHead>
-                <TableHead>Ngày đăng ký</TableHead>
-                <TableHead className="text-right">Hành động</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    Đang tải...
-                  </TableCell>
-                </TableRow>
-              ) : farmers.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    Không có farmer nào
-                  </TableCell>
-                </TableRow>
-              ) : (
-                farmers.map((user) => {
-                  const canManage = canToggleUser(user)
+          <div className="space-y-3 p-3 sm:p-4 md:hidden">
+            {isLoading ? (
+              <div className="rounded-2xl border border-border/50 bg-background/60 px-4 py-6 text-center text-sm text-muted-foreground">
+                Đang tải...
+              </div>
+            ) : farmers.length === 0 ? (
+              <div className="rounded-2xl border border-border/50 bg-background/60 px-4 py-6 text-center text-sm text-muted-foreground">
+                Không có farmer nào
+              </div>
+            ) : (
+              farmers.map((user) => {
+                const canManage = canToggleUser(user)
 
-                  return (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
-                            {user.name?.[0]?.toUpperCase() || 'U'}
-                          </div>
-                          <span>{user.name}</span>
+                return (
+                  <div key={user.id} className="rounded-2xl border border-border/50 bg-background/70 p-4 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary">
+                        {user.name?.[0]?.toUpperCase() || 'U'}
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-base font-semibold">{user.name}</p>
+                        <p className="mt-1 truncate text-sm text-muted-foreground">{user.email}</p>
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <Badge variant={getStatusVariant(user.status)}>{getStatusLabel(user.status)}</Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(user.createdAt).toLocaleDateString('vi-VN')}
+                          </span>
                         </div>
-                      </TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(user.status)}>{getStatusLabel(user.status)}</Badge>
-                      </TableCell>
-                      <TableCell>{new Date(user.createdAt).toLocaleDateString('vi-VN')}</TableCell>
-                      <TableCell className="text-right">
-                        {canManage ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-2"
-                            onClick={() => handleToggleStatus(user)}
-                            disabled={toggleUserStatus.isPending}
-                          >
-                            {user.status === 'banned' ? <Unlock size={16} /> : <Lock size={16} />}
-                            {user.status === 'banned' ? 'Mở khóa' : 'Khóa'}
-                          </Button>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">Không áp dụng</span>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  )
-                })
-              )}
-            </TableBody>
-          </Table>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      {canManage ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full gap-2"
+                          onClick={() => handleToggleStatus(user)}
+                          disabled={toggleUserStatus.isPending}
+                        >
+                          {user.status === 'banned' ? <Unlock size={16} /> : <Lock size={16} />}
+                          {user.status === 'banned' ? 'Mở khóa' : 'Khóa'}
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">Không áp dụng</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })
+            )}
+          </div>
+
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead>Tên</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Trạng thái</TableHead>
+                  <TableHead>Ngày đăng ký</TableHead>
+                  <TableHead className="text-right">Hành động</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      Đang tải...
+                    </TableCell>
+                  </TableRow>
+                ) : farmers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      Không có farmer nào
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  farmers.map((user) => {
+                    const canManage = canToggleUser(user)
+
+                    return (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                              {user.name?.[0]?.toUpperCase() || 'U'}
+                            </div>
+                            <span>{user.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusVariant(user.status)}>{getStatusLabel(user.status)}</Badge>
+                        </TableCell>
+                        <TableCell>{new Date(user.createdAt).toLocaleDateString('vi-VN')}</TableCell>
+                        <TableCell className="text-right">
+                          {canManage ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-2"
+                              onClick={() => handleToggleStatus(user)}
+                              disabled={toggleUserStatus.isPending}
+                            >
+                              {user.status === 'banned' ? <Unlock size={16} /> : <Lock size={16} />}
+                              {user.status === 'banned' ? 'Mở khóa' : 'Khóa'}
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Không áp dụng</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

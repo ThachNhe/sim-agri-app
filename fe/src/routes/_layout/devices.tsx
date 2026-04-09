@@ -80,7 +80,7 @@ function DevicesPage() {
       }}
     >
       <div className="space-y-6">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">
               {isAdmin ? 'Thiết bị theo farm' : 'Thiết bị của tôi'}
@@ -103,11 +103,11 @@ function DevicesPage() {
               emptyMessage="Chưa có farmer nào trong hệ thống."
               loadingMessage="Đang tải danh sách farmer..."
               isLoading={isFarmersLoading}
-              className="w-full xl:max-w-md"
+              className="w-full md:max-w-md"
             />
           ) : (
             <Button
-              className="gap-2"
+              className="w-full gap-2 md:w-auto"
               onClick={() => {
                 setEditingDevice(null)
                 setIsOpen(true)
@@ -118,7 +118,7 @@ function DevicesPage() {
           )}
         </div>
 
-        <DialogContent>
+        <DialogContent className="w-[calc(100vw-1rem)] max-w-lg sm:max-w-2xl">
           <DeviceForm
             device={editingDevice}
             onSuccess={() => setIsOpen(false)}
@@ -127,53 +127,103 @@ function DevicesPage() {
 
         <Card className="shadow-sm border-border/50 bg-card/60 backdrop-blur">
           <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-muted/50">
-                <TableRow>
-                  <TableHead>Tên thiết bị</TableHead>
-                  <TableHead>Vị trí</TableHead>
-                  <TableHead>Loại</TableHead>
-                  <TableHead>Trạng thái</TableHead>
-                  <TableHead className="text-right">Hành động</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {!canLoadFarmData ? (
+            <div className="space-y-3 p-3 sm:p-4 md:hidden">
+              {!canLoadFarmData ? (
+                <div className="rounded-2xl border border-border/50 bg-background/60 px-4 py-6 text-center text-sm text-muted-foreground">
+                  Chọn farm để xem thiết bị.
+                </div>
+              ) : isLoading ? (
+                <div className="rounded-2xl border border-border/50 bg-background/60 px-4 py-6 text-center text-sm text-muted-foreground">
+                  Đang tải...
+                </div>
+              ) : devices.length === 0 ? (
+                <div className="rounded-2xl border border-border/50 bg-background/60 px-4 py-6 text-center text-sm text-muted-foreground">
+                  Không có thiết bị nào
+                </div>
+              ) : devices.map(device => (
+                <div key={device.id} className="rounded-2xl border border-border/50 bg-background/70 p-4 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-base font-semibold">{device.name}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{device.location}</p>
+                    </div>
+                    <Badge variant={device.is_active ? 'default' : 'secondary'} className="shrink-0">
+                      {device.is_active ? 'Hoạt động' : 'Tạm dừng'}
+                    </Badge>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="capitalize">
+                      {device.type}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">ID: {device.id.slice(0, 8)}</span>
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <Button variant="outline" className="flex-1 gap-2" onClick={() => handleEdit(device)}>
+                      <Pencil size={16} /> Sửa
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 gap-2 text-destructive hover:text-destructive"
+                      onClick={() => handleDelete(device.id)}
+                    >
+                      <Trash2 size={16} /> Xóa
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader className="bg-muted/50">
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                      Chọn farm để xem thiết bị.
-                    </TableCell>
+                    <TableHead>Tên thiết bị</TableHead>
+                    <TableHead>Vị trí</TableHead>
+                    <TableHead>Loại</TableHead>
+                    <TableHead>Trạng thái</TableHead>
+                    <TableHead className="text-right">Hành động</TableHead>
                   </TableRow>
-                ) : isLoading ? (
-                  <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Đang tải...</TableCell></TableRow>
-                ) : devices.length === 0 ? (
-                  <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Không có thiết bị nào</TableCell></TableRow>
-                ) : devices.map(device => (
-                  <TableRow key={device.id}>
-                    <TableCell className="font-medium">{device.name}</TableCell>
-                    <TableCell>{device.location}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">
-                        {device.type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={device.is_active ? "default" : "secondary"}>
-                        {device.is_active ? "Hoạt động" : "Tạm dừng"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(device)}>
-                        <Pencil size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(device.id)}>
-                        <Trash2 size={16} />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {!canLoadFarmData ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                        Chọn farm để xem thiết bị.
+                      </TableCell>
+                    </TableRow>
+                  ) : isLoading ? (
+                    <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Đang tải...</TableCell></TableRow>
+                  ) : devices.length === 0 ? (
+                    <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Không có thiết bị nào</TableCell></TableRow>
+                  ) : devices.map(device => (
+                    <TableRow key={device.id}>
+                      <TableCell className="font-medium">{device.name}</TableCell>
+                      <TableCell>{device.location}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="capitalize">
+                          {device.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={device.is_active ? "default" : "secondary"}>
+                          {device.is_active ? "Hoạt động" : "Tạm dừng"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => handleEdit(device)}>
+                          <Pencil size={16} />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(device.id)}>
+                          <Trash2 size={16} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>

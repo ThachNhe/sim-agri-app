@@ -1,8 +1,19 @@
 import { Link, Outlet, useNavigate } from '@tanstack/react-router'
-import type { ReactNode } from 'react'
-import { Leaf, LogOut, Moon, Sun } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { Leaf, LogOut, Menu, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet'
+import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 export interface LayoutNavItem {
@@ -28,6 +39,7 @@ export function LayoutShell({
     const logout = useAuthStore(s => s.logout)
     const navigate = useNavigate()
     const { theme, setTheme } = useTheme()
+    const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
     const handleLogout = () => {
         logout()
@@ -35,8 +47,8 @@ export function LayoutShell({
     }
 
     return (
-        <div className="flex h-screen overflow-hidden bg-background text-foreground">
-            <aside className="z-20 flex w-64 flex-col border-r border-border/50 bg-card/60 backdrop-blur-xl transition-all">
+        <div className="flex min-h-dvh overflow-x-hidden bg-background text-foreground">
+            <aside className="z-20 hidden w-72 flex-col border-r border-border/50 bg-card/60 backdrop-blur-xl transition-all lg:flex">
                 <div className="p-6">
                     <div className="flex items-center gap-3 text-primary">
                         <Leaf className="h-8 w-8" />
@@ -98,13 +110,122 @@ export function LayoutShell({
                 </div>
             </aside>
 
-            <main className="relative flex h-full flex-1 flex-col overflow-hidden bg-background">
-                <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] -translate-y-1/2 translate-x-1/3 rounded-full bg-primary/5 blur-3xl" />
+            <div className="flex min-w-0 flex-1 flex-col">
+                <header className="sticky top-0 z-30 border-b border-border/50 bg-background/90 backdrop-blur lg:hidden">
+                    <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
+                        <div className="flex min-w-0 items-center gap-3">
+                            <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+                                <SheetTrigger asChild>
+                                    <Button variant="outline" size="icon-sm" className="rounded-xl">
+                                        <Menu size={18} />
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent side="left" className="w-[min(88vw,22rem)] p-0">
+                                    <div className="flex h-full flex-col">
+                                        <SheetHeader className="border-b border-border/50 p-6 text-left">
+                                            <div className="flex items-center gap-3 text-primary">
+                                                <Leaf className="h-8 w-8" />
+                                                <div>
+                                                    <p className="text-xl font-bold tracking-tight">AgriSmart</p>
+                                                    <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                                                        {roleLabel}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <SheetTitle className="sr-only">Điều hướng {title}</SheetTitle>
+                                            <SheetDescription className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                                {subtitle}
+                                            </SheetDescription>
+                                        </SheetHeader>
 
-                <div className="z-10 flex-1 overflow-auto p-8">
-                    <Outlet />
-                </div>
-            </main>
+                                        <nav className="flex-1 space-y-2 overflow-y-auto p-4">
+                                            {navItems.map(item => (
+                                                <NavLink
+                                                    key={item.to}
+                                                    to={item.to}
+                                                    icon={item.icon}
+                                                    label={item.label}
+                                                    mobile
+                                                    closeOnNavigate
+                                                />
+                                            ))}
+                                        </nav>
+
+                                        <SheetFooter className="border-t border-border/50 p-4">
+                                            <div className="mb-2 flex items-center gap-2 text-sm font-medium">
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/20 font-bold text-primary">
+                                                    {user?.name?.[0]?.toUpperCase() || 'U'}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="truncate">{user?.name || 'Unknown'}</p>
+                                                    <p className="truncate text-xs text-muted-foreground">{roleLabel}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    className="flex-1 gap-2 rounded-xl"
+                                                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                                >
+                                                    {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                                                    {theme === 'dark' ? 'Sáng' : 'Tối'}
+                                                </Button>
+
+                                                <SheetClose asChild>
+                                                    <Button
+                                                        variant="destructive"
+                                                        className="flex-1 gap-2 rounded-xl shadow-sm"
+                                                        onClick={handleLogout}
+                                                    >
+                                                        <LogOut size={16} />
+                                                        Đăng xuất
+                                                    </Button>
+                                                </SheetClose>
+                                            </div>
+                                        </SheetFooter>
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+
+                            <div className="min-w-0">
+                                <p className="truncate text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                                    {roleLabel}
+                                </p>
+                                <h1 className="truncate text-sm font-semibold sm:text-base">{title}</h1>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                className="rounded-full"
+                            >
+                                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                            </Button>
+
+                            <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={handleLogout}
+                                className="rounded-full"
+                            >
+                                <LogOut size={18} />
+                            </Button>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="relative flex-1 overflow-y-auto overflow-x-hidden">
+                    <div className="pointer-events-none absolute right-0 top-0 hidden h-[500px] w-[500px] -translate-y-1/2 translate-x-1/3 rounded-full bg-primary/5 blur-3xl lg:block" />
+
+                    <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
+                        <Outlet />
+                    </div>
+                </main>
+            </div>
         </div>
     )
 }
@@ -113,19 +234,32 @@ function NavLink({
     to,
     icon,
     label,
+    mobile = false,
+    closeOnNavigate = false,
 }: {
     to: string
     icon: ReactNode
     label: string
+    mobile?: boolean
+    closeOnNavigate?: boolean
 }) {
-    return (
+    const link = (
         <Link
             to={to}
-            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary active:scale-95 [&.active]:bg-primary [&.active]:font-medium [&.active]:text-primary-foreground [&.active]:shadow-md [&.active]:shadow-primary/20"
+            className={cn(
+                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary active:scale-95 [&.active]:bg-primary [&.active]:font-medium [&.active]:text-primary-foreground [&.active]:shadow-md [&.active]:shadow-primary/20',
+                mobile && 'px-4 py-3 text-base',
+            )}
             activeProps={{ className: 'active' }}
         >
             {icon}
-            <span>{label}</span>
+            <span className="truncate">{label}</span>
         </Link>
     )
+
+    if (!closeOnNavigate) {
+        return link
+    }
+
+    return <SheetClose asChild>{link}</SheetClose>
 }

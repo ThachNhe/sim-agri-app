@@ -32,11 +32,11 @@ function LoginPage() {
     });
 
     return (
-        <div className="bg-background relative flex min-h-screen items-center justify-center overflow-hidden">
+        <div className="bg-background relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-6 sm:px-6 lg:px-8">
             <div className="bg-primary/10 pointer-events-none absolute top-0 right-0 h-[500px] w-[500px] translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
             <div className="bg-primary/10 pointer-events-none absolute bottom-0 left-0 h-[500px] w-[500px] -translate-x-1/2 translate-y-1/2 rounded-full blur-3xl" />
 
-            <Card className="border-border/50 bg-card/80 z-10 w-full max-w-sm shadow-2xl backdrop-blur-sm">
+            <Card className="border-border/50 bg-card/80 z-10 w-full max-w-md shadow-2xl backdrop-blur-sm">
                 <CardHeader className="space-y-1 text-center">
                     <div className="mb-4 flex justify-center">
                         <div className="bg-primary/20 text-primary flex h-12 w-12 items-center justify-center rounded-xl">
