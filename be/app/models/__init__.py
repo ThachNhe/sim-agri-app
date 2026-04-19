@@ -1,6 +1,19 @@
 from app.models.user import User
-from app.models.device import Device
+from app.models.plant_profile import PlantProfile
+from app.models.growing_zone import GrowingZone
+from app.models.sensor import Sensor
+from app.models.actuator import Actuator
+from app.models.actuator_command import ActuatorCommand
 from app.models.sensor_reading import SensorReading
 from app.models.alert import Alert
 
-__all__ = ["User", "Device", "SensorReading", "Alert"]
+__all__ = [
+    "User",
+    "PlantProfile",
+    "GrowingZone",
+    "Sensor",
+    "Actuator",
+    "ActuatorCommand",
+    "SensorReading",
+    "Alert",
+]

@@ -5,11 +5,11 @@ import type { SensorReading } from '@/types/common.types'
 import type { ApiResponse } from '@/types/api.types'
 
 export const useReadings = (
-  deviceId: string | undefined,
+  sensorId: string | undefined,
   selectedDate: string | undefined,
 ) => {
   return useQuery({
-    queryKey: ['readings', deviceId, selectedDate],
+    queryKey: ['readings', sensorId, selectedDate],
     queryFn: () => {
       const baseDate = selectedDate
         ? new Date(`${selectedDate}T00:00:00`)
@@ -21,12 +21,25 @@ export const useReadings = (
       toDate.setHours(23, 59, 59, 999)
 
       return apiGet<ApiResponse<SensorReading[]>>(API_ENDPOINTS.READINGS.LIST, {
-        device_id: deviceId,
+        sensor_id: sensorId,
         from_date: fromDate.toISOString(),
         to_date: toDate.toISOString(),
       })
     },
-    enabled: !!deviceId,
+    enabled: !!sensorId,
     refetchInterval: 30000,
   })
 }
+
+export const useLatestReadings = (zoneId: string | undefined, enabled = true) => {
+  return useQuery({
+    queryKey: ['readings', 'latest', zoneId],
+    queryFn: () =>
+      apiGet<ApiResponse<SensorReading[]>>(API_ENDPOINTS.READINGS.LATEST, {
+        zone_id: zoneId,
+      }),
+    enabled: !!zoneId && enabled,
+    refetchInterval: 30000,
+  })
+}
+

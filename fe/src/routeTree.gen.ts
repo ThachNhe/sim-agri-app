@@ -12,9 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutZonesRouteImport } from './routes/_layout/zones'
 import { Route as LayoutUsersRouteImport } from './routes/_layout/users'
+import { Route as LayoutSensorsRouteImport } from './routes/_layout/sensors'
+import { Route as LayoutPlantProfilesRouteImport } from './routes/_layout/plant-profiles'
 import { Route as LayoutDevicesRouteImport } from './routes/_layout/devices'
 import { Route as LayoutAlertsRouteImport } from './routes/_layout/alerts'
+import { Route as LayoutActuatorsRouteImport } from './routes/_layout/actuators'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -30,9 +34,24 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutZonesRoute = LayoutZonesRouteImport.update({
+  id: '/zones',
+  path: '/zones',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutUsersRoute = LayoutUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutSensorsRoute = LayoutSensorsRouteImport.update({
+  id: '/sensors',
+  path: '/sensors',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutPlantProfilesRoute = LayoutPlantProfilesRouteImport.update({
+  id: '/plant-profiles',
+  path: '/plant-profiles',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutDevicesRoute = LayoutDevicesRouteImport.update({
@@ -45,42 +64,81 @@ const LayoutAlertsRoute = LayoutAlertsRouteImport.update({
   path: '/alerts',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutActuatorsRoute = LayoutActuatorsRouteImport.update({
+  id: '/actuators',
+  path: '/actuators',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
+  '/actuators': typeof LayoutActuatorsRoute
   '/alerts': typeof LayoutAlertsRoute
   '/devices': typeof LayoutDevicesRoute
+  '/plant-profiles': typeof LayoutPlantProfilesRoute
+  '/sensors': typeof LayoutSensorsRoute
   '/users': typeof LayoutUsersRoute
+  '/zones': typeof LayoutZonesRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/actuators': typeof LayoutActuatorsRoute
   '/alerts': typeof LayoutAlertsRoute
   '/devices': typeof LayoutDevicesRoute
+  '/plant-profiles': typeof LayoutPlantProfilesRoute
+  '/sensors': typeof LayoutSensorsRoute
   '/users': typeof LayoutUsersRoute
+  '/zones': typeof LayoutZonesRoute
   '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
+  '/_layout/actuators': typeof LayoutActuatorsRoute
   '/_layout/alerts': typeof LayoutAlertsRoute
   '/_layout/devices': typeof LayoutDevicesRoute
+  '/_layout/plant-profiles': typeof LayoutPlantProfilesRoute
+  '/_layout/sensors': typeof LayoutSensorsRoute
   '/_layout/users': typeof LayoutUsersRoute
+  '/_layout/zones': typeof LayoutZonesRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/alerts' | '/devices' | '/users'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/actuators'
+    | '/alerts'
+    | '/devices'
+    | '/plant-profiles'
+    | '/sensors'
+    | '/users'
+    | '/zones'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/alerts' | '/devices' | '/users' | '/'
+  to:
+    | '/login'
+    | '/actuators'
+    | '/alerts'
+    | '/devices'
+    | '/plant-profiles'
+    | '/sensors'
+    | '/users'
+    | '/zones'
+    | '/'
   id:
     | '__root__'
     | '/_layout'
     | '/login'
+    | '/_layout/actuators'
     | '/_layout/alerts'
     | '/_layout/devices'
+    | '/_layout/plant-profiles'
+    | '/_layout/sensors'
     | '/_layout/users'
+    | '/_layout/zones'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -112,11 +170,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/zones': {
+      id: '/_layout/zones'
+      path: '/zones'
+      fullPath: '/zones'
+      preLoaderRoute: typeof LayoutZonesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/users': {
       id: '/_layout/users'
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof LayoutUsersRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/sensors': {
+      id: '/_layout/sensors'
+      path: '/sensors'
+      fullPath: '/sensors'
+      preLoaderRoute: typeof LayoutSensorsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/plant-profiles': {
+      id: '/_layout/plant-profiles'
+      path: '/plant-profiles'
+      fullPath: '/plant-profiles'
+      preLoaderRoute: typeof LayoutPlantProfilesRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/devices': {
@@ -133,20 +212,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAlertsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/actuators': {
+      id: '/_layout/actuators'
+      path: '/actuators'
+      fullPath: '/actuators'
+      preLoaderRoute: typeof LayoutActuatorsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
 interface LayoutRouteChildren {
+  LayoutActuatorsRoute: typeof LayoutActuatorsRoute
   LayoutAlertsRoute: typeof LayoutAlertsRoute
   LayoutDevicesRoute: typeof LayoutDevicesRoute
+  LayoutPlantProfilesRoute: typeof LayoutPlantProfilesRoute
+  LayoutSensorsRoute: typeof LayoutSensorsRoute
   LayoutUsersRoute: typeof LayoutUsersRoute
+  LayoutZonesRoute: typeof LayoutZonesRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutActuatorsRoute: LayoutActuatorsRoute,
   LayoutAlertsRoute: LayoutAlertsRoute,
   LayoutDevicesRoute: LayoutDevicesRoute,
+  LayoutPlantProfilesRoute: LayoutPlantProfilesRoute,
+  LayoutSensorsRoute: LayoutSensorsRoute,
   LayoutUsersRoute: LayoutUsersRoute,
+  LayoutZonesRoute: LayoutZonesRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 

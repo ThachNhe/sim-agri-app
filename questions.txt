@@ -1,0 +1,180 @@
+AGRI SMART - CAC CAU HOI HOI DONG CO THE HOI KHI THUYET TRINH/DEMO
+
+Goi y chung:
+- Tra loi ngan, ro, bam dung pham vi do an.
+- Neu chua lam den dau thi noi thang, sau do noi huong mo rong.
+- Khong can hoc thuoc tung chu, chi can nam y chinh.
+
+==================================================
+1. Tong quan de tai
+==================================================
+
+1. Hoi: De tai nay giai quyet bai toan gi?
+   Tra loi: De tai giai quyet bai toan giam sat nong trai tren nen web. Thay vi theo doi thu cong, nguoi dung co the xem thiet bi, du lieu cam bien va canh bao tren mot dashboard tap trung.
+
+2. Hoi: Doi tuong su dung cua he thong la ai?
+   Tra loi: He thong co 2 nhom chinh la admin va farmer. Admin quan ly tong the, con farmer theo doi va quan ly farm cua minh.
+
+3. Hoi: Chuc nang chinh cua he thong la gi?
+   Tra loi: He thong co dang nhap, dashboard, quan ly thiet bi, xem du lieu cam bien theo ngay, canh bao, danh dau da doc, xuat CSV va quan ly farmer.
+
+4. Hoi: Diem noi bat cua do an nay la gi?
+   Tra loi: Diem noi bat la em gom duoc nhieu chuc nang thuc te vao cung mot he thong: giam sat, quan ly thiet bi, canh bao, xuat bao cao va phan quyen vai tro.
+
+5. Hoi: Vi sao em chon huong web app?
+   Tra loi: Vi web app de trien khai, de demo va chay duoc tren nhieu thiet bi. Trong pham vi do an, cach nay hop ly hon viec lam them app mobile.
+
+6. Hoi: Neu gioi thieu ngan gon trong 30 giay thi em noi gi?
+   Tra loi: AgriSmart la he thong giam sat nong nghiep thong minh, giup nguoi dung theo doi du lieu cam bien, canh bao va thiet bi tren web. He thong co 2 vai tro la admin va farmer, backend dung FastAPI, frontend dung React va du lieu luu trong PostgreSQL.
+
+7. Hoi: Luong demo cua em se di nhu the nao?
+   Tra loi: Em demo dang nhap, vao dashboard, xem du lieu cam bien, xem thiet bi, xem canh bao, xuat CSV, sau do dang nhap vai tro admin de quan ly farmer va xem dashboard theo tung farm.
+
+8. Hoi: Tai sao de tai nay co y nghia thuc te?
+   Tra loi: Vi trong nong nghiep, viec theo doi nhiet do, do am va canh bao bat thuong la rat quan trong. He thong giup giam thao tac thu cong va ho tro ra quyet dinh nhanh hon.
+
+==================================================
+2. Kien truc va cong nghe
+==================================================
+
+9. Hoi: Kien truc tong the cua he thong la gi?
+   Tra loi: He thong tach frontend va backend. Frontend React goi API FastAPI, backend xu ly nghiep vu va luu du lieu trong PostgreSQL, tat ca duoc chay bang Docker Compose.
+
+10. Hoi: Vi sao em chon FastAPI?
+    Tra loi: Vi FastAPI gon, de doc, ho tro async tot va dung type hints ro rang. No rat phu hop de xay dung API trong do an.
+
+11. Hoi: Vi sao em chon React va TypeScript?
+    Tra loi: React phu hop voi giao dien dashboard co nhieu thanh phan va trang thai. TypeScript giup em giam loi du lieu giua frontend va backend.
+
+12. Hoi: Vi sao em chon PostgreSQL?
+    Tra loi: Vi du lieu cua em la du lieu quan he ro rang giua user, device, reading va alert. PostgreSQL on dinh, ho tro tot UUID va truy van theo thoi gian.
+
+13. Hoi: Vi sao em dung Docker Compose?
+    Tra loi: Vi he thong co nhieu service nhu frontend, backend, database, Redis va MailHog. Docker Compose giup dung moi truong nhanh va demo de hon.
+
+14. Hoi: Redis trong du an nay dung de lam gi?
+    Tra loi: Trong phien ban hien tai Redis moi o muc chuan bi ha tang cho cache hoac queue. Em chua khai thac sau, va day la mot huong mo rong tiep theo.
+
+15. Hoi: MailHog dung de lam gi?
+    Tra loi: MailHog giup gia lap hop thu trong moi truong phat trien. Em dung no de demo luong gui mat khau tam khi tao farmer moi ma khong can SMTP that.
+
+16. Hoi: Vi sao em tach service va repository?
+    Tra loi: Em tach de moi lop co mot trach nhiem ro rang. Repository lam viec voi database, con service xu ly nghiep vu, nhu vay de bao tri va de test hon.
+
+17. Hoi: Vi sao backend dung async?
+    Tra loi: Vi API chu yeu la I/O voi database, nen async giup xu ly dong thoi tot hon. Voi FastAPI thi cach nay cung rat phu hop.
+
+18. Hoi: Vi sao frontend co the tu dong cap nhat du lieu?
+    Tra loi: Frontend dung React Query va dat refetch theo chu ky 30 giay cho dashboard, readings va alerts. Nho do du lieu luon duoc cap nhat ma khong can tai lai trang.
+
+19. Hoi: Vi sao em chon React Query?
+    Tra loi: Vi no giup quan ly goi API, cache, refetch va dong bo lai du lieu sau mutation rat gon. Em giam duoc nhieu ma lap o frontend.
+
+==================================================
+3. Du lieu, bao mat va phan quyen
+==================================================
+
+20. Hoi: He thong co nhung bang chinh nao?
+    Tra loi: Co 4 bang chinh la users, devices, sensor_readings va alerts.
+
+21. Hoi: Quan he giua cac bang ra sao?
+    Tra loi: Mot user co nhieu device. Moi device co nhieu sensor reading va nhieu alert.
+
+22. Hoi: Vi sao em dung UUID thay vi id tang dan?
+    Tra loi: UUID kho doan hon va thuan loi neu sau nay mo rong tich hop nhieu nguon du lieu. No cung tranh de lo quy mo du lieu qua id tuan tu.
+
+23. Hoi: He thong xac thuc nhu the nao?
+    Tra loi: He thong dung JWT gom access token va refresh token. Hai token duoc luu bang HttpOnly cookie thay vi luu o localStorage.
+
+24. Hoi: Vi sao em dung HttpOnly cookie?
+    Tra loi: Vi cach nay an toan hon cho token, giam nguy co JavaScript tren trinh duyet doc duoc token khi co XSS. Day la ly do em uu tien cookie hon localStorage.
+
+25. Hoi: Refresh token duoc bao ve nhu the nao?
+    Tra loi: Refresh token cung la HttpOnly cookie va chi gui den nhom endpoint auth. Em gioi han path de giam pham vi cookie bi gui khong can thiet.
+
+26. Hoi: Mat khau duoc luu nhu the nao?
+    Tra loi: Em khong luu mat khau thuan. Mat khau duoc bam bang bcrypt thong qua passlib truoc khi luu vao database.
+
+27. Hoi: He thong phan quyen ra sao?
+    Tra loi: Backend lay user tu access token trong cookie, sau do kiem tra role va quyen so huu du lieu. Farmer chi thao tac tren du lieu cua minh, admin xem tong the va quan ly nguoi dung.
+
+28. Hoi: Vi sao admin khong duoc them thiet bi?
+    Tra loi: Trong nghiep vu hien tai, thiet bi gan voi farm cua farmer nen farmer la nguoi so huu va tao thiet bi. Admin chu yeu lam vai tro giam sat va quan ly tai khoan.
+
+29. Hoi: He thong xu ly loi nhu the nao?
+    Tra loi: Backend co custom exception handler cho loi nghiep vu, validation va loi database. Nho do response loi duoc thong nhat va de xu ly o frontend.
+
+30. Hoi: Neu token het han thi sao?
+    Tra loi: Frontend se goi endpoint refresh de xin access token moi bang refresh token cookie. Neu refresh cung khong hop le thi he thong dang xuat nguoi dung.
+
+==================================================
+4. Dashboard, canh bao va demo nghiep vu
+==================================================
+
+31. Hoi: Dashboard hien thi nhung gi?
+    Tra loi: Dashboard hien thi tong so thiet bi, so canh bao trong ngay, nhiet do trung binh va do am trung binh 24 gio gan nhat. Ngoai ra con co bieu do du lieu cam bien theo ngay.
+
+32. Hoi: Du lieu bieu do lay theo moc thoi gian nao?
+    Tra loi: Du lieu bieu do lay theo thiet bi va ngay ma nguoi dung chon. Con phan summary o dashboard thi tinh tren 24 gio gan nhat.
+
+33. Hoi: Canh bao duoc tao ra nhu the nao?
+    Tra loi: Hien tai he thong co task nen chay moi 60 giay de sinh du lieu gia cho sensor dang hoat dong. Neu nhiet do vuot 35 do hoac do am xuong duoi 35 phan tram thi tao alert.
+
+34. Hoi: Vi sao task lai ten la nasa_fetcher?
+    Tra loi: Ten file nay la ten cu tu giai doan som. Chuc nang thuc te hien nay la sinh du lieu gia dinh ky, va neu hoan thien tiep em se doi ten cho sat nghiep vu hon.
+
+35. Hoi: Vi sao em dung du lieu gia thay vi cam bien that?
+    Tra loi: Vi trong pham vi do an, em uu tien hoan thien nen tang phan mem va demo on dinh truoc. Du lieu gia van giup em mo phong duoc luong giam sat, bieu do va canh bao.
+
+36. Hoi: Chuc nang xuat CSV duoc xu ly o dau?
+    Tra loi: CSV hien duoc tao o frontend tu du lieu cam bien dang xem. Cach nay don gian, nhanh va du cho pham vi do an hien tai.
+
+37. Hoi: Vi sao admin co the chon tung farm?
+    Tra loi: Vi admin can theo doi toan bo he thong, nhung du lieu van phai tach theo tung farmer de de quan ly. Co che chon farm giup admin xem dung ngu canh nghiep vu.
+
+38. Hoi: Vi sao farmer can danh dau canh bao da doc?
+    Tra loi: Vi thao tac nay giup phan biet canh bao moi va canh bao da xu ly. Nguoi van hanh se de uu tien cac canh bao chua duoc tiep nhan.
+
+39. Hoi: Neu so luong readings tang lon thi sao?
+    Tra loi: Khi do em se them index toi uu, phan trang hoac gom du lieu theo khoang thoi gian, va co the cache phan summary. Kien truc hien tai duoc tach lop nen van mo rong duoc.
+
+40. Hoi: Vi sao em chua dung WebSocket realtime?
+    Tra loi: Vi o muc do an, refetch dinh ky la du de the hien bai toan. Neu trien khai thuc te voi tan suat cap nhat cao hon em se can nhac WebSocket hoac message broker.
+
+41. Hoi: Em da kiem thu nhung gi?
+    Tra loi: Em da kiem thu thu cong cac luong chinh nhu dang nhap, dashboard, thiet bi, canh bao, xuat CSV va quan ly farmer. Ngoai ra du an da co cau truc unit test va integration test cho mot so phan, nhung coverage tong the van con co the mo rong them.
+
+==================================================
+5. Han che va huong phat trien
+==================================================
+
+42. Hoi: Han che lon nhat cua he thong hien tai la gi?
+    Tra loi: Han che lon nhat la du lieu van la du lieu mo phong, chua doc truc tiep tu thiet bi IoT that. Ngoai ra nguong canh bao con dang hardcode va Redis chua duoc dung sau.
+
+43. Hoi: Neu lam tiep thi em uu tien phat trien gi truoc?
+    Tra loi: Em uu tien 3 huong: ket noi cam bien that hoac MQTT, cho phep cau hinh nguong canh bao dong, va bo sung kenh thong bao nhu email, SMS hoac mobile app.
+
+44. Hoi: Neu lam lai tu dau, em se cai tien gi?
+    Tra loi: Em se dat ten mot so thanh phan sat nghiep vu hon, mo rong test coverage som hon, va tach rieng phan xu ly du lieu mo phong de de thay the bang nguon du lieu that.
+
+45. Hoi: Diem manh cua kien truc hien tai la gi?
+    Tra loi: Diem manh la code duoc tach ro frontend, backend, service, repository va deployment bang Docker. Vi vay viec bao tri va mo rong sau nay se de hon.
+
+46. Hoi: Diem yeu ma em tu danh gia la gi?
+    Tra loi: Diem yeu la he thong chua ket noi phan cung that nen gia tri thuc te chua day du. Em xem day la moc tiep theo de nang cap do an thanh mot he thong gan san pham hon.
+
+==================================================
+6. Cau cuu nguy khi bi hoi kho
+==================================================
+
+47. Hoi: Neu hoi dong hoi mot cau em chua chac thi em nen tra loi sao?
+    Tra loi mau: Trong phien ban hien tai em chua trien khai sau phan do, nen em xin tra loi theo huong thiet ke. Neu mo rong tiep, em se xu ly theo huong nay...
+
+48. Hoi: Neu hoi dong noi giai phap cua em chua that su toi uu thi sao?
+    Tra loi mau: Da, em dong y day chua phai phien ban toi uu nhat. Trong pham vi do an, em uu tien giai phap de trien khai, de demo on dinh va de mo rong ve sau.
+
+49. Hoi: Neu hoi dong hoi ve mot phan em khong truc tiep lam ky thi sao?
+    Tra loi mau: Phan do em co nam muc dich va cach no hoat dong, con muc do toi uu hoac trien khai sau hon thi em van dang hoan thien them. Em xin trinh bay trong pham vi em da xay dung va kiem chung duoc.
+
+50. Hoi: Cau chot cuoi neu hoi dong hoi em hoc duoc gi tu do an nay?
+    Tra loi: Dieu em hoc duoc nhieu nhat la cach ghep cac phan thanh mot he thong hoan chinh, tu giao dien, API, co so du lieu, xac thuc, phan quyen den deployment. Em cung hoc duoc cach can bang giua giai phap dung duoc ngay va huong mo rong ve sau.

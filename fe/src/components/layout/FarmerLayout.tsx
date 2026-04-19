@@ -1,18 +1,20 @@
-import { BellRing, Cpu, LayoutDashboard } from 'lucide-react'
+import { BellRing, LayoutDashboard, MapPin, Radio, Settings2 } from 'lucide-react'
 import { LayoutShell, type LayoutNavItem } from './LayoutShell'
 
 const farmerNavItems: LayoutNavItem[] = [
-    { to: '/', icon: <LayoutDashboard size={20} />, label: 'Tổng quan của tôi' },
-    { to: '/devices', icon: <Cpu size={20} />, label: 'Thiết bị của tôi' },
-    { to: '/alerts', icon: <BellRing size={20} />, label: 'Cảnh báo của tôi' },
+    { to: '/', icon: <LayoutDashboard size={20} />, label: 'Tổng quan' },
+    { to: '/zones', icon: <MapPin size={20} />, label: 'Khu vực trồng trọt' },
+    { to: '/sensors', icon: <Radio size={20} />, label: 'Cảm biến & Dữ liệu' },
+    { to: '/actuators', icon: <Settings2 size={20} />, label: 'Điều khiển thiết bị' },
+    { to: '/alerts', icon: <BellRing size={20} />, label: 'Cảnh báo' },
 ]
 
 export function FarmerLayout() {
     return (
         <LayoutShell
             roleLabel="Nông dân"
-            title="Trang trại của bạn"
-            subtitle="Theo dõi thiết bị và cảnh báo thuộc quyền quản lý của bạn."
+            title="Hệ thống canh tác thông minh"
+            subtitle="Theo dõi thông số môi trường và điều chỉnh để cây trồng phát triển tốt nhất."
             navItems={farmerNavItems}
         />
     )

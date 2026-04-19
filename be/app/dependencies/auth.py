@@ -20,14 +20,16 @@ async def get_current_user(
     token = request.cookies.get("access_token")
     if not token:
         raise UnauthorizedException(ErrorMessage.UNAUTHORIZED)
-
+    print("Access token from cookie:", token, flush=True)  # Debug log
     token_data = decode_token(token)
+    print("Decoded token data:", token_data, flush=True)  # Debug log
 
     if not token_data or token_data.get("type") != TokenType.ACCESS:
         raise UnauthorizedException(ErrorMessage.TOKEN_INVALID)
 
     user_repo = UserRepository(db)
     user = await user_repo.get_by_id(token_data["sub"])
+    print("Fetched user from database:", user, flush=True)  # Debug log
 
     if not user:
         raise UnauthorizedException(ErrorMessage.USER_NOT_FOUND)

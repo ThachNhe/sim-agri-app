@@ -1,14 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { AlertCircle, CheckCircle2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { FarmSelectCard } from '@/components/admin/FarmSelectCard'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAlertSummary, useAlerts, useMarkAlertRead } from '@/hooks/useAlerts'
 import { useUsers } from '@/hooks/useUsers'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { FarmSelectCard } from '@/components/admin/FarmSelectCard'
+import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { SENSOR_LABEL } from '@/types/common.types'
+import type { AlertSeverity } from '@/types/common.types'
+import { createFileRoute } from '@tanstack/react-router'
+import { AlertCircle, AlertTriangle, CheckCircle2, Info } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_layout/alerts')({
   component: AlertsPage,
@@ -148,33 +151,35 @@ function AlertsPage() {
               key={alert.id}
               className={cn(
                 'transition-all border-l-4',
-                alert.is_read ? 'border-l-border bg-card/40' : 'border-l-destructive bg-destructive/5 shadow-sm',
+                alert.is_read ? 'border-l-border bg-card/40' : severityBorderColor(alert.severity),
               )}
             >
               <CardContent className="p-3 sm:p-4 flex items-start justify-between gap-3">
                 <div className="flex min-w-0 flex-1 gap-3">
-                  <div
-                    className={cn(
-                      'mt-0.5 rounded-full p-1.5',
-                      alert.is_read ? 'bg-muted text-muted-foreground' : 'bg-destructive/10 text-destructive',
-                    )}
-                  >
-                    <AlertCircle size={16} />
+                  <div className={cn('mt-0.5 rounded-full p-1.5 shrink-0', alert.is_read ? 'bg-muted text-muted-foreground' : severityIconBg(alert.severity))}>
+                    {severityIcon(alert.severity)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="truncate text-sm font-medium">{alert.message}</h4>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="text-sm font-medium">{alert.message}</h4>
                       {!alert.is_read && (
-                        <span className="shrink-0 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium text-destructive">
-                          Mới
-                        </span>
+                        <span className="shrink-0 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium text-destructive">Mới</span>
                       )}
+                      <SeverityBadge severity={alert.severity} />
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <span>Ngưỡng giám sát: {alert.threshold}</span>
+                      {alert.parameter && <span>Thông số: <b className="text-foreground">{SENSOR_LABEL[alert.parameter]}</b></span>}
+                      {alert.actual_value != null && <span>Giá trị: <b className="text-foreground">{alert.actual_value.toFixed(1)}</b></span>}
+                      {alert.threshold_value != null && <span>Ngưỡng: {alert.threshold_value.toFixed(1)}</span>}
                       <span>•</span>
-                      <span>{new Date(alert.triggered_at).toLocaleString()}</span>
+                      <span>{new Date(alert.triggered_at).toLocaleString('vi-VN')}</span>
                     </div>
+                    {alert.recommended_action && (
+                      <div className="mt-1.5 flex items-start gap-1.5 rounded-md bg-blue-50 dark:bg-blue-950/30 px-2.5 py-1.5 text-xs text-blue-700 dark:text-blue-300">
+                        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        <span>{alert.recommended_action}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {!alert.is_read && (
@@ -218,5 +223,43 @@ function MetricCard({
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
+  )
+}
+
+function severityBorderColor(severity: AlertSeverity) {
+  switch (severity) {
+    case 'high': return 'border-l-destructive bg-destructive/5'
+    case 'medium': return 'border-l-amber-500 bg-amber-500/5'
+    case 'low': return 'border-l-blue-400 bg-blue-400/5'
+  }
+}
+
+function severityIconBg(severity: AlertSeverity) {
+  switch (severity) {
+    case 'high': return 'bg-destructive/10 text-destructive'
+    case 'medium': return 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+    case 'low': return 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+  }
+}
+
+function severityIcon(severity: AlertSeverity) {
+  switch (severity) {
+    case 'high': return <AlertCircle className="h-4 w-4" />
+    case 'medium': return <AlertTriangle className="h-4 w-4" />
+    case 'low': return <Info className="h-4 w-4" />
+  }
+}
+
+function SeverityBadge({ severity }: { severity: AlertSeverity }) {
+  const label: Record<AlertSeverity, string> = { high: 'Nghiêm trọng', medium: 'Trung bình', low: 'Thấp' }
+  const variant: Record<AlertSeverity, string> = {
+    high: 'bg-destructive/10 text-destructive',
+    medium: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+    low: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  }
+  return (
+    <Badge className={cn('px-2 py-0.5 text-[10px] font-medium border-0', variant[severity])}>
+      {label[severity]}
+    </Badge>
   )
 }

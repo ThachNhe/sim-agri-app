@@ -3,12 +3,16 @@ from uuid import UUID
 from datetime import datetime
 
 
+class SensorReadingCreate(BaseModel):
+    sensor_id: UUID
+    value: float
+
+
 class SensorReadingResponse(BaseModel):
     id: UUID
-    device_id: UUID
-    temperature: float
-    humidity: float
-    soil_moisture: float | None = None
+    sensor_id: UUID
+    value: float
     recorded_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+

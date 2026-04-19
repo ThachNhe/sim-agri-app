@@ -71,6 +71,7 @@ def create_refresh_token(subject: Any) -> str:
 
 def decode_token(token: str) -> Optional[dict]:
     try:
+        print("Check settings.JWT_SECRET_KEY:", settings.JWT_SECRET_KEY, flush=True)  # Debug log
         payload = jwt.decode(
             token,
             settings.JWT_SECRET_KEY,

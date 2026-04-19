@@ -21,14 +21,28 @@ def get_reading_service(db: AsyncSession = Depends(get_db)) -> SensorReadingServ
 @router.get(
     "",
     response_model=BaseResponse[List[SensorReadingResponse]],
-    summary="Lấy dữ liệu cảm biến",
+    summary="Lấy dữ liệu cảm biến theo thời gian",
 )
 async def get_readings(
-    device_id: UUID,
+    sensor_id: UUID,
     from_date: datetime,
     to_date: datetime,
     current_user: CurrentUser,
     service: SensorReadingService = Depends(get_reading_service),
 ):
-    data = await service.get_readings(device_id, from_date, to_date, current_user)
+    data = await service.get_readings(sensor_id, from_date, to_date, current_user)
+    return BaseResponse.ok(data=data)
+
+
+@router.get(
+    "/latest",
+    response_model=BaseResponse[List[SensorReadingResponse]],
+    summary="Giá trị mới nhất của tất cả cảm biến trong khu vực",
+)
+async def get_latest_readings(
+    zone_id: UUID,
+    current_user: CurrentUser,
+    service: SensorReadingService = Depends(get_reading_service),
+):
+    data = await service.get_latest_by_zone(zone_id, current_user)
     return BaseResponse.ok(data=data)

@@ -30,18 +30,18 @@ def _set_token_cookies(response: Response, access_token: str, refresh_token: str
         httponly=True,
         secure=settings.is_production,
         samesite="lax",
-        max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        max_age=7 * 24 * 60 * 60,  # 7 days
         path="/",
     )
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
-        httponly=True,
-        secure=settings.is_production,
-        samesite="lax",
-        max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
-        path="/api/v1/auth",  # only sent to auth endpoints
-    )
+            httponly=True,
+            secure=settings.is_production,
+            samesite="lax",
+            max_age=30 * 24 * 60 * 60,  # 7 days
+            path="/api/v1/auth",  # only sent to auth endpoints
+        )
 
 
 def _clear_token_cookies(response: Response):

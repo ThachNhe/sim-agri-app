@@ -4,13 +4,13 @@ services:
       context: ./be
       dockerfile: Dockerfile
       target: development
-    container_name: fastapi_app
+    container_name: agri_app_server
     ports:
       - "8000:8000"
     volumes:
       - ./be:/app
     env_file:
-      - .env
+      - ./be/.env
     environment:
       MAIL_HOST: mailhog
       MAIL_PORT: 1025
@@ -27,11 +27,11 @@ services:
 
   db:
     image: postgres:16-alpine
-    container_name: fastapi_db
+    container_name: agri_app_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: fastapi_db
+      POSTGRES_DB: agri_db
     ports:
       - "5436:5432"
     volumes:

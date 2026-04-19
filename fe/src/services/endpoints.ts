@@ -1,11 +1,5 @@
 /**
  * Centralized API endpoints.
- * All endpoints are defined here to avoid magic strings scattered across the codebase.
- *
- * Usage:
- *   import { API_ENDPOINTS } from '@/services/endpoints'
- *   api.get(API_ENDPOINTS.USERS.LIST)
- *   api.get(API_ENDPOINTS.USERS.BY_ID(userId))
  */
 
 export const API_ENDPOINTS = {
@@ -20,18 +14,46 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: '/auth/reset-password',
   },
 
-  // ─── Devices ─────────────────────────────────────────────────────────────
-  DEVICES: {
-    LIST: '/devices',
-    BY_ID: (id: string) => `/devices/${id}`,
-    CREATE: '/devices',
-    UPDATE: (id: string) => `/devices/${id}`,
-    DELETE: (id: string) => `/devices/${id}`,
+  // ─── Plant Profiles ───────────────────────────────────────────────────────
+  PLANT_PROFILES: {
+    LIST: '/plant-profiles',
+    BY_ID: (id: string) => `/plant-profiles/${id}`,
+    CREATE: '/plant-profiles',
+    UPDATE: (id: string) => `/plant-profiles/${id}`,
+    DELETE: (id: string) => `/plant-profiles/${id}`,
+  },
+
+  // ─── Growing Zones ────────────────────────────────────────────────────────
+  ZONES: {
+    LIST: '/zones',
+    BY_ID: (id: string) => `/zones/${id}`,
+    CREATE: '/zones',
+    UPDATE: (id: string) => `/zones/${id}`,
+    DELETE: (id: string) => `/zones/${id}`,
+  },
+
+  // ─── Sensors ─────────────────────────────────────────────────────────────
+  SENSORS: {
+    LIST: '/sensors',           // requires ?zone_id=
+    CREATE: '/sensors',
+    UPDATE: (id: string) => `/sensors/${id}`,
+    DELETE: (id: string) => `/sensors/${id}`,
+  },
+
+  // ─── Actuators ───────────────────────────────────────────────────────────
+  ACTUATORS: {
+    LIST: '/actuators',         // requires ?zone_id=
+    CREATE: '/actuators',
+    UPDATE: (id: string) => `/actuators/${id}`,
+    DELETE: (id: string) => `/actuators/${id}`,
+    COMMAND: (id: string) => `/actuators/${id}/command`,
+    COMMANDS: (id: string) => `/actuators/${id}/commands`,
   },
 
   // ─── Readings ────────────────────────────────────────────────────────────
   READINGS: {
-    LIST: '/readings', // requires ?device_id=&from=&to=
+    LIST: '/readings',           // requires ?sensor_id=&from_date=&to_date=
+    LATEST: '/readings/latest',  // requires ?zone_id=
   },
 
   // ─── Alerts ──────────────────────────────────────────────────────────────
@@ -53,3 +75,4 @@ export const API_ENDPOINTS = {
     UPDATE_USER_STATUS: (id: string) => `/admin/users/${id}/status`,
   },
 } as const
+

@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, func
 
 from app.models.alert import Alert
-from app.models.device import Device
+from app.models.growing_zone import GrowingZone
 from app.repositories.base import BaseRepository
 
 
@@ -17,8 +17,8 @@ class AlertRepository(BaseRepository[Alert]):
     ) -> List[Alert]:
         result = await self.db.execute(
             select(Alert)
-            .join(Device)
-            .where(Device.owner_id == owner_id)
+            .join(GrowingZone)
+            .where(GrowingZone.owner_id == owner_id)
             .order_by(Alert.triggered_at.desc())
             .offset(skip)
             .limit(limit)
@@ -28,9 +28,9 @@ class AlertRepository(BaseRepository[Alert]):
     async def get_by_owner_and_id(self, owner_id: UUID, alert_id: UUID) -> Optional[Alert]:
         result = await self.db.execute(
             select(Alert)
-            .join(Device)
+            .join(GrowingZone)
             .where(Alert.id == alert_id)
-            .where(Device.owner_id == owner_id)
+            .where(GrowingZone.owner_id == owner_id)
         )
         return result.scalar_one_or_none()
 
@@ -48,21 +48,12 @@ class AlertRepository(BaseRepository[Alert]):
         read_query = select(func.count(Alert.id)).where(Alert.is_read.is_(True))
 
         if owner_id is not None:
-            total_query = total_query.join(Device).where(Device.owner_id == owner_id)
-            read_query = read_query.join(Device).where(Device.owner_id == owner_id)
+            total_query = total_query.join(GrowingZone).where(GrowingZone.owner_id == owner_id)
+            read_query = read_query.join(GrowingZone).where(GrowingZone.owner_id == owner_id)
 
         total_alerts = (await self.db.execute(total_query)).scalar() or 0
         read_alerts = (await self.db.execute(read_query)).scalar() or 0
         return total_alerts, read_alerts
-
-    async def get_unread_count(self, owner_id: UUID) -> int:
-        result = await self.db.execute(
-            select(func.count(Alert.id))
-            .join(Device)
-            .where(Device.owner_id == owner_id)
-            .where(Alert.is_read == False)
-        )
-        return result.scalar_one()
 
     async def mark_as_read(self, alert_id: UUID) -> Optional[Alert]:
         result = await self.db.execute(

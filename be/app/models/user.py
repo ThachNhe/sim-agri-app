@@ -6,7 +6,8 @@ import uuid
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.device import Device
+    from app.models.growing_zone import GrowingZone
+    from app.models.actuator_command import ActuatorCommand
 
 from app.core.database import Base
 from app.constants.enums import UserRole, UserStatus
@@ -38,7 +39,12 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    devices: Mapped[list["Device"]] = relationship("Device", back_populates="owner", cascade="all, delete-orphan")
+    zones: Mapped[list["GrowingZone"]] = relationship(
+        "GrowingZone", back_populates="owner", cascade="all, delete-orphan"
+    )
+    commands: Mapped[list["ActuatorCommand"]] = relationship(
+        "ActuatorCommand", back_populates="user"
+    )
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email}>"
