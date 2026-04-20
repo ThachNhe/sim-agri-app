@@ -26,7 +26,8 @@ class SensorService:
     async def create_sensor(self, payload: SensorCreate, user: User) -> SensorResponse:
         await self._check_zone_access(payload.zone_id, user)
         unit = payload.unit or SENSOR_UNIT.get(payload.sensor_type, "")
-        sensor = Sensor(**payload.model_dump(), unit=unit)
+        sensor_data = payload.model_dump(exclude={"unit"})
+        sensor = Sensor(**sensor_data, unit=unit)
         sensor.unit = unit
         sensor = await self.repo.create(sensor)
         return SensorResponse.model_validate(sensor)
