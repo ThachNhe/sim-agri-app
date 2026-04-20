@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, Request, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants.messages import SuccessMessage
@@ -22,8 +22,8 @@ def get_auth_service(db: AsyncSession = Depends(get_db)) -> AuthService:
     return AuthService(db)
 
 
-def _set_token_cookies(response: Response, access_token: str, refresh_token: str):
-    """Set access_token & refresh_token as HttpOnly cookies."""
+def _set_token_cookies(response: Response, access_token: str):
+    """Set access_token as HttpOnly cookie (7 days)."""
     response.set_cookie(
         key="access_token",
         value=access_token,
@@ -33,21 +33,11 @@ def _set_token_cookies(response: Response, access_token: str, refresh_token: str
         max_age=7 * 24 * 60 * 60,  # 7 days
         path="/",
     )
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-            httponly=True,
-            secure=settings.is_production,
-            samesite="lax",
-            max_age=30 * 24 * 60 * 60,  # 7 days
-            path="/api/v1/auth",  # only sent to auth endpoints
-        )
 
 
 def _clear_token_cookies(response: Response):
     """Clear auth cookies."""
     response.delete_cookie(key="access_token", path="/")
-    response.delete_cookie(key="refresh_token", path="/api/v1/auth")
 
 
 @router.post(
@@ -75,33 +65,12 @@ async def login(
     service: AuthService = Depends(get_auth_service),
 ):
     data = await service.login(payload)
-    _set_token_cookies(response, data.tokens.access_token, data.tokens.refresh_token)
+    _set_token_cookies(response, data.tokens.access_token)
     # Only return user info, tokens are in cookies
     return BaseResponse.ok(
         data=LoginResponse(user=data.user),
         message=SuccessMessage.LOGIN_SUCCESS,
     )
-
-
-@router.post(
-    "/refresh",
-    response_model=BaseResponse[UserResponse],
-    summary="Làm mới access token",
-)
-async def refresh_token(
-    request: Request,
-    response: Response,
-    service: AuthService = Depends(get_auth_service),
-):
-    token = request.cookies.get("refresh_token")
-    if not token:
-        from app.core.exception import UnauthorizedException
-        from app.constants.messages import ErrorMessage
-        raise UnauthorizedException(ErrorMessage.TOKEN_INVALID)
-
-    data = await service.refresh_token(token)
-    _set_token_cookies(response, data["tokens"].access_token, data["tokens"].refresh_token)
-    return BaseResponse.ok(data=data["user"])
 
 
 @router.post(

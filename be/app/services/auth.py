@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.constants.enums import TokenType, UserStatus
+from app.constants.enums import UserStatus
 from app.constants.messages import ErrorMessage
 from app.core.exception import (
     BadRequestException,
@@ -19,7 +19,6 @@ from app.schemas.auth import (
 )
 from app.utils.security import (
     create_access_token,
-    create_refresh_token,
     decode_token,
     hash_password,
     verify_password,
@@ -58,27 +57,6 @@ class AuthService:
         tokens = self._generate_tokens(user)
         return LoginResponse(user=UserResponse.model_validate(user), tokens=tokens)
 
-    # ── Refresh token ─────────────────────────────────────────────────────────
-
-    async def refresh_token(self, token: str) -> dict:
-        """Nhận refresh_token string từ cookie, trả về tokens mới + user."""
-        token_data = decode_token(token)
-
-        if not token_data or token_data.get("type") != TokenType.REFRESH:
-            raise UnauthorizedException(ErrorMessage.TOKEN_INVALID)
-
-        user = await self.user_repo.get_by_id(token_data["sub"])
-        if not user:
-            raise UnauthorizedException(ErrorMessage.USER_NOT_FOUND)
-
-        self._check_user_status(user)
-
-        tokens = self._generate_tokens(user)
-        return {
-            "tokens": tokens,
-            "user": UserResponse.model_validate(user),
-        }
-
     # ── Change password ───────────────────────────────────────────────────────
 
     async def change_password(
@@ -111,5 +89,4 @@ class AuthService:
             subject=str(user.id),
             extra={"role": user.role, "email": user.email},
         )
-        refresh_token = create_refresh_token(subject=str(user.id))
-        return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+        return TokenResponse(access_token=access_token)

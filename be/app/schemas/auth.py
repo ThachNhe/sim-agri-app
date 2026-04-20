@@ -58,7 +58,6 @@ class TokenResponse(BaseModel):
     """Internal use only — not exposed to client."""
 
     access_token: str
-    refresh_token: str
 
 
 class LoginResponse(BaseModel):

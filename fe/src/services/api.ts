@@ -1,7 +1,6 @@
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import axios, { type AxiosError } from 'axios'
 import { useAuthStore } from '@/stores/useAuthStore'
 import type { ApiErrorResponse } from '@/types/api.types'
-import { API_ENDPOINTS } from './endpoints'
 
 // ─── Axios Instance ────────────────────────────────────────────────────────
 
@@ -14,62 +13,15 @@ export const api = axios.create({
   withCredentials: true, // Always send cookies
 })
 
-// ─── Token Refresh Logic ───────────────────────────────────────────────────
-
-let isRefreshing = false
-let failedQueue: Array<{
-  resolve: (value?: unknown) => void
-  reject: (err: unknown) => void
-}> = []
-
-const processQueue = (error: unknown) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error)
-    } else {
-      prom.resolve()
-    }
-  })
-  failedQueue = []
-}
-
 // ─── Response Interceptor ──────────────────────────────────────────────────
 
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiErrorResponse>) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean
-    }
-
-    // Handle 401 - attempt token refresh via cookie
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        // Queue requests while refreshing
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject })
-        })
-          .then(() => api(originalRequest))
-          .catch((err) => Promise.reject(err))
-      }
-
-      originalRequest._retry = true
-      isRefreshing = true
-
-      try {
-        // Call refresh endpoint — refresh_token cookie is sent automatically
-        await api.post(API_ENDPOINTS.AUTH.REFRESH)
-        processQueue(null)
-        // Retry the original request — new access_token cookie is now set
-        return api(originalRequest)
-      } catch (refreshError) {
-        processQueue(refreshError)
-        useAuthStore.getState().logout()
-        window.location.href = '/login'
-        return Promise.reject(refreshError)
-      } finally {
-        isRefreshing = false
-      }
+    // On 401, token expired — auto logout and redirect to login
+    if (error.response?.status === 401) {
+      useAuthStore.getState().logout()
+      window.location.href = '/login'
     }
 
     return Promise.reject(error)
