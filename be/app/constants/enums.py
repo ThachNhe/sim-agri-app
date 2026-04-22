@@ -54,6 +54,7 @@ class ActuatorState(str, Enum):
 class AlertType(str, Enum):
     ABOVE_MAX = "above_max"       # Thông số vượt ngưỡng tối đa
     BELOW_MIN = "below_min"       # Thông số dưới ngưỡng tối thiểu
+    COMPOUND_CONDITION = "compound_condition"
     DEVICE_OFFLINE = "device_offline"
 
 

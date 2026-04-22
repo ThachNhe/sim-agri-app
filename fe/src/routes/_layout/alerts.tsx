@@ -45,7 +45,7 @@ function AlertsPage() {
   const canLoadFarmData = !isAdmin || Boolean(selectedFarmId)
   const alertsOwnerId = isAdmin ? selectedFarmId || undefined : undefined
 
-  const { data: res, isLoading: isAlertsLoading } = useAlerts(alertsOwnerId, !isAdmin, 12)
+  const { data: res, isLoading: isAlertsLoading } = useAlerts(alertsOwnerId, !isAdmin)
   const alerts = res?.data || []
 
   const { data: summaryRes, isLoading: isSummaryLoading } = useAlertSummary(
@@ -145,7 +145,7 @@ function AlertsPage() {
           Không có cảnh báo nào của bạn
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="max-h-[calc(100vh-18rem)] space-y-2 overflow-y-auto pr-2 overscroll-contain">
           {alerts.map(alert => (
             <Card
               key={alert.id}

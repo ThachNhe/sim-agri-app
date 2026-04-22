@@ -191,7 +191,7 @@ export interface SensorReading {
 
 // ─── Alert ─────────────────────────────────────────────────────────────────
 
-export type AlertType = 'above_max' | 'below_min' | 'device_offline'
+export type AlertType = 'above_max' | 'below_min' | 'compound_condition' | 'device_offline'
 export type AlertSeverity = 'low' | 'medium' | 'high'
 
 export interface Alert {

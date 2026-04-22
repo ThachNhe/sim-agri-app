@@ -13,16 +13,18 @@ class AlertRepository(BaseRepository[Alert]):
         super().__init__(Alert, db)
 
     async def get_by_owner(
-        self, owner_id: UUID, skip: int = 0, limit: int = 100
+        self, owner_id: UUID, skip: int = 0, limit: int | None = None
     ) -> List[Alert]:
-        result = await self.db.execute(
+        query = (
             select(Alert)
             .join(GrowingZone)
             .where(GrowingZone.owner_id == owner_id)
             .order_by(Alert.triggered_at.desc())
             .offset(skip)
-            .limit(limit)
         )
+        if limit is not None:
+            query = query.limit(limit)
+        result = await self.db.execute(query)
         return list(result.scalars().all())
 
     async def get_by_owner_and_id(self, owner_id: UUID, alert_id: UUID) -> Optional[Alert]:
@@ -34,13 +36,11 @@ class AlertRepository(BaseRepository[Alert]):
         )
         return result.scalar_one_or_none()
 
-    async def get_all_ordered(self, skip: int = 0, limit: int = 100) -> List[Alert]:
-        result = await self.db.execute(
-            select(Alert)
-            .order_by(Alert.triggered_at.desc())
-            .offset(skip)
-            .limit(limit)
-        )
+    async def get_all_ordered(self, skip: int = 0, limit: int | None = None) -> List[Alert]:
+        query = select(Alert).order_by(Alert.triggered_at.desc()).offset(skip)
+        if limit is not None:
+            query = query.limit(limit)
+        result = await self.db.execute(query)
         return list(result.scalars().all())
 
     async def get_summary(self, owner_id: Optional[UUID] = None) -> tuple[int, int]:

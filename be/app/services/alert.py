@@ -16,7 +16,7 @@ class AlertService:
         self.alert_repo = AlertRepository(db)
 
     async def get_alerts(
-        self, user: User, skip: int = 0, limit: int = 100, owner_id: UUID | None = None
+        self, user: User, skip: int = 0, limit: int | None = None, owner_id: UUID | None = None
     ) -> List[AlertResponse]:
         if user.role == UserRole.ADMIN:
             if owner_id is not None:

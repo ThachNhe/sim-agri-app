@@ -26,7 +26,7 @@ async def get_alerts(
     current_user: CurrentUser,
     owner_id: UUID | None = None,
     skip: int = 0,
-    limit: int = 100,
+    limit: int | None = None,
     service: AlertService = Depends(get_alert_service),
 ):
     data = await service.get_alerts(current_user, skip, limit, owner_id)
