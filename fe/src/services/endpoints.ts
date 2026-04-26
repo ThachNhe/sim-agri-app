@@ -22,13 +22,11 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/plant-profiles/${id}`,
   },
 
-  // ─── Growing Zones ────────────────────────────────────────────────────────
+  // ─── Growing Zones (Farmer) ───────────────────────────────────────────────
   ZONES: {
     LIST: '/zones',
     BY_ID: (id: string) => `/zones/${id}`,
-    CREATE: '/zones',
     UPDATE: (id: string) => `/zones/${id}`,
-    DELETE: (id: string) => `/zones/${id}`,
   },
 
   // ─── Sensors ─────────────────────────────────────────────────────────────
@@ -69,9 +67,21 @@ export const API_ENDPOINTS = {
 
   // ─── Admin ───────────────────────────────────────────────────────────────
   ADMIN: {
+    // Farmer accounts
     USERS: '/admin/users',
     CREATE_USER: '/admin/users',
     UPDATE_USER_STATUS: (id: string) => `/admin/users/${id}/status`,
+    // Zone management
+    ZONES: '/admin/zones',
+    ZONE_BY_ID: (id: string) => `/admin/zones/${id}`,
+    CREATE_ZONE: '/admin/zones',
+    UPDATE_ZONE: (id: string) => `/admin/zones/${id}`,
+    DELETE_ZONE: (id: string) => `/admin/zones/${id}`,
+    // Farmer ↔ zone assignments
+    ZONE_FARMERS: (zoneId: string) => `/admin/zones/${zoneId}/farmers`,
+    ASSIGN_FARMER: (zoneId: string) => `/admin/zones/${zoneId}/farmers`,
+    UNASSIGN_FARMER: (zoneId: string, farmerId: string) =>
+      `/admin/zones/${zoneId}/farmers/${farmerId}`,
   },
 } as const
 

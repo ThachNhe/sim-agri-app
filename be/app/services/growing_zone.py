@@ -16,11 +16,11 @@ class GrowingZoneService:
         self.db = db
         self.repo = GrowingZoneRepository(db)
 
-    async def list_zones(self, user: User, owner_id: UUID | None = None) -> List[GrowingZoneResponse]:
+    async def list_zones(self, user: User) -> List[GrowingZoneResponse]:
         if user.role == UserRole.ADMIN:
-            zones = await self.repo.get_by_owner(owner_id) if owner_id else await self.repo.get_all_ordered()
+            zones = await self.repo.get_all_ordered()
         else:
-            zones = await self.repo.get_by_owner(user.id)
+            zones = await self.repo.get_by_farmer(user.id)
         return [GrowingZoneResponse.model_validate(z) for z in zones]
 
     async def get_zone(self, zone_id: UUID, user: User) -> GrowingZoneResponse:
@@ -28,9 +28,9 @@ class GrowingZoneService:
         return GrowingZoneResponse.model_validate(zone)
 
     async def create_zone(self, payload: GrowingZoneCreate, user: User) -> GrowingZoneResponse:
-        if user.role == UserRole.ADMIN:
-            raise ForbiddenException("Admin không thêm khu vực trồng trọt")
-        zone = GrowingZone(**payload.model_dump(), owner_id=user.id)
+        if user.role != UserRole.ADMIN:
+            raise ForbiddenException("Chỉ admin mới có quyền tạo khu vực trồng trọt")
+        zone = GrowingZone(**payload.model_dump())
         zone = await self.repo.create(zone)
         return GrowingZoneResponse.model_validate(zone)
 
@@ -43,13 +43,19 @@ class GrowingZoneService:
         return GrowingZoneResponse.model_validate(zone)
 
     async def delete_zone(self, zone_id: UUID, user: User) -> None:
-        zone = await self._get_and_check(zone_id, user)
+        if user.role != UserRole.ADMIN:
+            raise ForbiddenException("Chỉ admin mới có quyền xóa khu vực trồng trọt")
+        zone = await self.repo.get_by_id(zone_id)
+        if not zone:
+            raise NotFoundException("Khu vực trồng trọt không tồn tại")
         await self.repo.delete(zone)
 
     async def _get_and_check(self, zone_id: UUID, user: User) -> GrowingZone:
         zone = await self.repo.get_by_id(zone_id)
         if not zone:
             raise NotFoundException("Khu vực trồng trọt không tồn tại")
-        if user.role != UserRole.ADMIN and zone.owner_id != user.id:
-            raise ForbiddenException("Bạn không có quyền truy cập khu vực này")
+        if user.role != UserRole.ADMIN:
+            assigned = await self.repo.is_farmer_assigned(zone_id, user.id)
+            if not assigned:
+                raise ForbiddenException("Bạn không có quyền truy cập khu vực này")
         return zone

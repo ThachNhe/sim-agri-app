@@ -6,17 +6,17 @@ import uuid
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.user import User
     from app.models.plant_profile import PlantProfile
     from app.models.sensor import Sensor
     from app.models.actuator import Actuator
     from app.models.alert import Alert
+    from app.models.farmer_zone_assignment import FarmerZoneAssignment
 
 from app.core.database import Base
 
 
 class GrowingZone(Base):
-    """Khu vực trồng trọt – một vùng đất/nhà kính của nông dân, trồng một loại cây nhất định."""
+    """Khu vực trồng trọt – được tạo bởi admin và phân công cho nông dân."""
 
     __tablename__ = "growing_zones"
 
@@ -33,9 +33,6 @@ class GrowingZone(Base):
         ForeignKey("plant_profiles.id", ondelete="SET NULL"),
         nullable=True,
     )
-    owner_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-    )
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     planting_date: Mapped[date] = mapped_column(Date, nullable=True)
@@ -48,7 +45,6 @@ class GrowingZone(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    owner: Mapped["User"] = relationship("User", back_populates="zones")
     plant_profile: Mapped["PlantProfile"] = relationship(
         "PlantProfile", back_populates="zones"
     )
@@ -57,6 +53,9 @@ class GrowingZone(Base):
     )
     actuators: Mapped[list["Actuator"]] = relationship(
         "Actuator", back_populates="zone", cascade="all, delete-orphan"
+    )
+    farmer_assignments: Mapped[list["FarmerZoneAssignment"]] = relationship(
+        "FarmerZoneAssignment", back_populates="zone", cascade="all, delete-orphan"
     )
     alerts: Mapped[list["Alert"]] = relationship(
         "Alert", back_populates="zone", cascade="all, delete-orphan"

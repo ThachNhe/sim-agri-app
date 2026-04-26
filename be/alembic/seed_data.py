@@ -18,6 +18,7 @@ from app.models.sensor import Sensor
 from app.models.actuator import Actuator
 from app.constants.enums import UserRole, UserStatus, SensorType, ActuatorType, SENSOR_UNIT
 from app.utils.security import hash_password
+from app.models.farmer_zone_assignment import FarmerZoneAssignment
 
 
 SEED_USERS = [
@@ -241,7 +242,6 @@ async def seed(db: AsyncSession) -> None:
         existing_zone = (await db.execute(
             select(GrowingZone)
             .where(GrowingZone.name == zone_data["name"])
-            .where(GrowingZone.owner_id == owner.id)
         )).scalar_one_or_none()
 
         if existing_zone:
@@ -254,7 +254,6 @@ async def seed(db: AsyncSession) -> None:
             location=zone_data["location"],
             area_sqm=zone_data["area_sqm"],
             plant_profile_id=profile.id if profile else None,
-            owner_id=owner.id,
             planting_date=zone_data["planting_date"],
             expected_harvest_date=zone_data["expected_harvest_date"],
         )
@@ -262,6 +261,13 @@ async def seed(db: AsyncSession) -> None:
         await db.flush()
         await db.refresh(zone)
         print(f"  ✅ Tạo zone: {zone.name}")
+
+
+        assignment = FarmerZoneAssignment(
+            farmer_id=owner.id,
+            zone_id=zone.id,
+        )
+        db.add(assignment)
 
         for s_type, s_name in entry["sensors"]:
             sensor = Sensor(

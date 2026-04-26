@@ -29,8 +29,10 @@ class SensorReadingService:
         zone = await self.zone_repo.get_by_id(sensor.zone_id)
         if not zone:
             raise NotFoundException("Khu vực không tồn tại")
-        if user.role != UserRole.ADMIN and zone.owner_id != user.id:
-            raise ForbiddenException("Bạn không có quyền xem dữ liệu cảm biến này")
+        if user.role != UserRole.ADMIN:
+            assigned = await self.zone_repo.is_farmer_assigned(sensor.zone_id, user.id)
+            if not assigned:
+                raise ForbiddenException("Bạn không có quyền xem dữ liệu cảm biến này")
 
         readings = await self.reading_repo.get_by_sensor_and_date(sensor_id, from_date, to_date)
         return [SensorReadingResponse.model_validate(r) for r in readings]
@@ -39,8 +41,10 @@ class SensorReadingService:
         zone = await self.zone_repo.get_by_id(zone_id)
         if not zone:
             raise NotFoundException("Khu vực không tồn tại")
-        if user.role != UserRole.ADMIN and zone.owner_id != user.id:
-            raise ForbiddenException("Bạn không có quyền xem dữ liệu khu vực này")
+        if user.role != UserRole.ADMIN:
+            assigned = await self.zone_repo.is_farmer_assigned(zone_id, user.id)
+            if not assigned:
+                raise ForbiddenException("Bạn không có quyền xem dữ liệu khu vực này")
 
         readings = await self.reading_repo.get_latest_by_zone(zone_id)
         return [SensorReadingResponse.model_validate(r) for r in readings]

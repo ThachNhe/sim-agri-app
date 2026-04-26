@@ -90,12 +90,21 @@ export interface GrowingZone {
   location?: string
   area_sqm?: number
   plant_profile_id?: string
-  owner_id: string
   is_active: boolean
   planting_date?: string
   expected_harvest_date?: string
   created_at: string
   updated_at: string
+}
+
+export interface AssignedFarmerBrief {
+  id: string
+  full_name: string | null
+  email: string
+}
+
+export interface GrowingZoneAdminResponse extends GrowingZone {
+  assigned_farmers: AssignedFarmerBrief[]
 }
 
 // ─── Sensor ────────────────────────────────────────────────────────────────

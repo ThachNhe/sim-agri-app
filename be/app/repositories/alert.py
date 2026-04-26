@@ -5,6 +5,7 @@ from sqlalchemy import select, update, func
 
 from app.models.alert import Alert
 from app.models.growing_zone import GrowingZone
+from app.models.farmer_zone_assignment import FarmerZoneAssignment
 from app.repositories.base import BaseRepository
 
 
@@ -13,12 +14,16 @@ class AlertRepository(BaseRepository[Alert]):
         super().__init__(Alert, db)
 
     async def get_by_owner(
-        self, owner_id: UUID, skip: int = 0, limit: int | None = None
+        self, farmer_id: UUID, skip: int = 0, limit: int | None = None
     ) -> List[Alert]:
         query = (
             select(Alert)
-            .join(GrowingZone)
-            .where(GrowingZone.owner_id == owner_id)
+            .join(GrowingZone, GrowingZone.id == Alert.zone_id)
+            .join(
+                FarmerZoneAssignment,
+                (FarmerZoneAssignment.zone_id == GrowingZone.id)
+                & (FarmerZoneAssignment.farmer_id == farmer_id),
+            )
             .order_by(Alert.triggered_at.desc())
             .offset(skip)
         )
@@ -27,12 +32,16 @@ class AlertRepository(BaseRepository[Alert]):
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
-    async def get_by_owner_and_id(self, owner_id: UUID, alert_id: UUID) -> Optional[Alert]:
+    async def get_by_owner_and_id(self, farmer_id: UUID, alert_id: UUID) -> Optional[Alert]:
         result = await self.db.execute(
             select(Alert)
-            .join(GrowingZone)
+            .join(GrowingZone, GrowingZone.id == Alert.zone_id)
+            .join(
+                FarmerZoneAssignment,
+                (FarmerZoneAssignment.zone_id == GrowingZone.id)
+                & (FarmerZoneAssignment.farmer_id == farmer_id),
+            )
             .where(Alert.id == alert_id)
-            .where(GrowingZone.owner_id == owner_id)
         )
         return result.scalar_one_or_none()
 
@@ -43,13 +52,29 @@ class AlertRepository(BaseRepository[Alert]):
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
-    async def get_summary(self, owner_id: Optional[UUID] = None) -> tuple[int, int]:
+    async def get_summary(self, farmer_id: Optional[UUID] = None) -> tuple[int, int]:
         total_query = select(func.count(Alert.id))
         read_query = select(func.count(Alert.id)).where(Alert.is_read.is_(True))
 
-        if owner_id is not None:
-            total_query = total_query.join(GrowingZone).where(GrowingZone.owner_id == owner_id)
-            read_query = read_query.join(GrowingZone).where(GrowingZone.owner_id == owner_id)
+        if farmer_id is not None:
+            total_query = (
+                total_query
+                .join(GrowingZone, GrowingZone.id == Alert.zone_id)
+                .join(
+                    FarmerZoneAssignment,
+                    (FarmerZoneAssignment.zone_id == GrowingZone.id)
+                    & (FarmerZoneAssignment.farmer_id == farmer_id),
+                )
+            )
+            read_query = (
+                read_query
+                .join(GrowingZone, GrowingZone.id == Alert.zone_id)
+                .join(
+                    FarmerZoneAssignment,
+                    (FarmerZoneAssignment.zone_id == GrowingZone.id)
+                    & (FarmerZoneAssignment.farmer_id == farmer_id),
+                )
+            )
 
         total_alerts = (await self.db.execute(total_query)).scalar() or 0
         read_alerts = (await self.db.execute(read_query)).scalar() or 0

@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr, field_validator
+from uuid import UUID
 
 from app.constants.enums import UserStatus
+from app.schemas.growing_zone import GrowingZoneCreate
 
 
 class CreateFarmerRequest(BaseModel):
@@ -18,3 +20,12 @@ class CreateFarmerRequest(BaseModel):
 
 class UpdateUserStatusRequest(BaseModel):
     status: UserStatus
+
+
+class AdminCreateZoneRequest(GrowingZoneCreate):
+    """Admin tạo khu vực trồng trọt mới."""
+    pass
+
+
+class AssignFarmerRequest(BaseModel):
+    farmer_id: UUID

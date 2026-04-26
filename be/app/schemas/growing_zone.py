@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from uuid import UUID
 from datetime import datetime, date
+from typing import List
 
 
 class GrowingZoneBase(BaseModel):
@@ -30,9 +31,20 @@ class GrowingZoneUpdate(BaseModel):
 
 class GrowingZoneResponse(GrowingZoneBase):
     id: UUID
-    owner_id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class AssignedFarmerBrief(BaseModel):
+    id: UUID
+    full_name: str | None = None
+    email: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GrowingZoneAdminResponse(GrowingZoneResponse):
+    assigned_farmers: List[AssignedFarmerBrief] = []

@@ -24,12 +24,12 @@ def get_alert_service(db: AsyncSession = Depends(get_db)) -> AlertService:
 )
 async def get_alerts(
     current_user: CurrentUser,
-    owner_id: UUID | None = None,
+    farmer_id: UUID | None = None,
     skip: int = 0,
     limit: int | None = None,
     service: AlertService = Depends(get_alert_service),
 ):
-    data = await service.get_alerts(current_user, skip, limit, owner_id)
+    data = await service.get_alerts(current_user, skip, limit, farmer_id)
     return BaseResponse.ok(data=data)
 
 
@@ -40,10 +40,10 @@ async def get_alerts(
 )
 async def get_alert_summary(
     current_user: CurrentUser,
-    owner_id: UUID | None = None,
+    farmer_id: UUID | None = None,
     service: AlertService = Depends(get_alert_service),
 ):
-    data = await service.get_summary(current_user, owner_id)
+    data = await service.get_summary(current_user, farmer_id)
     return BaseResponse.ok(data=data)
 
 

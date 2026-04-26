@@ -4,12 +4,12 @@ import { API_ENDPOINTS } from '@/services/endpoints'
 import type { Alert, AlertSummary } from '@/types/common.types'
 import type { ApiResponse } from '@/types/api.types'
 
-export const useAlerts = (ownerId?: string, enabled = true, limit?: number) => {
+export const useAlerts = (farmerId?: string, enabled = true, limit?: number) => {
   return useQuery({
-    queryKey: ['alerts', ownerId ?? 'all', limit ?? 'all'],
+    queryKey: ['alerts', farmerId ?? 'all', limit ?? 'all'],
     queryFn: () =>
       apiGet<ApiResponse<Alert[]>>(API_ENDPOINTS.ALERTS.LIST, {
-        ...(ownerId ? { owner_id: ownerId } : {}),
+        ...(farmerId ? { farmer_id: farmerId } : {}),
         ...(limit !== undefined ? { limit } : {}),
       }),
     enabled,
@@ -17,11 +17,11 @@ export const useAlerts = (ownerId?: string, enabled = true, limit?: number) => {
   })
 }
 
-export const useAlertSummary = (ownerId?: string, enabled = true) => {
+export const useAlertSummary = (farmerId?: string, enabled = true) => {
   return useQuery({
-    queryKey: ['alerts-summary', ownerId ?? 'all'],
+    queryKey: ['alerts-summary', farmerId ?? 'all'],
     queryFn: () =>
-      apiGet<ApiResponse<AlertSummary>>(API_ENDPOINTS.ALERTS.SUMMARY, ownerId ? { owner_id: ownerId } : undefined),
+      apiGet<ApiResponse<AlertSummary>>(API_ENDPOINTS.ALERTS.SUMMARY, farmerId ? { farmer_id: farmerId } : undefined),
     enabled,
     refetchInterval: 30000,
   })

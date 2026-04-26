@@ -9,6 +9,7 @@ from app.core.database import get_db
 from app.dependencies.auth import CurrentUser
 from app.schemas.base_response import BaseResponse
 from app.models.growing_zone import GrowingZone
+from app.models.farmer_zone_assignment import FarmerZoneAssignment
 from app.models.alert import Alert
 from app.models.sensor import Sensor
 from app.models.sensor_reading import SensorReading
@@ -43,15 +44,20 @@ class DashboardSummary(BaseModel):
 )
 async def get_dashboard_summary(
     current_user: CurrentUser,
-    owner_id: UUID | None = None,
+    farmer_id: UUID | None = None,
     db: AsyncSession = Depends(get_db),
 ):
-    target_owner_id = owner_id if current_user.role == UserRole.ADMIN else current_user.id
+    # Admin can optionally filter by a specific farmer; farmers always see their own zones
+    target_farmer_id = farmer_id if current_user.role == UserRole.ADMIN else current_user.id
 
     # ── Zones ──────────────────────────────────────────────────────────────
     zones_q = select(GrowingZone)
-    if target_owner_id:
-        zones_q = zones_q.where(GrowingZone.owner_id == target_owner_id)
+    if target_farmer_id:
+        zones_q = zones_q.join(
+            FarmerZoneAssignment,
+            (FarmerZoneAssignment.zone_id == GrowingZone.id)
+            & (FarmerZoneAssignment.farmer_id == target_farmer_id),
+        )
     zones = list((await db.execute(zones_q)).scalars().all())
 
     total_zones = len(zones)

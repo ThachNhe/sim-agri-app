@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useSensors, useCreateSensor, useDeleteSensor } from '@/hooks/useSensors'
 import { useZones } from '@/hooks/useZones'
+import { useAdminZones } from '@/hooks/useAdminZones'
 import { useReadings } from '@/hooks/useReadings'
 import { useUsers } from '@/hooks/useUsers'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -48,8 +49,12 @@ function SensorsPage() {
     const canLoad = !isAdmin || Boolean(selectedFarmId)
     const ownerId = isAdmin ? selectedFarmId || undefined : undefined
 
-    const { data: zonesRes } = useZones(ownerId, canLoad)
-    const zones = zonesRes?.data || []
+    const { data: adminZonesRes } = useAdminZones(isAdmin && canLoad)
+    const { data: farmerZonesRes } = useZones(!isAdmin && canLoad)
+    const allAdminZones = adminZonesRes?.data || []
+    const zones = isAdmin
+        ? allAdminZones.filter(z => z.assigned_farmers.some(f => f.id === ownerId))
+        : (farmerZonesRes?.data || [])
 
     const [selectedZoneId, setSelectedZoneId] = useState('')
     useEffect(() => {

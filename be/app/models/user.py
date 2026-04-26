@@ -6,7 +6,7 @@ import uuid
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.growing_zone import GrowingZone
+    from app.models.farmer_zone_assignment import FarmerZoneAssignment
     from app.models.actuator_command import ActuatorCommand
 
 from app.core.database import Base
@@ -39,8 +39,8 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    zones: Mapped[list["GrowingZone"]] = relationship(
-        "GrowingZone", back_populates="owner", cascade="all, delete-orphan"
+    zone_assignments: Mapped[list["FarmerZoneAssignment"]] = relationship(
+        "FarmerZoneAssignment", back_populates="farmer", cascade="all, delete-orphan"
     )
     commands: Mapped[list["ActuatorCommand"]] = relationship(
         "ActuatorCommand", back_populates="user"

@@ -16,11 +16,11 @@ class AlertService:
         self.alert_repo = AlertRepository(db)
 
     async def get_alerts(
-        self, user: User, skip: int = 0, limit: int | None = None, owner_id: UUID | None = None
+        self, user: User, skip: int = 0, limit: int | None = None, farmer_id: UUID | None = None
     ) -> List[AlertResponse]:
         if user.role == UserRole.ADMIN:
-            if owner_id is not None:
-                alerts = await self.alert_repo.get_by_owner(owner_id, skip, limit)
+            if farmer_id is not None:
+                alerts = await self.alert_repo.get_by_owner(farmer_id, skip, limit)
             else:
                 alerts = await self.alert_repo.get_all_ordered(skip, limit)
         else:
@@ -28,10 +28,10 @@ class AlertService:
         return [AlertResponse.model_validate(a) for a in alerts]
 
     async def get_summary(
-        self, user: User, owner_id: UUID | None = None
+        self, user: User, farmer_id: UUID | None = None
     ) -> AlertSummaryResponse:
-        summary_owner_id = owner_id if user.role == UserRole.ADMIN else user.id
-        total_alerts, read_alerts = await self.alert_repo.get_summary(summary_owner_id)
+        summary_farmer_id = farmer_id if user.role == UserRole.ADMIN else user.id
+        total_alerts, read_alerts = await self.alert_repo.get_summary(summary_farmer_id)
         return AlertSummaryResponse(
             total_alerts=total_alerts,
             read_alerts=read_alerts,

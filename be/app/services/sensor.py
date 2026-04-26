@@ -48,8 +48,10 @@ class SensorService:
         zone = await self.zone_repo.get_by_id(zone_id)
         if not zone:
             raise NotFoundException("Khu vực trồng trọt không tồn tại")
-        if user.role != UserRole.ADMIN and zone.owner_id != user.id:
-            raise ForbiddenException("Bạn không có quyền truy cập khu vực này")
+        if user.role != UserRole.ADMIN:
+            assigned = await self.zone_repo.is_farmer_assigned(zone_id, user.id)
+            if not assigned:
+                raise ForbiddenException("Bạn không có quyền truy cập khu vực này")
 
     async def _get_sensor_with_access(self, sensor_id: UUID, user: User) -> Sensor:
         sensor = await self.repo.get_by_id(sensor_id)

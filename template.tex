@@ -1,0 +1,816 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{tocloft}
+\usepackage[utf8]{inputenc}
+\usepackage{vietnam}
+\usepackage{hyphenat}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage[vietnamese]{babel}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{datetime}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{scrextend}
+\usetikzlibrary{calc}
+
+\definecolor{myblue}{RGB}{0,0,255}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=myblue,
+	citecolor=myblue,
+	urlcolor=myblue
+}
+
+\addto\captionsvietnamese{\renewcommand{\abstractname}{Mở đầu}}
+\usepackage[letterpaper,top=2.5cm,bottom=3cm,left=3.5cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+\setlength{\parindent}{1.5cm}
+\setlength{\parskip}{0.25em}
+
+% Định dạng mục lục phân cấp đẹp
+\usepackage{tocloft}
+
+% Thụt lề theo cấp
+\setlength{\cftsubsecindent}{1.5em}
+\setlength{\cftsubsubsecindent}{3.5em}
+
+% Chấm dẫn cho tất cả các cấp
+\renewcommand{\cftsubsecdotsep}{\cftdotsep}
+\renewcommand{\cftsubsubsecdotsep}{\cftdotsep}
+
+% Cỡ chữ và kiểu chữ theo cấp
+\renewcommand{\cftsecfont}{\bfseries}          % section: in đậm
+\renewcommand{\cftsubsecfont}{\normalfont}     % subsection: thường
+\renewcommand{\cftsubsubsecfont}{\normalfont\small} % subsubsection: nhỏ hơn
+
+
+
+
+\begin{document}
+	%===========================
+	% Trang bìa
+	%===========================
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture,overlay,inner sep=0,outer sep=0]
+			\draw[blue!70!black,line width=4pt] ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--([xshift=1.5cm,yshift=-2cm]current page.north west) coordinate(B)--([xshift=1.5cm,yshift=2cm]current page.south west) coordinate (C)--([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+			
+			\draw ([yshift=0.5cm,xshift=-0.5cm]A)-- ([yshift=0.5cm,xshift=0.5cm]B)--
+			([yshift=-0.5cm,xshift=0.5cm]B) --([yshift=-0.5cm,xshift=-0.5cm]B)--([yshift=0.5cm,xshift=-0.5cm]C)--([yshift=0.5cm,xshift=0.5cm]C)--([yshift=-0.5cm,xshift=0.5cm]C)-- ([yshift=-0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=0.5cm]D)--([yshift=-0.5cm,xshift=0.5cm]A)--([yshift=-0.5cm,xshift=-0.5cm]A)--([yshift=0.5cm,xshift=-0.5cm]A);
+			
+			\draw ([yshift=-0.3cm,xshift=0.3cm]A)-- ([yshift=-0.3cm,xshift=-0.3cm]B)--
+			([yshift=0.3cm,xshift=-0.3cm]B) --([yshift=0.3cm,xshift=0.3cm]B)--([yshift=-0.3cm,xshift=0.3cm]C)--([yshift=-0.3cm,xshift=-0.3cm]C)--([yshift=0.3cm,xshift=-0.3cm]C)-- ([yshift=0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=-0.3cm]D)--([yshift=0.3cm,xshift=-0.3cm]A)--([yshift=0.3cm,xshift=0.3cm]A)--([yshift=-0.3cm,xshift=0.3cm]A);
+		\end{tikzpicture}
+		
+		\begin{center}
+			\vspace{7pt}
+			\textbf{TRƯỜNG ĐẠI HỌC TÂY BẮC}
+			
+			\vspace{7pt}
+			\textbf{KHOA KHOA HỌC TỰ NHIÊN VÀ CÔNG NGHỆ}
+		\end{center}
+		
+		\begin{center}
+			\includegraphics[scale=0.5]{images/tb.jpg}
+			
+			\vspace{10pt}
+			\fontsize{18pt}{17pt}\selectfont 
+			\textbf{ ĐỒ ÁN TỐT NGHIỆP}
+			
+			\vspace{10pt}
+			% \textbf{\footnotesize MÔN HỌC}
+			\vspace{50pt}
+			% \textbf{Môn học: Các vấn đề hiện đại của Công nghệ thông tin}
+		\end{center}
+		
+		
+		\begin{center}
+			\fontsize{18pt}{17pt}\selectfont
+			\textbf{\textrm{XÂY DỰNG HỆ THỐNG QUẢN LÝ KÍ TÚC XÁ ĐẠI HỌC TÂY BẮC}}
+		\end{center}
+		
+		\vspace{250pt}
+		\begin{center}
+			\today
+		\end{center}
+	\end{titlepage}
+	
+	%===========================
+	% Trang bìa
+	%===========================
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture,overlay,inner sep=0,outer sep=0]
+			\draw[blue!70!black,line width=4pt] ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--([xshift=1.5cm,yshift=-2cm]current page.north west) coordinate(B)--([xshift=1.5cm,yshift=2cm]current page.south west) coordinate (C)--([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+			
+			\draw ([yshift=0.5cm,xshift=-0.5cm]A)-- ([yshift=0.5cm,xshift=0.5cm]B)--
+			([yshift=-0.5cm,xshift=0.5cm]B) --([yshift=-0.5cm,xshift=-0.5cm]B)--([yshift=0.5cm,xshift=-0.5cm]C)--([yshift=0.5cm,xshift=0.5cm]C)--([yshift=-0.5cm,xshift=0.5cm]C)-- ([yshift=-0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=0.5cm]D)--([yshift=-0.5cm,xshift=0.5cm]A)--([yshift=-0.5cm,xshift=-0.5cm]A)--([yshift=0.5cm,xshift=-0.5cm]A);
+			
+			\draw ([yshift=-0.3cm,xshift=0.3cm]A)-- ([yshift=-0.3cm,xshift=-0.3cm]B)--
+			([yshift=0.3cm,xshift=-0.3cm]B) --([yshift=0.3cm,xshift=0.3cm]B)--([yshift=-0.3cm,xshift=0.3cm]C)--([yshift=-0.3cm,xshift=-0.3cm]C)--([yshift=0.3cm,xshift=-0.3cm]C)-- ([yshift=0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=-0.3cm]D)--([yshift=0.3cm,xshift=-0.3cm]A)--([yshift=0.3cm,xshift=0.3cm]A)--([yshift=-0.3cm,xshift=0.3cm]A);
+		\end{tikzpicture}
+		
+		\begin{center}
+			\vspace{7pt}
+			\textbf{TRƯỜNG ĐẠI HỌC TÂY BẮC}
+			
+			\vspace{7pt}
+			\textbf{KHOA KHOA HỌC TỰ NHIÊN VÀ CÔNG NGHÊ}
+		\end{center}
+		
+		\begin{center}
+			\includegraphics[scale=0.5]{images/tb.jpg}
+			
+			\vspace{10pt}
+			\fontsize{18pt}{17pt}\selectfont 
+			\textbf{ ĐỒ ÁN TỐT NGHIỆP}
+			
+			\vspace{10pt}
+			% \textbf{\footnotesize MÔN HỌC}
+			\vspace{7pt}
+			% \textbf{Môn học: Các vấn đề hiện đại của Công nghệ thông tin}
+		\end{center}
+		
+		%		\begin{flushleft}
+			%			\fontsize{14pt}{17pt}\selectfont
+			%			\textbf{\textsl{ĐỀ TÀI}}
+			%		\end{flushleft}
+		
+		\begin{center}
+			\fontsize{18pt}{17pt}\selectfont
+			\textbf{\textrm{XÂY DỰNG HỆ THỐNG QUẢN LÝ KÍ TÚC XÁ ĐẠI HỌC TÂY BẮC}}
+		\end{center}
+		
+		\vspace{75pt}
+		\textbf{GV hướng dẫn: ThS. Nguyễn Văn Hải}
+		
+		\vspace{10pt}
+		
+		\textbf{Sinh viên thực hiện: Phạm Quang Trung}
+		
+		\vspace{10pt}
+		\textbf{MSV: 2022A1271}
+		
+		\vspace{100pt}
+		\begin{center}
+			\today
+		\end{center}
+	\end{titlepage}
+	
+	%===========================
+	% Lời cảm ơn
+	%===========================
+	\newpage
+	\thispagestyle{empty}
+	\begin{center}
+		\fontsize{14pt}{20pt}\selectfont
+		\textbf{LỜI CẢM ƠN}
+	\end{center}
+	
+	\vspace{20pt}
+	
+	Trong suốt quá trình nghiên cứu, phân tích và hoàn thiện báo cáo về hệ thống giám sát nông nghiệp thông minh AgriSmart, em đã nhận được nhiều sự hỗ trợ quý báu từ thầy cô, bạn bè và những tài liệu chuyên môn liên quan đến phát triển phần mềm, Internet vạn vật và chuyển đổi số trong nông nghiệp.
+	
+	Trước hết, em xin bày tỏ lòng biết ơn sâu sắc đến giảng viên hướng dẫn đã định hướng phương pháp tiếp cận, góp ý về mặt học thuật và hỗ trợ em trong quá trình hoàn thiện nội dung khóa luận. Những ý kiến nhận xét thẳng thắn và có chiều sâu là cơ sở quan trọng giúp báo cáo bám sát thực tế triển khai hệ thống.
+	
+	Em xin chân thành cảm ơn Ban Giám hiệu \textbf{Trường Đại học Tây Bắc}, Ban chủ nhiệm \textbf{Khoa Công nghệ Thông tin} cùng toàn thể quý thầy cô đã truyền đạt kiến thức nền tảng về phân tích hệ thống, thiết kế cơ sở dữ liệu, phát triển ứng dụng web và kiểm thử phần mềm. Đây là hành trang quan trọng để em có thể tiếp cận và xây dựng báo cáo này một cách có hệ thống.
+	
+	Em cũng xin cảm ơn gia đình và bạn bè đã luôn động viên, chia sẻ và tạo điều kiện thuận lợi trong suốt quá trình học tập và thực hiện đề tài. Sự hỗ trợ đó là nguồn động lực giúp em duy trì sự tập trung và hoàn thành nhiệm vụ được giao.
+	
+	Mặc dù đã cố gắng nghiên cứu và trình bày đầy đủ, báo cáo vẫn khó tránh khỏi những thiếu sót nhất định. Em rất mong nhận được thêm các góp ý từ quý thầy cô và bạn đọc để nội dung được hoàn thiện hơn trong các lần cập nhật tiếp theo.
+	
+	\vspace{30pt}
+	
+	\begin{flushright}
+		\textit{Sơn La, \today}\\[10pt]
+		\textit{Sinh viên thực hiện}\\[30pt]
+		\textbf{Phạm Quang Trung}
+	\end{flushright}
+	
+	\newpage
+	
+	\newpage
+	\begin{center}
+		\textbf{NHẬN XÉT CỦA GIẢNG VIÊN HƯỚNG DẪN}
+	\end{center}
+	
+	\vspace{1cm}
+	
+	\begin{enumerate}
+		\item Hình thức (Bố cục, trình bày, lỗi, các mục, hình, bảng, công thức, phụ lục)
+		
+		\vspace{3cm}
+		
+		\item Nội dung (mục tiêu, phương pháp, kết quả, sao chép, các chương, tài liệu,..)
+		
+		\vspace{3cm}
+		
+		\item Kết luận
+		
+		\vspace{3cm}
+	\end{enumerate}
+	
+	\vspace{1cm}
+	
+	\begin{flushright}
+		\textit{Sơn La, Ngày ...... tháng ...... năm 202}\\[0.5cm]
+		\textbf{Giảng viên hướng dẫn}\\[0.3cm]
+		\textit{(Ký tên, ghi rõ họ tên)}
+	\end{flushright}
+	
+	\newpage
+	
+	%	Nhận xét giảng viên
+	\newpage
+	\begin{center}
+		\textbf{NHẬN XÉT CỦA GIẢNG VIÊN CHẤM}
+	\end{center}
+	
+	\vspace{1cm}
+	
+	\begin{enumerate}
+		\item Hình thức (Bố cục, trình bày, lỗi, các mục, hình, bảng, công thức, phụ lục)
+		
+		\vspace{3cm}
+		
+		\item Nội dung (mục tiêu, phương pháp, kết quả, sao chép, các chương, tài liệu,..)
+		
+		\vspace{3cm}
+		
+		\item Kết luận
+		
+		\vspace{3cm}
+	\end{enumerate}
+	
+	\vspace{1cm}
+	
+	\begin{flushright}
+		\textit{Sơn La, Ngày ...... tháng ...... năm 202}\\[0.5cm]
+		\textbf{Giảng viên chấm}\\[0.3cm]
+		\textit{(Ký tên, ghi rõ họ tên)}
+	\end{flushright}
+	\newpage
+	
+	%===========================
+	% Mục lục
+	%===========================
+	\tableofcontents
+	\thispagestyle{empty}
+	\clearpage
+	\newpage
+	
+	%===========================
+	% Mở đầu
+	%===========================
+	\begin{abstract}
+    \pagenumbering{arabic}
+    \pagestyle{fancy}
+    \fancyhf{}
+    \fancyhead[L]{Khóa luận tốt nghiệp}
+    \fancyhead[R]{\thepage}
+    \renewcommand{\headrulewidth}{0.4pt}
+
+    Trường Đại học Tây Bắc là cơ sở đào tạo đại học đa ngành trực thuộc Bộ Giáo dục và Đào tạo, với quy mô đào tạo hơn 5.000 sinh viên, học viên mỗi năm học. Trong đó, tỷ lệ sinh viên là người dân tộc thiểu số chiếm hơn 76\% và gần 500 lưu học sinh đến từ nước CHDCND Lào \ci. Với đặc thù sinh viên phần lớn đến từ các tỉnh miền núi xa xôi, hệ thống ký túc xá của nhà trường đóng vai trò thiết yếu trong việc bảo đảm điều kiện học tập và sinh hoạt cho người học. Tuy nhiên, công tác quản lý nội trú hiện tại chủ yếu vẫn dựa trên phương thức thủ công hoặc các công cụ rời rạc, dẫn đến nhiều khó khăn trong việc theo dõi thông tin cư trú, quản lý hóa đơn, xử lý sự cố cơ sở vật chất và tổng hợp báo cáo vận hành.
+
+    Đề tài này tập trung phân tích, thiết kế và xây dựng \textbf{Hệ thống Quản lý Ký túc xá Đại học Tây Bắc} -- một ứng dụng web hỗ trợ số hóa các nghiệp vụ cốt lõi trong công tác nội trú sinh viên. Hệ thống phục vụ ba vai trò chính là quản trị viên, nhân viên quản lý và sinh viên. Các chức năng chính bao gồm: xác thực và phân quyền người dùng, quản lý danh mục tòa nhà và phòng ở, tiếp nhận và xét duyệt đơn đăng ký nội trú, lập và theo dõi hóa đơn tiền phòng theo tháng, tiếp nhận yêu cầu bảo trì, gửi thông báo nội bộ và xem báo cáo thống kê vận hành. Phần backend được xây dựng bằng FastAPI, sử dụng PostgreSQL làm cơ sở dữ liệu; phần frontend được phát triển với React, TypeScript và Vite; toàn bộ hệ thống được đóng gói bằng Docker Compose để thuận lợi cho triển khai.
+
+    \textbf{Nội dung, phạm vi của đề tài}
+    \begin{itemize}
+        \item \textbf{Nội dung:} Khảo sát bài toán quản lý nội trú sinh viên tại Đại học Tây Bắc, phân tích yêu cầu, thiết kế cơ sở dữ liệu và xây dựng hệ thống web quản lý phòng ở, đăng ký nội trú, hóa đơn, bảo trì và báo cáo thống kê.
+        \item \textbf{Phạm vi:} Tập trung vào phiên bản web phục vụ quản trị viên, nhân viên và sinh viên; hóa đơn bao gồm tiền phòng, điện và nước; hệ thống hỗ trợ phân loại phòng theo đối tượng cư trú (giới tính, quốc tịch) và phân quyền theo vai trò. Phiên bản hiện tại chưa tích hợp thanh toán trực tuyến qua ngân hàng và chưa đồng bộ với hệ thống quản lý đào tạo của nhà trường.
+    \end{itemize}
+\end{abstract}
+	
+	\clearpage
+	\listoffigures
+	\clearpage
+	\listoftables
+	
+	
+	\newpage
+	\phantomsection
+%	\addcontentsline{toc}{section}{DANH MỤC TỪ VIẾT TẮT}
+	\begin{center}
+		\fontsize{14pt}{17pt}\selectfont
+		{DANH MỤC TỪ VIẾT TẮT}
+	\end{center}
+	
+	\vspace{10pt}
+	
+	\begin{tabular}{|c|p{11cm}|}
+        \hline
+        {Chữ viết tắt} & \multicolumn{1}{c|}{\textbf{Ý nghĩa}} \\
+        \hline
+        API  & Application Programming Interface, giao diện lập trình ứng dụng kết nối frontend và backend. \\
+        \hline
+        BE   & Backend, phần xử lý nghiệp vụ và truy xuất dữ liệu phía máy chủ. \\
+        \hline
+        CNTT & Công nghệ Thông tin. \\
+        \hline
+        CRUD & Create, Read, Update, Delete — bốn thao tác cơ bản với dữ liệu. \\
+        \hline
+        CSDL & Cơ sở dữ liệu. \\
+        \hline
+        ĐH   & Đại học. \\
+        \hline
+        FE   & Frontend, giao diện người dùng được xây dựng bằng React, TypeScript và Vite. \\
+        \hline
+        JWT  & JSON Web Token, chuẩn token dùng cho xác thực và phân quyền người dùng. \\
+        \hline
+        KTX  & Ký túc xá. \\
+        \hline
+        ORM  & Object Relational Mapping, cơ chế ánh xạ đối tượng với bảng trong cơ sở dữ liệu. \\
+        \hline
+        REST & Representational State Transfer, kiểu kiến trúc API được sử dụng trong hệ thống. \\
+        \hline
+        SV   & Sinh viên. \\
+        \hline
+        UUID & Universally Unique Identifier, mã định danh duy nhất toàn cục dùng cho các bản ghi. \\
+        \hline
+\end{tabular}
+
+\newpage
+\section*{MỞ ĐẦU}
+\addcontentsline{toc}{section}{MỞ ĐẦU}
+
+
+\subsection*{1.1. Tổng quan về hệ thống đề xuất}
+\addcontentsline{toc}{subsection}{1.1 Tổng quan về hệ thống đề xuất}
+
+
+\subsubsection*{1.1.1. Nghiên cứu tổng quan về hệ thống quản lý ký túc xá trên thế giới}
+\addcontentsline{toc}{subsubsection}{1.1.1 Nghiên cứu tổng quan về hệ thống quản lý ký túc xá trên thế giới}
+
+Trong những năm gần đây, các trường đại học trên thế giới đã xem quản lý ký túc xá như một phần quan trọng của hệ sinh thái quản trị sinh viên. Nếu trước đây việc phân phòng, tiếp nhận phản ánh, thu phí nội trú và quản lý chỗ ở chủ yếu được thực hiện bằng biểu mẫu giấy hoặc phần mềm cục bộ, thì hiện nay xu hướng chung là tích hợp các nghiệp vụ này vào hệ thống dịch vụ số dùng chung cho toàn trường. Nhiều nền tảng quản lý cư trú sinh viên đã phát triển theo hướng cho phép sinh viên tự phục vụ trên môi trường web, từ việc đăng ký chỗ ở, xem hợp đồng nội trú, nộp phí, gửi yêu cầu hỗ trợ cho đến theo dõi các thông báo liên quan đến đời sống trong khu nội trú.
+
+Một số giải pháp quốc tế như StarRez hoặc eRezLife được nhiều cơ sở giáo dục sử dụng vì có khả năng quản lý tập trung dữ liệu cư trú, hỗ trợ quy trình phân phòng, quản lý hồ sơ người ở, theo dõi thanh toán và tiếp nhận yêu cầu vận hành \cite{starrez,erezlife}. Điểm chung của các hệ thống này là hướng tới trải nghiệm số hóa trọn vẹn, trong đó dữ liệu về sinh viên, phòng ở, hóa đơn và phản hồi dịch vụ được liên thông với nhau thay vì tách rời thành nhiều công cụ độc lập. Cách tiếp cận này giúp giảm đáng kể khối lượng công việc thủ công, đồng thời tăng tính minh bạch và khả năng giám sát trong quản lý nội trú.
+
+Xu hướng quốc tế cũng cho thấy một số yêu cầu ngày càng trở nên phổ biến đối với hệ thống quản lý ký túc xá. Thứ nhất là yêu cầu tự động hóa quy trình xét duyệt và phân bổ chỗ ở dựa trên quy tắc nghiệp vụ. Thứ hai là yêu cầu cung cấp kênh tương tác trực tiếp giữa người ở và ban quản lý thông qua các yêu cầu hỗ trợ, phản ánh hỏng hóc hoặc thông báo khẩn. Thứ ba là yêu cầu tổng hợp dữ liệu theo thời gian thực để hỗ trợ ra quyết định, chẳng hạn theo dõi tỷ lệ lấp đầy, tình trạng thanh toán hoặc mức độ sử dụng từng khu nhà. Những định hướng đó là cơ sở tham chiếu quan trọng cho việc xây dựng hệ thống quản lý ký túc xá trong đề tài này.
+
+\subsubsection*{1.1.2. Nghiên cứu tổng quan về hệ thống quản lý ký túc xá tại Việt Nam}
+\addcontentsline{toc}{subsubsection}{1.1.2. Nghiên cứu tổng quan về hệ thống quản lý ký túc xá tại Việt Nam}
+
+Tại Việt Nam, nhu cầu số hóa công tác quản lý ký túc xá đã xuất hiện ở nhiều trường đại học, đặc biệt tại các đơn vị có số lượng sinh viên nội trú lớn. Tuy nhiên, mức độ hoàn thiện của các hệ thống hiện có còn khá chênh lệch giữa các cơ sở. Ở một số trường lớn tại các thành phố trung tâm, nghiệp vụ nội trú đã được tích hợp vào cổng thông tin sinh viên, cho phép đăng ký chỗ ở trực tuyến, theo dõi hóa đơn và nhận thông báo chung qua môi trường số. Tuy vậy, phạm vi chức năng thường tập trung vào các nghiệp vụ hành chính cơ bản, trong khi các bài toán xử lý bảo trì, quản lý trạng thái phòng theo thời gian thực hoặc thống kê vận hành chi tiết chưa được hỗ trợ đầy đủ.
+
+Ở nhiều đơn vị khác, đặc biệt tại các trường có điều kiện hạ tầng công nghệ chưa đồng đều, công tác quản lý nội trú vẫn còn phụ thuộc mạnh vào bảng tính điện tử, hồ sơ giấy và trao đổi trực tiếp giữa sinh viên với bộ phận quản lý. Khi số lượng sinh viên tăng lên hoặc cơ cấu khu nhà trở nên phức tạp hơn, việc quản lý thủ công rất dễ dẫn tới nhầm lẫn trong phân phòng, bỏ sót hóa đơn, khó đối soát tình trạng cư trú và chậm trễ trong phản hồi các yêu cầu phát sinh.
+
+Trường Đại học Tây Bắc là một trường hợp điển hình với những đặc thù riêng biệt. Nhà trường có khu ký túc xá gồm 8 tòa nhà 5 tầng với 473 phòng ở, đáp ứng khoảng 3.000 chỗ ở \cite{utb_ktx}, phục vụ đối tượng cư trú đa dạng bao gồm sinh viên người dân tộc thiểu số chiếm hơn 76\% và gần 500 lưu học sinh Lào \cite{utb_khaigiang2024}. Sự đa dạng về quốc tịch và đối tượng sinh viên đặt ra yêu cầu quản lý nội trú có tính phân loại cao, đòi hỏi hệ thống phải xử lý được các trường hợp phòng dành riêng cho từng nhóm đối tượng. Bên cạnh đó, đơn vị trực tiếp phụ trách công tác này là Ban Quản lý khu nội trú thuộc Phòng Quản trị -- Thiết bị, đặt tại ký túc xá K2 của trường \cite{utb_phongsban}. Thực tế vận hành cho thấy quy trình hiện tại chủ yếu vẫn dựa trên phương thức thủ công, chưa có một phần mềm thống nhất hỗ trợ toàn bộ chu trình từ đăng ký đến thanh lý nội trú.
+
+Do đó, việc xây dựng một hệ thống quản lý ký túc xá phù hợp với đặc thù của Trường Đại học Tây Bắc là hoàn toàn cần thiết và có giá trị thực tiễn cao.
+
+\subsubsection*{1.1.3. Đánh giá chất lượng sản phẩm đã biết}
+\addcontentsline{toc}{subsubsection}{1.1.3. Đánh giá chất lượng sản phẩm đã biết}
+
+Qua khảo sát có thể thấy các sản phẩm quốc tế có ưu điểm nổi bật ở tính hệ thống, mức độ hoàn thiện quy trình và khả năng tích hợp với các nền tảng quản trị đại học khác. Các hệ thống này thường được thiết kế theo hướng mô-đun, hỗ trợ tốt cho vận hành nhiều khu nhà, nhiều nhóm người dùng và nhiều quy trình phức tạp. Tuy nhiên, khi áp dụng vào bối cảnh Việt Nam, các sản phẩm quốc tế có thể gặp những trở ngại về chi phí bản quyền, yêu cầu triển khai hạ tầng, rào cản ngôn ngữ và mức độ phù hợp với cách thức quản lý nội trú tại từng trường.
+
+Ngược lại, các giải pháp nội bộ hoặc các hệ thống phát triển riêng cho môi trường Việt Nam có ưu điểm ở khả năng tùy biến theo nhu cầu thực tế, chi phí kiểm soát tốt hơn và dễ điều chỉnh quy trình theo yêu cầu của ban quản lý. Dù vậy, nhiều sản phẩm kiểu này lại thường thiếu tính đồng bộ trong thiết kế, chưa tổ chức dữ liệu thành một kiến trúc thống nhất và còn hạn chế ở các chức năng hỗ trợ ra quyết định, kiểm soát trạng thái nghiệp vụ hoặc mở rộng tích hợp về sau.
+
+Từ hai xu hướng trên có thể rút ra rằng một hệ thống phù hợp với bài toán ký túc xá đại học cần dung hòa cả hai yêu cầu: đủ gần với thực tế nội trú của nhà trường, nhưng cũng phải bảo đảm cấu trúc kỹ thuật rõ ràng, dữ liệu nhất quán và quy trình nghiệp vụ được mô hình hóa chặt chẽ. Đó cũng chính là định hướng của đề tài xây dựng hệ thống quản lý ký túc xá được trình bày trong báo cáo này.
+
+\subsection*{1.2. Mục đích nghiên cứu}
+\addcontentsline{toc}{subsection}{1.2. Mục đích nghiên cứu}
+
+Mục đích tổng quát của đề tài là xây dựng một hệ thống quản lý ký túc xá trên nền tảng web nhằm hỗ trợ số hóa các nghiệp vụ cốt lõi trong công tác quản lý nội trú sinh viên. Hệ thống không chỉ đóng vai trò là nơi lưu trữ dữ liệu mà còn phải trở thành công cụ kiểm soát quy trình, giúp giảm thao tác thủ công, hạn chế sai sót nghiệp vụ và tạo ra môi trường tương tác minh bạch giữa sinh viên với bộ phận quản lý.
+
+\subsubsection*{1.2.1. Tăng cường hiệu quả quản lý và vận hành ký túc xá}
+\addcontentsline{toc}{subsubsection}{1.2.1. Tăng cường hiệu quả quản lý và vận hành ký túc xá}
+
+Một trong những mục đích quan trọng nhất của đề tài là nâng cao hiệu quả quản lý nội trú bằng cách đưa các quy trình thường xuyên phát sinh vào một hệ thống thống nhất. Khi dữ liệu về sinh viên, tòa nhà, phòng ở, đơn đăng ký, hóa đơn và bảo trì được quản lý tập trung, ban quản lý có thể theo dõi tình trạng vận hành một cách đầy đủ hơn, xử lý nghiệp vụ nhanh hơn và giảm bớt phụ thuộc vào sổ sách hoặc bảng tính rời rạc.
+
+Hệ thống còn giúp chuẩn hóa các bước xử lý như tiếp nhận đơn đăng ký, duyệt vào ở, cập nhật số người trong phòng, lập hóa đơn định kỳ hoặc xử lý yêu cầu bảo trì. Nhờ vậy, các thao tác được thực hiện nhất quán hơn giữa các cán bộ quản lý, đồng thời giảm đáng kể nguy cơ bỏ sót hoặc xử lý nhầm dữ liệu.
+
+\subsubsection*{1.2.2. Cải thiện trải nghiệm người dùng}
+\addcontentsline{toc}{subsubsection}{1.2.2. Cải thiện trải nghiệm người dùng}
+
+Đối với sinh viên, một hệ thống ký túc xá hiện đại cần tạo cảm giác chủ động và minh bạch trong quá trình sử dụng. Thay vì phải hỏi trực tiếp hoặc chờ phản hồi thủ công, sinh viên có thể tự xem phòng còn chỗ, gửi đơn đăng ký, theo dõi trạng thái xét duyệt, kiểm tra hóa đơn và gửi phản ánh bảo trì ngay trên môi trường web. Điều này giúp rút ngắn thời gian xử lý và giảm cảm giác bị động trong các thủ tục nội trú.
+
+Đối với cán bộ quản lý, trải nghiệm sử dụng được cải thiện ở khía cạnh thao tác rõ ràng hơn, dữ liệu tập trung hơn và dễ truy vết hơn. Các nghiệp vụ như duyệt đơn, lập hóa đơn, xác nhận thanh toán hoặc gửi thông báo có thể được thực hiện trực tiếp trên giao diện, thay vì phải chuyển đổi qua nhiều công cụ khác nhau.
+
+\subsubsection*{1.2.3. Hỗ trợ ra quyết định dựa trên dữ liệu}
+\addcontentsline{toc}{subsubsection}{1.2.3. Hỗ trợ ra quyết định dựa trên dữ liệu}
+
+Một mục đích quan trọng khác của đề tài là tạo ra nền tảng dữ liệu phục vụ công tác điều hành. Khi thông tin hóa đơn, công suất sử dụng phòng và tình hình cư trú được lưu trữ có hệ thống, ban quản lý có thể tổng hợp báo cáo theo tháng để quan sát các chỉ số quan trọng như số hóa đơn đã thanh toán, số hóa đơn còn nợ, tổng sức chứa, số chỗ đã sử dụng và tỷ lệ lấp đầy từng khu nhà.
+
+Việc ra quyết định dựa trên dữ liệu giúp công tác quản lý không chỉ dừng lại ở xử lý tác vụ hằng ngày mà còn hỗ trợ điều phối vận hành ở mức tổng thể. Ví dụ, khi phát hiện một khu nhà có tỷ lệ lấp đầy thấp hoặc lượng phản ánh bảo trì tăng bất thường, ban quản lý có thể nhanh chóng xem xét nguyên nhân và đưa ra biện pháp điều chỉnh phù hợp.
+
+\subsubsection*{1.2.4. Tích hợp các công nghệ hiện đại}
+\addcontentsline{toc}{subsubsection}{1.2.4. Tích hợp các công nghệ hiện đại}
+
+Đề tài hướng tới việc vận dụng các công nghệ phát triển web hiện đại để tạo ra một sản phẩm có cấu trúc rõ ràng, dễ mở rộng và có khả năng triển khai thực tế. Việc sử dụng FastAPI, PostgreSQL, React, TypeScript và Docker Compose không chỉ đáp ứng yêu cầu kỹ thuật của sản phẩm mà còn phản ánh định hướng thiết kế phần mềm theo mô hình nhiều lớp, tách biệt giao diện, nghiệp vụ và dữ liệu.
+
+Thông qua việc tích hợp các công nghệ này, hệ thống có thể bảo đảm tốc độ phát triển tốt, khả năng quản lý mã nguồn rõ ràng và tính nhất quán giữa các môi trường chạy khác nhau. Đây là yếu tố quan trọng nếu hệ thống được tiếp tục nâng cấp hoặc triển khai trong điều kiện vận hành thực tế.
+
+\subsubsection*{1.2.5. Giảm chi phí vận hành và quản lý}
+\addcontentsline{toc}{subsubsection}{1.2.5. Giảm chi phí vận hành và quản lý}
+
+Khi các nghiệp vụ được số hóa, thời gian xử lý công việc thường ngày của bộ phận quản lý sẽ giảm xuống đáng kể. Những thao tác như đối chiếu danh sách người ở, kiểm tra tình trạng phòng, xem công nợ hóa đơn hoặc tiếp nhận phản ánh không còn phụ thuộc hoàn toàn vào việc rà soát thủ công. Điều này giúp tiết kiệm công sức vận hành, đồng thời giảm chi phí phát sinh do sai sót dữ liệu hoặc chậm trễ xử lý.
+
+Về dài hạn, một hệ thống được thiết kế bài bản sẽ giúp nhà trường giảm chi phí bảo trì so với việc duy trì nhiều công cụ nhỏ lẻ, bởi mọi dữ liệu và quy trình đều được quản lý trong cùng một nền tảng thống nhất. Đây cũng là điều kiện thuận lợi để mở rộng chức năng mà không phải thay đổi toàn bộ cách thức vận hành.
+
+\subsubsection*{1.2.6. Đáp ứng nhu cầu của môi trường đại học Việt Nam}
+\addcontentsline{toc}{subsubsection}{1.2.6. Đáp ứng nhu cầu của môi trường đại học Việt Nam}
+
+Mục đích cuối cùng của đề tài là xây dựng một hệ thống phù hợp với bối cảnh thực tế của ký túc xá trong trường đại học Việt Nam nói chung, và đại học Tây Bắc nói riêng. Điều đó thể hiện ở việc thiết kế giao diện tiếng Việt, lựa chọn các quy tắc nghiệp vụ gần với hoạt động nội trú thực tế, và tổ chức các chức năng theo vai trò quen thuộc như quản trị viên, nhân viên và sinh viên.
+
+Đề tài không hướng tới một mô hình quá phức tạp như các giải pháp thương mại quốc tế quy mô lớn, mà tập trung vào một hệ thống đủ thực tế, dễ tiếp cận, dễ triển khai và có khả năng phát triển tiếp trong môi trường đào tạo đại học.
+
+\subsection*{1.3. Đối tượng và phạm vi nghiên cứu}
+\addcontentsline{toc}{subsection}{1.3. Đối tượng và phạm vi nghiên cứu}
+
+\subsubsection*{1.3.1. Đối tượng nghiên cứu}
+\addcontentsline{toc}{subsubsection}{1.3.1. Đối tượng nghiên cứu}
+
+Đối tượng nghiên cứu của đề tài là bài toán quản lý ký túc xá trong trường đại học, trong đó trọng tâm là các quy trình phát sinh trong đời sống nội trú của sinh viên và công tác điều hành của bộ phận quản lý. Bên cạnh các chủ thể trực tiếp như sinh viên, cán bộ quản lý và quản trị viên hệ thống, đề tài còn tập trung vào các thực thể dữ liệu cốt lõi gồm người dùng, tòa nhà, phòng ở, đăng ký nội trú, hóa đơn, yêu cầu bảo trì và thông báo.
+
+Ngoài ra, đề tài cũng nghiên cứu cách biểu diễn các quy tắc nghiệp vụ thành logic xử lý trong phần mềm, chẳng hạn như điều kiện phê duyệt đơn nội trú, cơ chế cập nhật sức chứa phòng, điều kiện lập hóa đơn và phạm vi hợp lệ của yêu cầu bảo trì. Đây là phần có ý nghĩa lớn vì nó quyết định hệ thống có phản ánh đúng quy trình quản lý thực tế hay không.
+
+\subsubsection*{1.3.2. Phạm vi nghiên cứu}
+\addcontentsline{toc}{subsubsection}{1.3.2. Phạm vi nghiên cứu}
+
+
+Về phạm vi chức năng, đề tài tập trung vào các nghiệp vụ chính gồm xác thực người dùng, quản lý phòng ở, quản lý đăng ký nội trú, quản lý hóa đơn, quản lý bảo trì, gửi thông báo và báo cáo thống kê theo tháng. Đề tài chưa mở rộng tới các chức năng như thanh toán trực tuyến qua ngân hàng, đồng bộ dữ liệu với cổng đào tạo hoặc quản lý thiết bị vật chất ở mức chi tiết.
+
+Về phạm vi công nghệ, hệ thống được xây dựng trên nền tảng web với backend sử dụng FastAPI, SQLAlchemy, Alembic và PostgreSQL; frontend sử dụng React, Vite và TypeScript; môi trường triển khai sử dụng Docker Compose. Về phạm vi sử dụng, hệ thống hướng đến mô hình ký túc xá của trường đại học có nhiều khu nhà, nhiều phòng và nhiều loại đối tượng cư trú, trong đó có nhu cầu phân loại theo giới tính hoặc nhóm người dùng đặc thù.
+
+\subsection*{1.4. Phương pháp nghiên cứu}
+\addcontentsline{toc}{subsection}{1.4. Phương pháp nghiên cứu}
+
+\subsubsection*{1.4.1. Nêu các phương pháp nghiên cứu đã được sử dụng}
+\addcontentsline{toc}{subsubsection}{Nêu các phương pháp nghiên cứu đã được sử dụng}
+
+Để thực hiện đề tài, tác giả kết hợp phương pháp khảo sát nghiệp vụ, phương pháp phân tích hệ thống, phương pháp thiết kế phần mềm và phương pháp lập trình thử nghiệm. Quá trình nghiên cứu không tách rời giữa lý thuyết và thực hành mà diễn ra song song, trong đó các yêu cầu thực tế của bài toán nội trú được sử dụng làm cơ sở để định hình kiến trúc và chức năng của hệ thống.
+
+Phương pháp khảo sát được áp dụng thông qua việc tổng hợp các tình huống quản lý thường gặp trong ký túc xá, phân tích nhu cầu thông tin của sinh viên và cán bộ quản lý, đồng thời đối chiếu với cách tổ chức dữ liệu và logic nghiệp vụ trong hệ thống được xây dựng. Cách làm này giúp nội dung đồ án bám sát thực tiễn hơn thay vì chỉ dừng ở mô hình lý thuyết.
+
+\subsubsection*{1.4.2. Phương pháp phân tích hệ thống}
+\addcontentsline{toc}{subsubsection}{1.4.2. Phương pháp phân tích hệ thống}
+
+Ở giai đoạn phân tích, đề tài sử dụng phương pháp mô hình hóa tác nhân và ca sử dụng để xác định các chức năng bắt buộc của hệ thống. Từ các tác nhân là sinh viên, nhân viên và quản trị viên, tác giả xây dựng các use case chính như đăng nhập, quản lý phòng, đăng ký ở, lập hóa đơn, xử lý bảo trì, gửi thông báo và xem báo cáo. Phương pháp này giúp bóc tách bài toán thành các luồng nghiệp vụ có thể kiểm soát, từ đó thuận lợi cho việc xây dựng sơ đồ và viết đặc tả chức năng.
+
+Song song với use case, đề tài còn sử dụng tư duy phân tích trạng thái để theo dõi sự chuyển đổi của các đối tượng nghiệp vụ quan trọng như đơn đăng ký, phòng ở, hóa đơn và yêu cầu bảo trì. Đây là bước quan trọng để tránh việc thiết kế hệ thống chỉ dựa trên giao diện mà thiếu đi ràng buộc xử lý bên trong.
+
+\subsubsection*{1.4.3. Phương pháp thiết kế hệ thống}
+\addcontentsline{toc}{subsubsection}{1.4.3. Phương pháp thiết kế hệ thống}
+
+Trên cơ sở kết quả phân tích, đề tài sử dụng phương pháp thiết kế kiến trúc nhiều lớp để tách biệt giao diện, xử lý nghiệp vụ và dữ liệu. Các thành phần backend được tổ chức theo router, service, model và schema; frontend được tổ chức theo tuyến đường và tính năng; cơ sở dữ liệu được mô hình hóa theo hướng quan hệ, có khóa liên kết rõ ràng giữa người dùng, phòng ở, đăng ký nội trú và hóa đơn.
+
+Phương pháp thiết kế còn được thể hiện ở việc sử dụng UML để mô tả hành vi hệ thống. Trong phạm vi đồ án này, thay vì tập trung vào biểu đồ lớp như mẫu cũ, đề tài ưu tiên biểu đồ use case, biểu đồ hoạt động và biểu đồ tuần tự vì chúng phù hợp hơn với mục tiêu làm rõ quy trình nghiệp vụ và tương tác giữa các thành phần hệ thống.
+
+\subsubsection*{1.4.4. Phương pháp lập trình và kiểm thử}
+\addcontentsline{toc}{subsubsection}{1.4.4. Phương pháp lập trình và kiểm thử}
+
+Sau khi hoàn thiện phần phân tích và thiết kế, hệ thống được hiện thực hóa bằng các công nghệ web hiện đại. Quá trình lập trình bám sát các quy tắc nghiệp vụ đã được xác định trước đó, đặc biệt ở các dịch vụ đăng ký nội trú, hóa đơn và bảo trì. Việc thử nghiệm được thực hiện thông qua các kịch bản sử dụng điển hình, nhằm kiểm tra tính đúng đắn của dữ liệu đầu vào, tính hợp lệ của trạng thái nghiệp vụ và sự phối hợp giữa frontend với backend.
+
+Thông qua phương pháp lập trình kết hợp thử nghiệm liên tục, đề tài không chỉ tạo ra một mô hình minh họa mà còn hình thành được một sản phẩm có thể chạy được, có cấu trúc kỹ thuật rõ ràng và đủ cơ sở để tiếp tục phát triển trong tương lai.
+
+\newpage
+\section*{CHƯƠNG 1: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
+\addcontentsline{toc}{section}{CHƯƠNG 1: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
+
+\subsection*{1.1. Bối cảnh và lý do chọn đề tài}
+\addcontentsline{toc}{subsection}{1.1. Bối cảnh và lý do chọn đề tài}
+
+Trường Đại học Tây Bắc được thành lập theo Quyết định số 39/2001/QĐ-TTg ngày 23/03/2001 của Thủ tướng Chính phủ, trên cơ sở nâng cấp Trường Cao đẳng Sư phạm Tây Bắc \cite{utb_history}. Đây là trường đại học đa ngành duy nhất của khu vực Tây Bắc, đặt tại thành phố Sơn La, với sứ mệnh đào tạo nguồn nhân lực và phục vụ phát triển kinh tế -- xã hội vùng Tây Bắc. Quy mô đào tạo hằng năm đạt hơn 5.000 học viên và sinh viên, trong đó tỷ lệ sinh viên là người dân tộc thiểu số chiếm hơn 76\% \cite{utb_khaigiang2024}. Đặc thù này tạo ra nhu cầu nội trú rất lớn, bởi phần lớn sinh viên đến từ các huyện miền núi xa xôi thuộc các tỉnh Sơn La, Điện Biên, Lai Châu và cả từ nước bạn Lào.
+
+Khu ký túc xá của nhà trường hiện có 8 tòa nhà 5 tầng với 473 phòng ở và 8 phòng sinh hoạt chung, đáp ứng khoảng 3.000 chỗ ở cho sinh viên, với mức phí chỉ từ 50.000 đồng/người/tháng \cite{utb_ktx}. Mỗi phòng bố trí từ 6 đến 8 sinh viên, được trang bị tủ sắt, giường ngủ, bàn học, quạt trần và công trình vệ sinh khép kín \cite{utb_phong_ktu}. Với quy mô gần 500 lưu học sinh Lào đang sinh sống trong khu nội trú cùng hàng nghìn sinh viên Việt Nam thuộc nhiều dân tộc khác nhau, công tác quản lý ký túc xá mang tính đặc thù cao về phân loại đối tượng cư trú, theo dõi thông tin đa dạng và kiểm soát trật tự nội trú.
+
+Tuy nhiên, thực tế cho thấy công tác quản lý nội trú tại nhà trường hiện nay vẫn chủ yếu dựa trên phương thức thủ công. Khi dữ liệu phòng ở, hóa đơn và phản ánh bảo trì nằm ở các kênh riêng rẽ, bộ phận quản lý sẽ khó kiểm soát được tình trạng vận hành chung. Trong khi đó, sinh viên cũng gặp khó khăn trong việc theo dõi thông tin về đơn đăng ký, khoản phải nộp hoặc tình trạng xử lý các yêu cầu đã gửi. Chính vì vậy, việc xây dựng một hệ thống quản lý ký túc xá có tính tập trung, nhất quán và minh bạch là nhu cầu rất cần thiết đối với Trường Đại học Tây Bắc hiện nay.
+
+Đề tài được lựa chọn trên cơ sở nhận thấy bài toán nội trú sinh viên tại Đại học Tây Bắc có giá trị thực tiễn cao, đủ rõ về phạm vi và đủ phong phú về nghiệp vụ để triển khai thành một hệ thống thông tin hoàn chỉnh. Bên cạnh ý nghĩa ứng dụng, đề tài còn cho phép vận dụng kiến thức về phân tích yêu cầu, thiết kế cơ sở dữ liệu, xây dựng API, phát triển giao diện web và triển khai hệ thống trong môi trường container.
+
+\subsubsection*{1.1.1. Mục tiêu của đề tài}
+\addcontentsline{toc}{subsubsection}{1.1.1. Mục tiêu của đề tài}
+
+Mục tiêu của đề tài là xây dựng một hệ thống quản lý ký túc xá có khả năng phản ánh tương đối đầy đủ các hoạt động cốt lõi trong công tác nội trú. Trước hết, hệ thống phải hỗ trợ quản lý thông tin người dùng theo vai trò, quản lý danh mục tòa nhà và phòng ở, đồng thời kiểm soát được trạng thái sử dụng của từng phòng. Tiếp đó, hệ thống phải hỗ trợ quy trình đăng ký ở, duyệt vào ở, trả phòng và cập nhật số người ở thực tế trong từng phòng.
+
+Ngoài các nghiệp vụ lưu trú cơ bản, đề tài còn hướng tới việc xử lý các nhu cầu vận hành thường xuyên như lập hóa đơn tiền phòng, điện và nước, tiếp nhận yêu cầu bảo trì, gửi thông báo và tổng hợp báo cáo thống kê. Một mục tiêu quan trọng khác là làm rõ được các ràng buộc nghiệp vụ bên trong hệ thống, để từ đó phần mềm không chỉ lưu dữ liệu mà còn kiểm soát đúng logic quản lý.
+
+\subsubsection*{1.1.2. Đối tượng và phạm vi nghiên cứu}
+\addcontentsline{toc}{subsubsection}{1.1.2. Đối tượng và phạm vi nghiên cứu}
+
+Ở phạm vi chương này, đối tượng khảo sát tập trung vào các bên tham gia trực tiếp trong hoạt động nội trú, gồm sinh viên, nhân viên quản lý và quản trị viên. Sinh viên là người sử dụng hệ thống để tra cứu thông tin và gửi yêu cầu; nhân viên quản lý là người vận hành các quy trình chính; còn quản trị viên là người quản lý danh mục chung của toàn hệ thống. Phạm vi khảo sát cũng bao gồm các thực thể dữ liệu cơ bản như phòng ở, đơn đăng ký, hóa đơn, yêu cầu bảo trì và thông báo.
+
+Giới hạn của đề tài trong giai đoạn hiện tại là tập trung vào quy trình quản lý nội trú bên trong ký túc xá, chưa mở rộng sang các bài toán bên ngoài như tích hợp cổng thanh toán liên ngân hàng, đồng bộ thời gian thực với phần mềm đào tạo hoặc hỗ trợ thiết bị IoT trong phòng ở. Việc xác định rõ phạm vi như vậy giúp hệ thống tập trung giải quyết tốt những nhu cầu quan trọng nhất trước khi phát triển thêm trong giai đoạn sau.
+
+\subsection*{1.2. Khảo sát thực tế}
+\addcontentsline{toc}{subsection}{1.2. Khảo sát thực tế}
+
+\subsubsection*{1.2.1. Kết quả khảo sát}
+\addcontentsline{toc}{subsubsection}{1.2.1. Kết quả khảo sát}
+
+Kết quả khảo sát nghiệp vụ tại khu ký túc xá Trường Đại học Tây Bắc cho thấy hoạt động quản lý nội trú xoay quanh một chuỗi quy trình lặp lại theo chu kỳ. Khu nội trú gồm 8 tòa nhà với 473 phòng ở, mỗi phòng bố trí 6 đến 8 sinh viên \cite{utb_ktx,utb_phong_ktu}, phục vụ đối tượng đa dạng bao gồm sinh viên người Việt Nam thuộc nhiều dân tộc và gần 500 lưu học sinh Lào \cite{utb_khaigiang2024}. Đơn vị trực tiếp phụ trách công tác này là Ban Quản lý khu nội trú thuộc Phòng Quản trị -- Thiết bị \cite{utb_phongsban}.
+
+Trước hết là quản lý hạ tầng lưu trú: bộ phận phụ trách cần nắm được khu nhà nào đang hoạt động, mỗi khu có bao nhiêu phòng, mỗi phòng thuộc nhóm đối tượng nào (nam, nữ, lưu học sinh Lào) và còn bao nhiêu chỗ trống. Tiếp theo là quy trình tiếp nhận sinh viên nội trú, nơi phát sinh nhu cầu xem phòng phù hợp, nộp đơn đăng ký, xét duyệt, bố trí vào ở và cập nhật tình trạng cư trú. Trong quá trình sinh viên sinh hoạt tại ký túc xá, bộ phận quản lý còn phải xử lý các nghiệp vụ phát sinh như lập hóa đơn theo tháng, theo dõi tình trạng thanh toán, tiếp nhận phản ánh về hỏng hóc hoặc sự cố phòng ở, đồng thời gửi thông báo chung đến đúng nhóm đối tượng.
+
+Hiện tại, toàn bộ các công việc trên chủ yếu được thực hiện thủ công hoặc qua bảng tính, chưa có một phần mềm thống nhất hỗ trợ toàn bộ chu trình từ đăng ký đến thanh lý nội trú. Điều này dẫn đến tình trạng dữ liệu phân tán, khó tổng hợp báo cáo và chậm trễ trong phản hồi các yêu cầu phát sinh của sinh viên, đặc biệt khi số lượng người ở đông và đối tượng cư trú đa dạng như tại Trường Đại học Tây Bắc.
+
+\subsubsection*{1.2.2. Phân tích kết quả khảo sát}
+\addcontentsline{toc}{subsubsection}{1.2.2. Phân tích kết quả khảo sát}
+
+Từ kết quả khảo sát có thể nhận thấy bài toán ký túc xá không hề đơn giản nếu nhìn từ góc độ luồng dữ liệu và trạng thái nghiệp vụ. Một thao tác tưởng như đơn giản, chẳng hạn duyệt cho một sinh viên vào ở, thực tế lại kéo theo nhiều điều kiện kiểm tra như tính phù hợp của loại phòng, trạng thái của phòng, sức chứa còn lại và tình trạng đăng ký hiện tại của sinh viên. Tương tự, việc lập một hóa đơn cũng phụ thuộc vào quan hệ giữa sinh viên với phòng ở và kỳ thanh toán, chứ không thể tạo tùy ý nếu chưa có cơ sở cư trú hợp lệ.
+
+Phân tích này cho thấy hệ thống cần được thiết kế theo hướng kiểm soát quy trình chặt chẽ chứ không chỉ cung cấp giao diện nhập liệu. Điều đó cũng giải thích vì sao kiến trúc của hệ thống phải tách rõ tầng xử lý nghiệp vụ, nơi chứa các điều kiện kiểm tra và các bước cập nhật trạng thái. Đây là điểm mấu chốt để hệ thống vừa đúng về mặt dữ liệu, vừa hữu ích trong vận hành thực tế.
+
+\subsection*{1.3. Đặc tả hệ thống}
+\addcontentsline{toc}{subsection}{1.3. Đặc tả hệ thống}
+
+Hệ thống quản lý ký túc xá trong đề tài được đặc tả như một ứng dụng web nhiều người dùng, hoạt động theo mô hình client-server. Ở phía người dùng, sinh viên và cán bộ quản lý thao tác thông qua giao diện web. Ở phía máy chủ, backend tiếp nhận yêu cầu, xác thực danh tính, kiểm tra quyền truy cập, áp dụng các quy tắc nghiệp vụ và truy xuất dữ liệu từ cơ sở dữ liệu quan hệ. Kết quả xử lý sau đó được trả về giao diện dưới dạng các phản hồi có cấu trúc thống nhất.
+
+Về mặt tác nhân, hệ thống có ba nhóm người dùng. Sinh viên là người tạo nhu cầu đăng ký, theo dõi thông tin và gửi yêu cầu hỗ trợ. Nhân viên quản lý là người trực tiếp vận hành quy trình xét duyệt, hóa đơn, bảo trì và thông báo. Quản trị viên là người quản lý danh mục chung của hệ thống, đồng thời có khả năng theo dõi báo cáo và giám sát vận hành ở phạm vi rộng hơn. Mỗi vai trò được gắn với phạm vi thao tác riêng, từ đó hình thành cơ chế phân quyền nhất quán trong toàn hệ thống.
+
+Về mặt chức năng, hệ thống bao gồm các nhóm nghiệp vụ chính là xác thực người dùng, quản lý tòa nhà và phòng ở, đăng ký nội trú, hóa đơn, bảo trì, thông báo và báo cáo thống kê. Các chức năng này không tách biệt tuyệt đối mà liên kết chặt chẽ với nhau. Chẳng hạn, việc lập hóa đơn phụ thuộc vào trạng thái đăng ký nội trú; việc gửi yêu cầu bảo trì phụ thuộc vào phòng mà sinh viên đang ở; việc thống kê công suất sử dụng lại phụ thuộc vào số người thực tế đang ở trong từng phòng.
+
+Về mặt ràng buộc, hệ thống được đặc tả với một số quy tắc nghiệp vụ trọng tâm. Sinh viên chỉ được đăng ký vào phòng phù hợp với nhóm đối tượng của mình. Sinh viên không được có đồng thời nhiều đơn đăng ký còn hiệu lực. Phòng đã đầy hoặc đang bảo trì không thể tiếp nhận đăng ký mới. Hóa đơn không được tạo trùng cho cùng một kỳ. Yêu cầu bảo trì chỉ được gửi cho phòng mà sinh viên đang cư trú hợp lệ. Các sơ đồ tổng quát và sơ đồ chi tiết mô tả những đặc tả này được trình bày ở mục \cite{làm sau}.
+
+\newpage
+\section*{CHƯƠNG 2: PHÂN TÍCH HỆ THỐNG}
+\addcontentsline{toc}{section}{CHƯƠNG 2: PHÂN TÍCH HỆ THỐNG}
+
+\subsection*{2.1. Các yêu cầu chức năng}
+\addcontentsline{toc}{subsection}{2.1. Các yêu cầu chức năng}
+
+\subsubsection*{2.1.1. Quản lý phòng}
+\addcontentsline{toc}{subsubsection}{2.1.1. Quản lý phòng}
+Phân hệ quản lý phòng có nhiệm vụ tổ chức dữ liệu hạ tầng lưu trú của ký túc xá. Chức năng này cho phép quản trị viên tạo mới tòa nhà, tạo mới phòng ở, thiết lập sức chứa, loại phòng, đơn giá và trạng thái sử dụng. Đồng thời, hệ thống phải hỗ trợ cập nhật trạng thái phòng trong quá trình vận hành, chẳng hạn khi phòng đang bảo trì hoặc khi số lượng người ở đã đạt tới giới hạn sức chứa.
+
+Ở góc độ nghiệp vụ, quản lý phòng không chỉ là lưu danh mục mà còn là nền tảng để các chức năng khác vận hành. Việc hiển thị phòng còn chỗ, xét duyệt đăng ký, tính công suất sử dụng hoặc lập hóa đơn đều phải dựa trên thông tin của phân hệ này. Vì vậy, dữ liệu phòng ở phải được duy trì chính xác và đồng bộ.
+
+\subsubsection*{2.1.2. Đặt phòng và trả phòng}
+\addcontentsline{toc}{subsubsection}{2.1.2. Đặt phòng và trả phòng}
+Trong bối cảnh ký túc xá, đặt phòng được hiểu là đăng ký ở nội trú. Hệ thống phải cho phép sinh viên xem danh sách phòng phù hợp, gửi đơn đăng ký và theo dõi kết quả xử lý. Từ phía cán bộ quản lý, hệ thống phải cho phép duyệt đơn hoặc từ chối đơn sau khi kiểm tra điều kiện hợp lệ. Khi sinh viên kết thúc thời gian nội trú, cán bộ phải có thể xác nhận trả phòng để giải phóng chỗ ở và cập nhật lại trạng thái phòng.
+
+Chức năng này là trục vận hành chính của hệ thống vì nó liên kết trực tiếp giữa dữ liệu sinh viên với dữ liệu phòng ở. Mọi thay đổi về trạng thái đăng ký đều kéo theo thay đổi về số người hiện diện trong phòng, từ đó ảnh hưởng đến báo cáo công suất sử dụng và các nghiệp vụ liên quan khác.
+
+\subsubsection*{2.1.3. Quản lý sinh viên}
+\addcontentsline{toc}{subsubsection}{2.1.3. Quản lý sinh viên}
+
+Trong bài toán thực tế của đề tài, nhóm “khách hàng” được hiểu là sinh viên nội trú và những người dùng có nhu cầu tương tác với hệ thống. Hệ thống cần lưu trữ thông tin định danh của người dùng, bao gồm họ tên, mã sinh viên, email, giới tính, quốc tịch và vai trò. Đối với sinh viên, thông tin này còn là cơ sở để hệ thống xác định loại phòng phù hợp, hiển thị dữ liệu cá nhân hóa và giới hạn phạm vi thao tác trong các chức năng như hóa đơn hoặc bảo trì.
+
+Quản lý sinh viên trong đề tài không đi theo hướng quản trị quan hệ khách hàng như trong doanh nghiệp dịch vụ, mà tập trung vào quản lý hồ sơ người dùng phục vụ nội trú. Cách hiểu này vừa phù hợp với mẫu bố cục tham khảo, vừa bảo đảm bám sát bối cảnh quản lý sinh viên ở ký túc xá.
+
+\subsubsection*{2.1.4. Quản lý thanh toán}
+\addcontentsline{toc}{subsubsection}{2.1.4. Quản lý thanh toán}
+
+Phân hệ thanh toán chịu trách nhiệm tạo hóa đơn tiền phòng, điện và nước theo tháng, đồng thời theo dõi trạng thái thanh toán của từng sinh viên. Hệ thống phải kiểm tra điều kiện tạo hóa đơn, tránh trùng kỳ thanh toán và lưu đầy đủ các thành phần chi phí để bảo đảm khả năng đối soát. Khi sinh viên hoàn thành nghĩa vụ tài chính, cán bộ quản lý phải có thể xác nhận thanh toán trên hệ thống.
+
+Ý nghĩa của chức năng này không chỉ nằm ở việc theo dõi công nợ mà còn ở khả năng kết nối dữ liệu cư trú với dữ liệu tài chính. Khi quy trình lập hóa đơn được kiểm soát tự động, ban quản lý sẽ giảm đáng kể nguy cơ bỏ sót khoản thu hoặc tạo sai hóa đơn.
+
+\subsubsection*{2.1.5. Quản lý người dùng và phân quyền}
+\addcontentsline{toc}{subsubsection}{2.1.5. Quản lý người dùng và phân quyền}
+
+Hệ thống phải có khả năng xác thực người dùng và phân biệt rõ phạm vi thao tác của từng vai trò. Sinh viên là người có quyền đăng ký ở, xem thông tin cá nhân, xem hóa đơn và gửi yêu cầu bảo trì. Nhân viên là người trực tiếp xử lý nghiệp vụ vận hành như duyệt đăng ký, tạo hóa đơn, xác nhận thanh toán hoặc xử lý bảo trì. Quản trị viên ngoài những quyền trên còn có quyền quản lý danh mục tòa nhà, phòng ở và theo dõi báo cáo tổng hợp.
+
+Việc phân quyền không chỉ bảo vệ dữ liệu mà còn giúp hệ thống phản ánh đúng cấu trúc vận hành thực tế. Nếu thiếu phân quyền, người dùng có thể truy cập hoặc chỉnh sửa các chức năng không phù hợp với trách nhiệm của mình, làm giảm tính an toàn và độ tin cậy của hệ thống.
+
+\subsubsection*{2.1.6. Báo cáo và thống kê}
+\addcontentsline{toc}{subsubsection}{2.1.6. Báo cáo và thống kê}
+
+Chức năng báo cáo và thống kê giúp tổng hợp dữ liệu vận hành thành các chỉ số phục vụ quản lý. Hệ thống cần có khả năng tính tổng doanh thu đã thu, số hóa đơn đã thanh toán, số hóa đơn chưa thanh toán, tổng sức chứa và tỷ lệ lấp đầy toàn hệ thống cũng như theo từng tòa nhà. Những thông tin này hỗ trợ đánh giá hiệu quả vận hành và phát hiện sớm các vấn đề cần điều chỉnh.
+
+Khác với các nghiệp vụ tác nghiệp hằng ngày, báo cáo là lớp thông tin ở mức quản trị. Vì vậy, dữ liệu đầu vào của báo cáo phải được lấy từ các phân hệ khác nhau nhưng vẫn bảo đảm tính nhất quán, nếu không kết quả thống kê sẽ không còn giá trị phục vụ điều hành.
+
+\subsubsection*{2.1.7. Thông báo và xác nhận}
+\addcontentsline{toc}{subsubsection}{2.1.7. Thông báo và xác nhận}
+
+Một hệ thống ký túc xá không thể vận hành hiệu quả nếu thiếu cơ chế truyền thông nội bộ rõ ràng. Do đó, hệ thống phải cho phép cán bộ tạo thông báo gửi tới đúng nhóm đối tượng như toàn bộ người dùng, sinh viên hoặc nhân viên. Đồng thời, ở các nghiệp vụ quan trọng như duyệt đăng ký, xác nhận thanh toán hoặc cập nhật tình trạng bảo trì, hệ thống cũng cần phản hồi rõ ràng để người dùng biết trạng thái hiện tại của yêu cầu.
+
+Thông báo và xác nhận là hai yếu tố giúp tăng tính minh bạch cho hệ thống. Khi người dùng luôn nhìn thấy trạng thái xử lý và các thông tin liên quan đến mình, mức độ tin cậy đối với quy trình nội trú cũng sẽ được cải thiện.
+
+\subsection*{2.2. Biểu đồ Usecase}
+\addcontentsline{toc}{subsection}{2.2. Biểu đồ Usecase}
+
+Biểu đồ use case tổng quát của hệ thống được xây dựng để mô tả quan hệ giữa ba tác nhân chính là sinh viên, nhân viên và quản trị viên với các nhóm chức năng cốt lõi của phần mềm. Trong biểu đồ này, sinh viên chủ yếu tương tác với các chức năng đăng nhập, xem phòng còn chỗ, gửi đơn đăng ký, xem hóa đơn, tạo yêu cầu bảo trì và xem thông báo. Nhân viên là tác nhân vận hành nghiệp vụ, còn quản trị viên là tác nhân có quyền quản lý rộng nhất.
+
+\subsection*{2.3. Đặc tả ca sử dụng}
+\addcontentsline{toc}{subsection}{2.3. Đặc tả ca sử dụng}
+
+\subsubsection*{2.3.1. Ca sử dụng đăng nhập}
+\addcontentsline{toc}{subsubsection}{2.3.1. Ca sử dụng đăng nhập}
+
+Ca sử dụng đăng nhập được thực hiện bởi mọi người dùng đã có tài khoản hợp lệ. Người dùng nhập email và mật khẩu trên giao diện, hệ thống kiểm tra thông tin xác thực, cấp access token và refresh token nếu dữ liệu hợp lệ, sau đó điều hướng đến khu vực chức năng tương ứng với vai trò. Nếu thông tin đăng nhập sai, hệ thống từ chối truy cập và trả về thông báo lỗi.
+
+Tiền điều kiện của ca sử dụng là tài khoản phải tồn tại trong hệ thống. Hậu điều kiện là người dùng được xác thực thành công và có thể thực hiện các chức năng đúng quyền trên hệ thống. Đây là ca sử dụng nền tảng vì toàn bộ các nghiệp vụ phía sau đều phụ thuộc vào trạng thái đăng nhập.
+
+\subsubsection*{2.3.2. Ca sử dụng quản lý phòng}
+\addcontentsline{toc}{subsubsection}{2.3.2. Ca sử dụng quản lý phòng}
+
+Ca sử dụng này chủ yếu do quản trị viên và một phần do nhân viên thực hiện. Quản trị viên có thể tạo tòa nhà, tạo phòng mới, gán các thuộc tính như loại phòng, sức chứa, giá tiền và trạng thái. Nhân viên hoặc quản trị viên có thể cập nhật trạng thái phòng trong quá trình vận hành. Hệ thống phải bảo đảm không phát sinh trùng số phòng trong cùng một tòa và không cập nhật trạng thái trái với thực trạng sử dụng của phòng.
+
+Kết quả của ca sử dụng là danh mục phòng luôn được duy trì nhất quán, phản ánh đúng hạ tầng thực tế của ký túc xá. Đây là tiền đề để các ca sử dụng khác như đăng ký ở, báo cáo công suất hoặc lập hóa đơn có thể hoạt động chính xác.
+
+\subsubsection*{2.3.3. Ca sử dụng đặt phòng}
+\addcontentsline{toc}{subsubsection}{2.3.3. Ca sử dụng đặt phòng}
+
+Trong ngữ cảnh của đề tài, “đặt phòng” được hiểu là gửi đơn đăng ký ở ký túc xá. Sinh viên sau khi đăng nhập sẽ xem danh sách phòng còn chỗ phù hợp với giới tính hoặc quốc tịch của mình, sau đó chọn phòng và gửi đơn đăng ký. Hệ thống kiểm tra các điều kiện như phòng có tồn tại hay không, còn sức chứa hay không, có đang bảo trì hay không, và sinh viên có đang tồn tại đơn khác còn hiệu lực hay không.
+
+Nếu tất cả điều kiện đều hợp lệ, hệ thống tạo đơn ở trạng thái chờ xử lý. Đơn này sau đó được chuyển đến bộ phận quản lý để xem xét. Hậu điều kiện tạm thời của ca sử dụng là hệ thống ghi nhận một yêu cầu đăng ký hợp lệ và lưu trạng thái ban đầu của yêu cầu đó.
+
+\subsubsection*{2.3.4. Ca sử dụng trả phòng}
+\addcontentsline{toc}{subsubsection}{2.3.4. Ca sử dụng trả phòng}
+
+Ca sử dụng trả phòng được thực hiện khi sinh viên kết thúc thời gian cư trú hoặc không còn nhu cầu ở ký túc xá. Nhân viên hoặc quản trị viên chọn bản ghi đăng ký đang ở trạng thái đã được duyệt, xác nhận thao tác trả phòng và hệ thống tiến hành cập nhật lại trạng thái đăng ký cũng như số lượng người ở thực tế trong phòng.
+
+Hậu điều kiện của ca sử dụng là đơn đăng ký chuyển sang trạng thái đã trả phòng, dữ liệu sức chứa của phòng được điều chỉnh tương ứng và phòng có thể quay lại trạng thái còn chỗ nếu chưa đủ người. Ca sử dụng này đặc biệt quan trọng vì nó bảo đảm dữ liệu công suất sử dụng luôn phản ánh đúng thực tế.
+
+\subsubsection*{2.3.5. Ca sử dụng quản lý dịch vụ}
+\addcontentsline{toc}{subsubsection}{2.3.5. Ca sử dụng quản lý dịch vụ}
+
+Trong phạm vi hệ thống hiện tại, quản lý dịch vụ được hiểu theo nghĩa quản lý các dịch vụ hỗ trợ sinh viên nội trú, tiêu biểu là tiếp nhận yêu cầu bảo trì và xử lý các nhu cầu vận hành phát sinh trong quá trình ở ký túc xá. Sinh viên có thể gửi yêu cầu bảo trì cho phòng mình đang ở, còn cán bộ quản lý sẽ tiếp nhận, phân loại và cập nhật trạng thái xử lý của yêu cầu.
+
+Điều kiện quan trọng của ca sử dụng này là sinh viên chỉ được gửi yêu cầu cho đúng phòng mình đang cư trú hợp lệ. Cách ràng buộc như vậy giúp tránh phản ánh sai đối tượng và giữ cho luồng vận hành luôn có cơ sở dữ liệu rõ ràng. Đây là ca sử dụng góp phần tăng chất lượng phục vụ trong môi trường nội trú.
+
+\subsubsection*{2.3.6. Ca sử dụng quản lý sinh viên}
+\addcontentsline{toc}{subsubsection}{2.3.6. Ca sử dụng quản lý sinh viên}
+
+Nếu đặt trong bối cảnh dịch vụ nội trú, “khách hàng” chính là người dùng của hệ thống, trọng tâm là sinh viên nội trú. Ca sử dụng này bao gồm việc lưu thông tin cá nhân, theo dõi lịch sử đăng ký, theo dõi hóa đơn và giới hạn phạm vi dữ liệu theo đúng vai trò. Nhân viên và quản trị viên sử dụng thông tin này để tra cứu hồ sơ người ở, trong khi sinh viên dùng nó để theo dõi các dữ liệu liên quan trực tiếp đến bản thân.
+
+Ca sử dụng quản lý sinh viên vì vậy được hiểu là quản lý hồ sơ người dùng phục vụ vận hành nội trú. Mặc dù tên gọi tham khảo xuất phát từ một mô hình khác, nhưng khi đặt vào hệ thống ký túc xá, nội dung của nó vẫn giữ giá trị nếu được diễn giải theo hướng quản lý sinh viên và người dùng hệ thống.
+
+\subsubsection*{2.3.7. Ca sử dụng xem báo cáo -- thống kê}
+\addcontentsline{toc}{subsubsection}{2.3.7. Ca sử dụng xem báo cáo -- thống kê}
+
+Ca sử dụng báo cáo được thực hiện chủ yếu bởi quản trị viên. Người dùng chọn tháng và năm cần theo dõi, hệ thống tập hợp dữ liệu từ hóa đơn, phòng ở và tòa nhà để tính toán doanh thu đã thu, số lượng hóa đơn đã thanh toán, số hóa đơn chưa thanh toán, tổng sức chứa, số chỗ đã sử dụng và tỷ lệ lấp đầy toàn hệ thống cũng như theo từng tòa nhà.
+
+Hậu điều kiện của ca sử dụng là người quản lý có trong tay bức tranh tổng hợp về tình hình vận hành ký túc xá trong một giai đoạn xác định. Đây là ca sử dụng có tính chất hỗ trợ điều hành và có giá trị lớn trong việc ra quyết định quản trị.
+
+\subsection*{2.4. Biểu đồ hoạt động}
+\addcontentsline{toc}{subsection}{2.4. Biểu đồ hoạt động}
+
+\subsubsection*{2.4.1. Xác định các luồng nghiệp vụ trọng tâm}
+\addcontentsline{toc}{subsubsection}{2.4.1. Xác định các luồng nghiệp vụ trọng tâm}
+
+Theo yêu cầu của đề tài, phần này không đi vào “tìm lớp” hay xây dựng biểu đồ lớp như bố cục tham khảo ban đầu, mà tập trung mô tả luồng hoạt động của các ca sử dụng chính. Đây là lựa chọn phù hợp hơn với đặc thù của hệ thống quản lý ký túc xá, bởi trọng tâm của bài toán nằm ở sự chuyển động của quy trình nghiệp vụ hơn là ở việc phân tách lớp đối tượng ở mức chi tiết.
+
+Các luồng nghiệp vụ trọng tâm gồm có luồng xác thực người dùng, luồng đăng ký nội trú, luồng cập nhật trạng thái phòng, luồng lập và xác nhận hóa đơn, luồng tiếp nhận bảo trì và luồng tổng hợp báo cáo. Mỗi luồng đều được mô tả trong \texttt{UML.txt} bằng biểu đồ hoạt động để thể hiện rõ thứ tự các bước xử lý và các điều kiện rẽ nhánh quan trọng.
+
+\subsubsection*{2.4.2. Biểu đồ hoạt động}
+\addcontentsline{toc}{subsubsection}{2.4.2. Biểu đồ hoạt động}
+
+\subsubsection*{2.4.2.1. Biểu đồ hoạt động đặt phòng}
+\addcontentsline{toc}{subsubsection}{2.4.2.1. Biểu đồ hoạt động đặt phòng}
+
+Biểu đồ hoạt động của ca sử dụng đặt phòng bắt đầu từ thao tác tra cứu phòng còn chỗ của sinh viên, sau đó đi qua bước kiểm tra loại phòng phù hợp, kiểm tra sức chứa, kiểm tra trạng thái phòng và kiểm tra đơn đăng ký hiện có của sinh viên. Nếu mọi điều kiện đều hợp lệ, hệ thống ghi nhận đơn ở trạng thái chờ xử lý. Nếu một trong các điều kiện không đạt, luồng xử lý kết thúc bằng thông báo lỗi tương ứng. Biểu đồ này làm nổi bật vai trò của bước kiểm tra nghiệp vụ trước khi tạo dữ liệu.
+
+\subsubsection*{2.4.2.2. Biểu đồ hoạt động quản lý sinh viên}
+\addcontentsline{toc}{subsubsection}{2.4.2.2. Biểu đồ hoạt động quản lý sinh viên}
+
+Trong bối cảnh quản lý nội trú, biểu đồ hoạt động của ca sử dụng quản lý sinh viên tập trung vào việc người dùng đăng nhập, hệ thống xác định vai trò, truy xuất hồ sơ cá nhân và hiển thị các dữ liệu thuộc phạm vi được phép xem. Luồng này cho thấy quá trình cá nhân hóa dữ liệu theo vai trò là điều kiện cần để hệ thống vừa thuận tiện vừa an toàn.
+
+\subsubsection*{2.4.2.3. Biểu đồ hoạt động quản lý phòng}
+\addcontentsline{toc}{subsubsection}{2.4.2.3. Biểu đồ hoạt động quản lý phòng}
+
+Biểu đồ hoạt động của ca sử dụng quản lý phòng mô tả ba nhánh chính gồm tạo tòa nhà, tạo phòng và cập nhật trạng thái phòng. Điểm đáng chú ý là nhánh cập nhật trạng thái luôn gắn với bước kiểm tra sức chứa hiện tại của phòng nhằm tránh trường hợp đặt trạng thái không phù hợp với tình trạng thực tế. Đây là luồng hoạt động phản ánh rất rõ tư tưởng kiểm soát dữ liệu thay vì chỉ cho phép chỉnh sửa tự do.
+
+\subsubsection*{2.4.2.4. Biểu đồ hoạt động thanh toán}
+\addcontentsline{toc}{subsubsection}{2.4.2.4. Biểu đồ hoạt động đặt phòng}
+
+Biểu đồ hoạt động của ca sử dụng thanh toán bắt đầu bằng việc cán bộ nhập thông tin hóa đơn theo kỳ, tiếp theo là bước kiểm tra đăng ký nội trú hợp lệ và chống trùng hóa đơn. Sau khi hệ thống tính tiền phòng, điện và nước, hóa đơn được tạo ở trạng thái chưa thanh toán. Luồng cuối cùng cho phép cán bộ xác nhận thanh toán để cập nhật trạng thái. Nhờ biểu đồ này, người xem có thể thấy rõ mối quan hệ giữa dữ liệu cư trú và dữ liệu tài chính.
+
+\subsubsection*{2.4.2.5. Biểu đồ hoạt động đăng nhập}
+\addcontentsline{toc}{subsubsection}{2.4.2.5. Biểu đồ hoạt động đăng nhập}
+
+Biểu đồ hoạt động của ca sử dụng đăng nhập thể hiện quá trình người dùng nhập thông tin xác thực, hệ thống kiểm tra dữ liệu, cấp token, lưu cookie phiên và điều hướng người dùng đến dashboard phù hợp. Đây là luồng hoạt động ngắn nhưng có ý nghĩa nền tảng vì nó là cổng vào của toàn bộ hệ thống.
+
+\subsubsection*{2.4.2.6. Biểu đồ hoạt động xem báo cáo thống kê}
+\addcontentsline{toc}{subsubsection}{2.4.2.6. Biểu đồ hoạt động xem báo cáo thống kê}
+
+Biểu đồ hoạt động của ca sử dụng báo cáo bắt đầu khi quản trị viên chọn tháng và năm cần xem, sau đó hệ thống thực hiện truy xuất dữ liệu từ hóa đơn, phòng ở và tòa nhà, tính toán các chỉ số tổng hợp rồi trả về giao diện báo cáo. Luồng hoạt động này cho thấy báo cáo là kết quả của quá trình tổng hợp nhiều nguồn dữ liệu chứ không phải dữ liệu độc lập.
+
+\subsection*{2.5. Biểu đồ tuần tự}
+\addcontentsline{toc}{subsection}{2.5. Biểu đồ tuần tự}
+
+\subsubsection*{2.5.1. Biểu đồ tuần tự đăng nhập}
+\addcontentsline{toc}{subsubsection}{2.5.1. Biểu đồ tuần tự đăng nhập}
+
+Biểu đồ tuần tự đăng nhập mô tả tương tác giữa người dùng, giao diện, API xác thực, dịch vụ xác thực, kho dữ liệu người dùng và tiện ích tạo token. Trình tự này bắt đầu từ yêu cầu đăng nhập, đi qua bước kiểm tra email và mật khẩu, sau đó sinh token và trả thông tin về giao diện. Đây là một trong những biểu đồ quan trọng nhất vì nó cho thấy cách hệ thống kiểm soát truy cập từ lớp ngoài cùng đến lớp nghiệp vụ.
+
+\subsubsection*{2.5.2. Biểu đồ tuần tự quản lý phòng}
+\addcontentsline{toc}{subsubsection}{2.5.2. Biểu đồ tuần tự quản lý phòng}
+
+Biểu đồ tuần tự của ca sử dụng quản lý phòng mô tả tương tác giữa quản trị viên, giao diện quản lý, API tòa nhà -- phòng, dịch vụ xử lý và cơ sở dữ liệu. Tùy theo thao tác tạo tòa nhà, tạo phòng hoặc cập nhật trạng thái phòng, trình tự sẽ đi qua các bước kiểm tra trùng lặp, kiểm tra tồn tại dữ liệu và lưu cập nhật mới. Biểu đồ này giúp làm rõ việc các điều kiện nghiệp vụ được xử lý trong service thay vì ở giao diện.
+
+\subsubsection*{2.5.3. Biểu đồ tuần tự đặt phòng}
+\addcontentsline{toc}{subsubsection}{2.5.3. Biểu đồ tuần tự đặt phòng}
+
+Biểu đồ tuần tự đặt phòng thể hiện luồng tương tác giữa sinh viên, frontend, API đăng ký, dịch vụ đăng ký và cơ sở dữ liệu. Hệ thống lần lượt kiểm tra phòng, kiểm tra sự phù hợp của loại phòng, kiểm tra đơn hiện có của sinh viên rồi mới tạo đơn mới. Sau đó, ở bước duyệt đơn, nhân viên lại tiếp tục tương tác với cùng chuỗi thành phần để cập nhật trạng thái đơn và trạng thái phòng. Trình tự này giúp chứng minh rằng dữ liệu được kiểm soát ở cả bước nộp đơn và bước duyệt đơn.
+
+\subsubsection*{2.5.4. Biểu đồ tuần tự thanh toán}
+\addcontentsline{toc}{subsubsection}{2.5.4. Biểu đồ tuần tự thanh toán}
+
+Biểu đồ tuần tự thanh toán mô tả quá trình cán bộ nhập thông tin hóa đơn, API chuyển yêu cầu sang dịch vụ hóa đơn, dịch vụ kiểm tra dữ liệu cư trú, tính toán chi phí rồi tạo hóa đơn trong cơ sở dữ liệu. Khi xác nhận thanh toán, trình tự tiếp tục với thao tác cập nhật trạng thái và lưu thời điểm thanh toán. Đây là biểu đồ cho thấy rõ mối liên hệ giữa xử lý tài chính và trạng thái nội trú của sinh viên.
+
+\subsubsection*{2.5.5. Biểu đồ tuần tự quản lý bảo trì và thông báo}
+\addcontentsline{toc}{subsubsection}{2.5.5. Biểu đồ tuần tự quản lý bảo trì và thông báo}
+
+Biểu đồ tuần tự của nghiệp vụ bảo trì và thông báo phản ánh hai dạng tương tác điển hình trong môi trường vận hành. Với bảo trì, sinh viên gửi yêu cầu, hệ thống kiểm tra quyền hợp lệ rồi lưu yêu cầu để nhân viên tiếp nhận và cập nhật trạng thái. Với thông báo, cán bộ tạo nội dung, chọn nhóm đích và hệ thống lưu lại để hiển thị cho người dùng tương ứng. Hai luồng này cho thấy hệ thống không chỉ quản lý dữ liệu lưu trú mà còn hỗ trợ quá trình tương tác dịch vụ trong ký túc xá.
+
+\subsubsection*{2.5.6. Biểu đồ tuần tự xem báo cáo thống kê}
+\addcontentsline{toc}{subsubsection}{2.5.6. Biểu đồ tuần tự xem báo cáo thống kê}
+
+Biểu đồ tuần tự xem báo cáo mô tả việc quản trị viên gửi yêu cầu theo tháng và năm, API chuyển tới dịch vụ báo cáo, dịch vụ lấy dữ liệu từ hóa đơn, phòng ở và tòa nhà, sau đó tổng hợp kết quả rồi trả về giao diện. Biểu đồ này đặc biệt hữu ích vì cho thấy báo cáo là kết quả của quá trình tính toán từ nhiều nguồn dữ liệu chứ không phải một bảng dữ liệu cố định.
+
+\newpage
+\section*{CHƯƠNG 3: XÂY DỰNG CHƯƠNG TRÌNH}
+\addcontentsline{toc}{section}{CHƯƠNG 3: XÂY DỰNG CHƯƠNG TRÌNH}
+
+\subsection*{3.3. Cơ sở dữ liệu}
+\addcontentsline{toc}{subsection}{3.3. Cơ sở dữ liệu}
+
+Cơ sở dữ liệu của hệ thống được thiết kế xoay quanh các bảng chính gồm người dùng, tòa nhà, phòng ở, đăng ký nội trú, hóa đơn, yêu cầu bảo trì và thông báo. Bảng người dùng lưu thông tin định danh và vai trò. Bảng tòa nhà lưu thông tin về khu nhà và số tầng. Bảng phòng ở gắn với tòa nhà, chứa số phòng, sức chứa, số người hiện tại, loại phòng, giá phòng và trạng thái sử dụng. Bảng đăng ký nội trú mô tả mối quan hệ giữa sinh viên với phòng ở trong một khoảng thời gian xác định. Bảng hóa đơn phản ánh nghĩa vụ tài chính theo tháng. Bảng bảo trì ghi nhận các sự cố và quá trình xử lý. Bảng thông báo lưu nội dung truyền thông nội bộ theo vai trò.
+
+Mối quan hệ giữa các bảng được tổ chức khá rõ ràng. Một tòa nhà có nhiều phòng. Một phòng có thể liên hệ với nhiều đơn đăng ký, nhiều hóa đơn và nhiều yêu cầu bảo trì theo thời gian. Một sinh viên có thể có lịch sử nhiều lần đăng ký ở hoặc nhiều hóa đơn, nhưng tại cùng một thời điểm hệ thống kiểm soát để tránh phát sinh các trạng thái mâu thuẫn. Thiết kế này không chỉ phục vụ nghiệp vụ tác nghiệp mà còn thuận lợi cho việc truy vấn báo cáo tổng hợp.
+
+Một điểm đáng chú ý trong thiết kế dữ liệu là việc sử dụng các trường trạng thái cho nhiều bảng khác nhau. Đơn đăng ký có các trạng thái như chờ xử lý, đã duyệt, từ chối và trả phòng. Phòng ở có các trạng thái còn chỗ, đã đầy hoặc bảo trì. Hóa đơn có các trạng thái chưa thanh toán và đã thanh toán. Yêu cầu bảo trì có các trạng thái chờ xử lý, đang xử lý và đã hoàn thành. Nhờ mô hình trạng thái này, hệ thống có thể phản ánh đúng nhịp vận hành của ký túc xá thay vì chỉ lưu dữ liệu tĩnh.
+
+\subsection*{3.4. Giao diện của hệ thống}
+\addcontentsline{toc}{subsection}{3.4. Giao diện của hệ thống}
+
+\subsubsection*{3.4.1. Giao diện đăng nhập}
+\addcontentsline{toc}{subsubsection}{3.4.1. Giao diện đăng nhập}
+
+Giao diện đăng nhập là cửa ngõ đầu tiên để người dùng tiếp cận hệ thống. Màn hình này cho phép nhập email và mật khẩu, đồng thời phản hồi rõ ràng khi dữ liệu không hợp lệ. Sau khi xác thực thành công, hệ thống sẽ điều hướng người dùng đến dashboard phù hợp với vai trò. Một giao diện đăng nhập tốt không chỉ cần dễ sử dụng mà còn phải làm nổi bật tính an toàn và độ tin cậy của hệ thống.
+
+\subsubsection*{3.4.2. Giao diện đặt phòng}
+\addcontentsline{toc}{subsubsection}{ Giao diện đặt phòng}
+
+Giao diện đặt phòng, hay chính xác hơn là giao diện đăng ký ở ký túc xá, cung cấp danh sách các phòng còn chỗ phù hợp với đối tượng người dùng. Tại đây, sinh viên có thể xem các thông tin quan trọng như tòa nhà, số phòng, loại phòng, sức chứa, số người đang ở và mức phí phòng. Sau khi lựa chọn, sinh viên gửi yêu cầu đăng ký và có thể theo dõi trạng thái xử lý của đơn trên cùng hệ thống.
+
+\subsubsection*{3.4.3. Giao diện quản lý dịch vụ}
+\addcontentsline{toc}{subsubsection}{3.4.3. Giao diện quản lý dịch vụ}
+
+Trong hệ thống hiện tại, giao diện quản lý dịch vụ chủ yếu được thể hiện qua giao diện yêu cầu bảo trì và các chức năng hỗ trợ sinh viên nội trú. Màn hình này cho phép sinh viên nhập tiêu đề, mô tả sự cố, lựa chọn phòng đang ở và gửi yêu cầu đến bộ phận quản lý. Ở chiều ngược lại, nhân viên có thể xem danh sách yêu cầu và cập nhật trạng thái xử lý. Cách tổ chức giao diện này giúp rút ngắn khoảng cách giữa người ở và ban quản lý trong các tình huống cần hỗ trợ.
+
+\subsubsection*{3.4.4. Giao diện quản lý phòng}
+\addcontentsline{toc}{subsubsection}{3.4.4. Giao diện quản lý phòng}
+
+Giao diện quản lý phòng dành cho quản trị viên và một phần cho nhân viên vận hành. Tại đây, người dùng có thể xem danh sách tòa nhà, danh sách phòng theo từng tòa, trạng thái phòng và các thông tin liên quan đến sức chứa. Giao diện này đóng vai trò như trung tâm theo dõi hạ tầng cư trú, giúp người quản lý dễ dàng phát hiện phòng còn chỗ, phòng đã đầy hoặc phòng đang bảo trì.
+
+\subsubsection*{3.4.5. Giao diện thanh toán}
+\addcontentsline{toc}{subsubsection}{3.4.5. Giao diện thanh toán}
+
+Giao diện thanh toán cho phép hiển thị thông tin hóa đơn theo tháng, bao gồm tiền phòng, tiền điện, tiền nước, tổng tiền và trạng thái thanh toán. Sinh viên sử dụng giao diện này để theo dõi nghĩa vụ tài chính của mình, trong khi nhân viên sử dụng nó để tạo hóa đơn và xác nhận khi khoản thu đã hoàn thành. Một giao diện thanh toán rõ ràng giúp hạn chế tranh chấp dữ liệu và tăng tính minh bạch cho công tác thu phí nội trú.
+
+\subsubsection*{3.4.6. Giao diện báo cáo thống kê}
+\addcontentsline{toc}{subsubsection}{3.4.6. Giao diện báo cáo thống kê}
+
+Giao diện báo cáo thống kê là nơi hiển thị các chỉ số tổng hợp về tình hình vận hành ký túc xá theo tháng. Tại đây, quản trị viên có thể xem doanh thu đã thu, số hóa đơn đã thanh toán, số hóa đơn chưa thanh toán, tổng số phòng, tổng sức chứa và tỷ lệ lấp đầy theo từng tòa nhà. Nếu được mở rộng thêm các biểu đồ trực quan, màn hình này sẽ trở thành công cụ hỗ trợ điều hành rất hiệu quả cho ban quản lý.
+
+\newpage
+\section*{KẾT LUẬN VÀ KIẾN NGHỊ}
+\addcontentsline{toc}{section}{KẾT LUẬN VÀ KIẾN NGHỊ}
+
+Qua quá trình nghiên cứu, phân tích, thiết kế và hiện thực, đề tài đã xây dựng được một hệ thống quản lý ký túc xá trên nền tảng web với các thành phần tương đối đầy đủ từ xác thực người dùng, quản lý phòng ở, đăng ký nội trú, hóa đơn, bảo trì, thông báo cho đến báo cáo thống kê. Hệ thống không chỉ giải quyết bài toán lưu trữ dữ liệu mà còn phản ánh được nhiều ràng buộc nghiệp vụ thiết thực như kiểm tra loại phòng phù hợp, kiểm soát sức chứa, chống trùng đăng ký và liên kết dữ liệu cư trú với dữ liệu tài chính.
+
+Về mặt học thuật, đề tài cho thấy khả năng vận dụng tổng hợp các kiến thức về phân tích hệ thống, thiết kế cơ sở dữ liệu, lập trình backend, phát triển giao diện người dùng và tổ chức môi trường triển khai. Về mặt thực tiễn, sản phẩm tạo ra một nền tảng có thể tiếp tục hoàn thiện để hỗ trợ công tác quản lý nội trú tại các cơ sở giáo dục đại học, đặc biệt ở những môi trường có nhiều đối tượng cư trú và nhu cầu vận hành tương đối đa dạng.
+
+Mặc dù đã đạt được các mục tiêu cốt lõi, hệ thống vẫn còn một số hướng phát triển đáng chú ý. Trong thời gian tới, có thể nghiên cứu tích hợp thanh toán trực tuyến, mở rộng chức năng thông báo theo thời gian thực, bổ sung quy trình chuyển phòng hoặc gia hạn nội trú, đồng thời tăng cường các cơ chế kiểm thử tự động và giám sát hệ thống khi triển khai thực tế. Những định hướng này sẽ giúp sản phẩm tiến gần hơn tới một giải pháp vận hành ký túc xá hoàn chỉnh và có khả năng sử dụng lâu dài.
+
+\newpage
+\section*{TÀI LIỆU THAM KHẢO}
+%\addcontentsline{toc}{section}{TÀI LIỆU THAM KHẢO}
+
+\begin{thebibliography}{99}
+        \bibitem{utb_history}
+    Trường Đại học Tây Bắc, \textit{Lịch sử hình thành}, trang chính thức Trường Đại học Tây Bắc. Truy cập tại: \url{https://utb.edu.vn/lich-su-hinh-thanh.html}
+    
+    \bibitem{utb_khaigiang2024}
+    Báo Sơn La, \textit{Xứng đáng là trường đào tạo nguồn nhân lực chất lượng cho tỉnh Sơn La và khu vực Tây Bắc}, 2024. Truy cập tại: \url{https://baosonla.vn}
+    
+    \bibitem{utb_ktx}
+    Trường Đại học Tây Bắc, \textit{Thông tin tuyển sinh -- Ký túc xá}, trang chính thức Trường Đại học Tây Bắc. Truy cập tại: \url{https://utb.edu.vn/tuyen-sinh.html}
+    
+    \bibitem{utb_phong_ktu}
+    Navigates, \textit{Trường Đại học Tây Bắc (TBU) -- Mã trường TTB}, 2025. Truy cập tại: \url{https://navigates.vn/truong-hoc/dai-hoc-tay-bac/}
+    
+    \bibitem{utb_phongsban}
+    Trường Đại học Tây Bắc, \textit{Các phòng ban -- Phòng Quản trị Thiết bị}, trang chính thức Trường Đại học Tây Bắc. Truy cập tại: \url{https://utb.edu.vn/cac-phong-ban.html}
+    
+	\bibitem{starrez}
+	StarRez, \textit{Student Housing Software and Residential Community Management}, tài liệu giới thiệu sản phẩm và giải pháp quản lý cư trú sinh viên, truy cập từ trang chính thức của StarRez.
+	
+	\bibitem{erezlife}
+	eRezLife, \textit{Housing and Residence Life Software}, tài liệu giới thiệu nền tảng quản lý ký túc xá và đời sống nội trú sinh viên, truy cập từ trang chính thức của eRezLife.
+	
+	\bibitem{fastapi}
+	Sebastián Ramírez, \textit{FastAPI Documentation}, tài liệu chính thức của FastAPI về xây dựng API, dependency injection và xử lý xác thực.
+	
+	\bibitem{sqlalchemy}
+	SQLAlchemy Authors, \textit{SQLAlchemy Documentation}, tài liệu chính thức về ORM, truy vấn dữ liệu và ánh xạ đối tượng trong Python.
+	
+	\bibitem{postgresql}
+	PostgreSQL Global Development Group, \textit{PostgreSQL Documentation}, tài liệu chính thức về thiết kế và vận hành cơ sở dữ liệu PostgreSQL.
+	
+	\bibitem{react}
+	Meta and React Contributors, \textit{React Documentation}, tài liệu chính thức về phát triển giao diện người dùng theo mô hình component.
+	
+	\bibitem{docker}
+	Docker Inc., \textit{Docker Documentation}, tài liệu chính thức về container hóa và Docker Compose.
+	
+	\bibitem{jwt}
+	M. Jones, J. Bradley, N. Sakimura, \textit{RFC 7519: JSON Web Token (JWT)}, Internet Engineering Task Force, 2015.
+\end{thebibliography}
+\end{document}

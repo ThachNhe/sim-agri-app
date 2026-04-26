@@ -46,8 +46,8 @@ class TestSensorService:
         user.role = UserRole.USER
 
         zone = MagicMock()
-        zone.owner_id = user_id
         service.zone_repo.get_by_id = AsyncMock(return_value=zone)
+        service.zone_repo.is_farmer_assigned = AsyncMock(return_value=True)
 
         async def fake_create(sensor):
             now = datetime.now(timezone.utc)

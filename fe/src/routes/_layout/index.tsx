@@ -13,6 +13,7 @@ import { useDashboardSummary } from '@/hooks/useDashboard'
 import { useLatestReadings, useReadings } from '@/hooks/useReadings'
 import { useSensors } from '@/hooks/useSensors'
 import { useZones } from '@/hooks/useZones'
+import { useAdminZones } from '@/hooks/useAdminZones'
 import { useUsers } from '@/hooks/useUsers'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { SENSOR_LABEL, SENSOR_UNIT, type SensorType } from '@/types/common.types'
@@ -59,8 +60,12 @@ function DashboardPage() {
   const summary = summaryRes?.data
 
   // Zones for zone-health grid
-  const { data: zonesRes } = useZones(ownerId, canLoadFarmData)
-  const zones = zonesRes?.data || []
+  const { data: adminZonesRes } = useAdminZones(isAdmin && canLoadFarmData)
+  const { data: farmerZonesRes } = useZones(!isAdmin && canLoadFarmData)
+  const allAdminZones = adminZonesRes?.data || []
+  const zones = isAdmin
+    ? allAdminZones.filter(z => z.assigned_farmers.some(f => f.id === ownerId))
+    : (farmerZonesRes?.data || [])
 
   // Alert summary for farmer
   const { data: alertSummaryRes } = useAlertSummary(undefined, !isAdmin)
@@ -194,8 +199,15 @@ function ZoneHealthCard({ zoneId, zoneName, plantName }: { zoneId: string; zoneN
 }
 
 function SensorChartPanel({ ownerId, canLoad }: { ownerId: string | undefined; canLoad: boolean }) {
-  const { data: zonesRes } = useZones(ownerId, canLoad)
-  const zones = zonesRes?.data || []
+  const isAdmin = Boolean(ownerId !== undefined)
+  const { data: adminZonesRes } = useAdminZones(isAdmin && canLoad)
+  const { data: farmerZonesRes } = useZones(!isAdmin && canLoad)
+  // For admin: filter all zones to only show zones assigned to selected farmer
+  const allAdminZones = adminZonesRes?.data || []
+  const farmerZones = isAdmin
+    ? allAdminZones.filter(z => z.assigned_farmers.some(f => f.id === ownerId))
+    : (farmerZonesRes?.data || [])
+  const zones = farmerZones
   const [selectedZoneId, setSelectedZoneId] = useState('')
 
   useEffect(() => {

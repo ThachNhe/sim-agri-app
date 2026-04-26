@@ -163,7 +163,7 @@ function UsersPage() {
                 </div>
 
                 <p className="text-sm text-muted-foreground">
-                  Mật khẩu tạm thời sẽ được tạo tự động và gửi vào MailHog.
+                  Mật khẩu tạm thời sẽ được tạo tự động và gửi vào Email.
                 </p>
               </div>
 
