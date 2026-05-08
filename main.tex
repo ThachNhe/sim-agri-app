@@ -20,7 +20,8 @@
 \usepackage{enumitem}
 \usepackage{tikz}
 \usepackage{scrextend}
-\usetikzlibrary{calc,positioning,arrows.meta,shapes.geometric}
+\usepackage{listings}
+\usetikzlibrary{calc,positioning,arrows.meta,shapes.geometric,fit,backgrounds}
 
 \definecolor{myblue}{RGB}{0,72,160}
 \definecolor{lightblue}{RGB}{232,242,252}
@@ -32,8 +33,8 @@
 	linkcolor=myblue,
 	citecolor=myblue,
 	urlcolor=myblue,
-	pdftitle={Bao cao do an Chatbot Tin hoc 12},
-	pdfauthor={Phạ Sắc - Lò Văn Hin}
+	pdftitle={Bao cao do an AgriSmart},
+	pdfauthor={Dieu Chinh Sim}
 }
 
 \geometry{top=2.5cm,bottom=3cm,left=3.5cm,right=2cm,marginparwidth=1.75cm}
@@ -51,12 +52,12 @@
 \renewcommand{\contentsname}{MỤC LỤC}
 \renewcommand{\listfigurename}{DANH MỤC HÌNH}
 \renewcommand{\listtablename}{DANH MỤC BẢNG}
-\addto\captionsvietnamese{\renewcommand{\abstractname}{ĐỀ TÀI}}
+\addto\captionsvietnamese{\renewcommand{\abstractname}{MỞ ĐẦU}}
 
-\newcommand{\reporttitle}{XÂY DỰNG CHATBOT HỖ TRỢ GIÁO VIÊN TRONG GIẢNG DẠY TIN HỌC 12}
-\newcommand{\studentname}{Phạ Sắc - Lò Văn Hin}
-\newcommand{\studentid}{MSV: 2024LN031}
-\newcommand{\advisorname}{GV hướng dẫn: TS. Phạm Đình Thành}
+\newcommand{\reporttitle}{THIẾT KẾ VÀ XÂY DỰNG HỆ THỐNG GIÁM SÁT NÔNG NGHIỆP THÔNG MINH (SMART AGRICULTURE)}
+\newcommand{\studentname}{Điêu Chính Sim}
+\newcommand{\studentid}{2022a1271}
+\newcommand{\advisorname}{GV hướng dẫn: ThS. Nguyễn Văn Hải}
 
 \begin{document}
 	
@@ -154,15 +155,15 @@
 	
 	\vspace{20pt}
 	
-	Trong suốt quá trình nghiên cứu, phân tích yêu cầu, hiện thực hóa chức năng và hoàn thiện báo cáo cho đồ án \textbf{Chatbot hỗ trợ giáo viên trong giảng dạy Tin học 12}, em đã nhận được nhiều sự hỗ trợ quý báu từ thầy cô, bạn bè và các tài liệu chuyên môn liên quan đến trí tuệ nhân tạo, xử lý ngôn ngữ tự nhiên và phát triển phần mềm giáo dục.
+	Trong suốt quá trình nghiên cứu, phân tích yêu cầu, hiện thực hóa chức năng và hoàn thiện báo cáo cho đồ án \textbf{thiết kế và xây dựng hệ thống giám sát nông nghiệp thông minh}, em đã nhận được nhiều sự hỗ trợ quý báu từ thầy cô, bạn bè và các tài liệu chuyên môn liên quan đến Internet vạn vật, nông nghiệp chính xác và phát triển phần mềm web hiện đại.
 	
-	Em xin bày tỏ lòng biết ơn sâu sắc tới \advisorname, người đã định hướng phương pháp tiếp cận, góp ý cho em trong quá trình lựa chọn phạm vi, tổ chức nội dung và hoàn thiện báo cáo. Những nhận xét có chiều sâu và thực tế đã giúp em nhìn rõ hơn cách chuyển hóa một bài toán kỹ thuật thành một sản phẩm có giá trị ứng dụng trong giảng dạy.
+	Em xin bày tỏ lòng biết ơn sâu sắc tới \advisorname, người đã định hướng phương pháp tiếp cận, góp ý cho em trong quá trình xác định phạm vi, thiết kế kiến trúc và hoàn thiện báo cáo. Những nhận xét sát thực đã giúp em nhìn rõ hơn cách chuyển hóa một bài toán kỹ thuật thành một sản phẩm có giá trị ứng dụng trong thực tiễn sản xuất nông nghiệp.
 	
-	Em xin chân thành cảm ơn Ban Giám hiệu \textbf{Trường Đại học Tây Bắc}, cùng tập thể quý thầy cô thuộc \textbf{Khoa Khoa học Tự nhiên và Công nghệ} đã truyền đạt cho em nền tảng kiến thức về phân tích hệ thống, cơ sở dữ liệu, phát triển ứng dụng web, kiểm thử phần mềm và triển khai hệ thống. Đó là hành trang quan trọng để em có thể xây dựng đề tài này theo hướng vừa có cơ sở học thuật, vừa có tính thực tiễn.
+	Em xin chân thành cảm ơn Ban Giám hiệu \textbf{Trường Đại học Tây Bắc}, cùng tập thể quý thầy cô thuộc \textbf{Khoa Khoa học Tự nhiên - Công nghệ} đã truyền đạt cho em nền tảng kiến thức về phân tích hệ thống, cơ sở dữ liệu, phát triển ứng dụng web, kiểm thử phần mềm và triển khai hệ thống. Đó là hành trang quan trọng để em có thể xây dựng đề tài này theo hướng vừa có cơ sở học thuật, vừa có tính thực tiễn.
 	
 	Em cũng xin cảm ơn gia đình và bạn bè đã luôn động viên, tạo điều kiện thuận lợi trong suốt quá trình học tập và thực hiện đồ án. Sự hỗ trợ về tinh thần và thời gian là nguồn động lực rất lớn để em có thể tập trung hoàn thành công việc đúng định hướng.
 	
-	Mặc dù đã nỗ lực nghiên cứu, hệ thống và báo cáo vẫn khó tránh khỏi những hạn chế nhất định, đặc biệt trong việc mở rộng kho tri thức sang các môn học khác, tối ưu hóa giao diện trên thiết bị di động và tích hợp gửi email thực trong môi trường sản xuất. Em rất mong nhận được thêm những góp ý quý báu từ thầy cô và bạn đọc để tiếp tục hoàn thiện đề tài ở các giai đoạn phát triển tiếp theo.
+	Mặc dù đã nỗ lực nghiên cứu, hệ thống và báo cáo vẫn khó tránh khỏi những hạn chế nhất định, đặc biệt trong việc tích hợp cảm biến IoT thực tế thay cho dữ liệu mô phỏng, bổ sung cơ chế điều khiển tự động cho thiết bị chấp hành và tối ưu hóa giao diện trên thiết bị di động. Em rất mong nhận được thêm những góp ý quý báu từ thầy cô và bạn đọc để tiếp tục hoàn thiện đề tài ở các giai đoạn phát triển tiếp theo.
 	
 	\vspace{30pt}
 	
@@ -240,13 +241,13 @@
 	\addcontentsline{toc}{section}{TÓM TẮT}
 	
 	\begin{abstract}
-		Trong bối cảnh chuyển đổi số giáo dục đang được Chính phủ Việt Nam xác định là lĩnh vực ưu tiên theo Quyết định số 749/QĐ-TTg năm 2020 , nhu cầu ứng dụng trí tuệ nhân tạo vào hỗ trợ giảng dạy ngày càng trở nên cấp thiết, đặc biệt tại các địa bàn có điều kiện tiếp cận nguồn lực hạn chế như khu vực Tây Bắc. Tại các tỉnh như Lào Cai và Lai Châu, tình trạng thiếu giáo viên Tin học có chuyên môn đúng ngành vẫn còn trầm trọng --- riêng Lai Châu thiếu gần 300 giáo viên Tin học và Tiếng Anh trong năm học 2023--2024 --- khiến giáo viên đang công tác phải kiêm nhiệm nhiều nhiệm vụ mà không có đủ công cụ hỗ trợ chuyên môn.
+		Nông nghiệp là ngành kinh tế trọng yếu của Việt Nam, chiếm hơn 14\% GDP và sử dụng trên 35\% lực lượng lao động cả nước \cite{gsovn2023}. Trong bối cảnh biến đổi khí hậu ngày càng phức tạp và yêu cầu sản xuất bền vững ngày càng cao, việc ứng dụng công nghệ cảm biến thông minh để theo dõi và tối ưu hóa điều kiện môi trường canh tác đã trở thành xu hướng tất yếu trên toàn cầu. Soussi và cộng sự (2024) đã tổng hợp hơn 100 nghiên cứu và kết luận rằng hệ thống đa cảm biến --- bao gồm nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, độ dẫn điện (EC) và CO$_2$ --- khi được tích hợp với nền tảng web và cơ chế cảnh báo thông minh, có thể giúp nông dân tăng năng suất từ 20 đến 30\% đồng thời giảm lãng phí tài nguyên đáng kể \cite{soussi2024}.
 		
-		Xuất phát từ thực tế đó, đề tài \textbf{xây dựng chatbot hỗ trợ giáo viên trong giảng dạy Tin học 12} được thực hiện nhằm giải quyết trực tiếp ba hạn chế có tính hệ thống mà giáo viên thường gặp: khó khăn trong việc trả lời nhanh các câu hỏi nội dung chuyên môn ngoài giờ; tốn nhiều thời gian biên soạn đề kiểm tra trắc nghiệm theo từng bài; và không có công cụ tích hợp để tổ chức thi trực tuyến và theo dõi kết quả học sinh một cách liền mạch. Hệ thống cho phép giáo viên hỏi đáp với trợ lý AI được xây dựng trên nền học liệu Tin học 12 đã lập chỉ mục, tạo đề thi trắc nghiệm bằng AI với khả năng kiểm soát và chỉnh sửa trước khi sử dụng, tổ chức phòng thi trực tuyến cho học sinh làm bài, đồng thời theo dõi kết quả và thống kê trên dashboard tập trung.
+		Xuất phát từ thực tiễn đó, đề tài \textbf{Xây dựng hệ thống giám sát nông nghiệp thông minh AgriSmart} được thực hiện nhằm xây dựng một nền tảng web tích hợp cho phép quản trị viên và nông dân theo dõi liên tục các thông số môi trường canh tác, nhận cảnh báo kịp thời khi thông số lệch ngưỡng tối ưu và điều khiển thiết bị chấp hành từ xa. Điểm kỹ thuật nổi bật của hệ thống là module sinh cảnh báo tự động với rule engine khoa học ba tầng nghiêm trọng --- được xây dựng dựa trực tiếp trên ngưỡng tối ưu cho từng loại cảm biến theo \cite{soussi2024} --- kết hợp với cơ chế phát hiện tổ hợp điều kiện nguy hiểm (compound conditions) như nhiệt độ cao đi kèm độ ẩm cao tạo nguy cơ nấm bệnh, hay ánh sáng mạnh đi kèm CO$_2$ thấp làm lãng phí quang hợp.
 		
-		Về phạm vi chức năng, hệ thống hỗ trợ ba nhóm người dùng chính là quản trị viên, giáo viên và học sinh, với phạm vi thao tác được phân quyền rõ ràng. Giáo viên có thể đăng nhập, hội thoại với AI, xem lịch sử hội thoại, tạo và quản lý đề thi, quản lý ngân hàng câu hỏi, tạo và điều hành phòng thi, xem dashboard và thống kê kết quả. Học sinh truy cập phòng thi qua liên kết, xác thực danh tính, làm bài và nhận điểm tự động sau khi nộp. Quản trị viên quản lý tài khoản toàn hệ thống, theo dõi biểu đồ xu hướng sử dụng, xếp hạng giáo viên và xem nhật ký hoạt động.
+		Về phạm vi chức năng, hệ thống hỗ trợ hai vai trò người dùng: quản trị viên và nông dân, với phân quyền rõ ràng dựa trên RBAC. Quản trị viên quản lý toàn bộ người dùng, tạo và phân công khu vực trồng trọt, định nghĩa hồ sơ cây trồng với các ngưỡng tối ưu theo từng loại cây. Nông dân theo dõi các khu vực được phân công, xem dữ liệu cảm biến theo thời gian thực, xử lý cảnh báo và điều khiển thiết bị chấp hành như máy tưới nước, bơm phân, đèn chiếu sáng, quạt thông gió và máy sưởi.
 		
-		Về kết quả đạt được, đề tài hoàn thành một hệ thống phần mềm theo mô hình client--server với kiến trúc nhiều lớp, tích hợp kỹ thuật Retrieval-Augmented Generation (RAG) để chatbot trả lời bám sát nội dung học liệu, mô hình dữ liệu quan hệ biểu diễn đầy đủ các thực thể nghiệp vụ từ người dùng đến lịch sử thi, và giao diện quản trị trực quan cho cả ba vai trò. Hệ thống được thiết kế theo hướng tách biệt rõ ràng giữa lớp giao diện, lớp nghiệp vụ và lớp dữ liệu, tạo nền tảng thuận lợi để mở rộng sang các môn học khác hoặc tích hợp thêm các tính năng phân tích học tập trong các giai đoạn phát triển tiếp theo.
+		Về kết quả đạt được, đề tài hoàn thành một hệ thống phần mềm client--server đa lớp với backend FastAPI, cơ sở dữ liệu PostgreSQL, frontend React/TypeScript, và background task mô phỏng dữ liệu cảm biến mỗi 60 giây có tích hợp rule engine khoa học. Kiến trúc hệ thống được thiết kế tách biệt rõ ràng giữa tầng API, tầng nghiệp vụ và tầng dữ liệu, tạo nền tảng thuận lợi để tích hợp cảm biến IoT thực tế và mở rộng sang nhiều loại cây trồng trong các giai đoạn phát triển tiếp theo.
 	\end{abstract}
 	
 	\clearpage
@@ -270,35 +271,33 @@
 			\hline
 			{Chữ viết tắt} & \multicolumn{1}{c|}{\textbf{Ý nghĩa}} \\
 			\hline
-			AI & Artificial Intelligence, trí tuệ nhân tạo. \\
-			\hline
 			API & Application Programming Interface, giao diện lập trình ứng dụng giữa frontend và backend. \\
-			\hline
-			CRUD & Create, Read, Update, Delete, bốn thao tác cơ bản với dữ liệu. \\
-			\hline
-			DB & Database, cơ sở dữ liệu lưu trữ trạng thái và lịch sử vận hành hệ thống. \\
-			\hline
-			FAISS & Facebook AI Similarity Search, thư viện tìm kiếm vector hiệu năng cao dùng trong RAG. \\
-			\hline
-			FE & Frontend, phần giao diện người dùng được xây dựng bằng React và TypeScript. \\
 			\hline
 			BE & Backend, phần xử lý nghiệp vụ, xác thực và truy xuất dữ liệu phía máy chủ. \\
 			\hline
-			JWT & JSON Web Token, chuẩn token dùng cho xác thực người dùng. \\
+			CRUD & Create, Read, Update, Delete, bốn thao tác cơ bản với dữ liệu. \\
 			\hline
-			LLM & Large Language Model, mô hình ngôn ngữ lớn được sử dụng làm lõi sinh ngôn ngữ cho chatbot. \\
+			DB & Database, cơ sở dữ liệu quan hệ lưu trữ toàn bộ dữ liệu vận hành hệ thống. \\
 			\hline
-			ORM & Object Relational Mapping, cơ chế ánh xạ đối tượng với bảng dữ liệu quan hệ. \\
+			EC & Electrical Conductivity, độ dẫn điện, dùng để đo nồng độ dinh dưỡng trong dung dịch đất (đơn vị: $\mu$S/cm hoặc mS/cm). \\
 			\hline
-			RAG & Retrieval-Augmented Generation, kỹ thuật kết hợp truy xuất tài liệu liên quan với sinh ngôn ngữ. \\
+			FE & Frontend, phần giao diện người dùng được xây dựng bằng React và TypeScript. \\
+			\hline
+			IoT & Internet of Things, mạng lưới các thiết bị vật lý được kết nối và trao đổi dữ liệu qua Internet. \\
+			\hline
+			JWT & JSON Web Token, chuẩn token dùng cho xác thực người dùng không trạng thái. \\
+			\hline
+			ORM & Object Relational Mapping, cơ chế ánh xạ đối tượng Python với bảng dữ liệu quan hệ. \\
+			\hline
+			PAR & Photosynthetically Active Radiation, bức xạ quang hợp hoạt động (400--700 nm), đo cường độ ánh sáng hiệu quả cho cây trồng. \\
 			\hline
 			RBAC & Role-Based Access Control, cơ chế kiểm soát truy cập theo vai trò người dùng. \\
 			\hline
-			THPT & Trung học Phổ thông. \\
+			REST & Representational State Transfer, kiến trúc API dựa trên giao thức HTTP. \\
 			\hline
 			UI & User Interface, giao diện tương tác của người sử dụng. \\
 			\hline
-			WebSocket & Giao thức truyền thông hai chiều thời gian thực giữa trình duyệt và máy chủ. \\
+			VPD & Vapor Pressure Deficit, thiếu hụt áp suất hơi nước --- chỉ số phản ánh mức độ căng thẳng thoát hơi nước của cây khi nhiệt độ cao kết hợp độ ẩm thấp. \\
 			\hline
 		\end{tabular}
 	\end{table}
@@ -312,638 +311,487 @@
 	\renewcommand{\headrulewidth}{0.4pt}
 	
 	% ============================================================
-	% PHẦN MỞ ĐẦU
+	% MỞ ĐẦU
 	% ============================================================
-	
-	\section*{CHƯƠNG I: KHẢO SÁT VÀ PHÂN TÍCH YÊU}
-	\addcontentsline{toc}{section}{CHƯƠNG I: KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU}
-	
-	% ------------------------------------------------------------------
-	\subsection*{1. Bối cảnh và lý do chọn đề tài}
-	\addcontentsline{toc}{subsection}{1. Bối cảnh và lý do chọn đề tài}
-	% ------------------------------------------------------------------
-	
-	\subsubsection*{1.1. Bối cảnh giáo dục vùng Tây Bắc và nhu cầu ứng dụng trí tuệ nhân tạo}
-	\addcontentsline{toc}{subsubsection}{1.1. Bối cảnh giáo dục vùng Tây Bắc và nhu cầu ứng dụng trí tuệ nhân tạo}
-	
-	Chuyển đổi số trong giáo dục đã được Chính phủ Việt Nam xác định là lĩnh vực ưu tiên trong Quyết định số 749/QĐ-TTg năm 2020 \cite{qd749}, với mục tiêu đưa công nghệ số vào mọi cấp học nhằm nâng cao chất lượng và mở rộng cơ hội tiếp cận giáo dục. Tuy nhiên, tại khu vực Tây Bắc --- đặc biệt các tỉnh Sơn La, Điện Biên, Lai Châu và Lào Cai --- khoảng cách số giữa trường học đô thị và vùng khó vẫn còn rất lớn. Theo khảo sát của Bộ Giáo dục, chỉ 12\% điểm trường vùng sâu có kết nối Internet ổn định \cite{jvs2025}, trong khi hạ tầng thiết bị và phòng học thông minh còn hạn chế; nhiều giáo viên phải di chuyển xa mới có thể tải tài liệu hoặc tham gia tập huấn trực tuyến \cite{gdtd2025}.
-	
-	Bên cạnh thách thức hạ tầng, tình trạng thiếu giáo viên bộ môn có chuyên môn đúng ngành là vấn đề cấp bách hơn. Riêng tỉnh Lai Châu thiếu gần 300 giáo viên Tin học và Tiếng Anh trong năm học 2023--2024 \cite{baolao2023}, buộc nhiều trường phải dồn lớp, ghép tiết hoặc hợp đồng thỉnh giảng. Thực trạng này khiến giáo viên Tin học tại khu vực Tây Bắc vừa thiếu đồng nghiệp để trao đổi chuyên môn, vừa phải kiêm nhiệm nhiều vai trò mà không có công cụ hỗ trợ đủ mạnh. Khi Chương trình giáo dục phổ thông 2018 yêu cầu năng lực giảng dạy Tin học ngày càng cao hơn, nghịch lý này trở nên gay gắt hơn bao giờ hết.
-	
-	Nhu cầu về một công cụ hỗ trợ giáo viên có thể trả lời nhanh câu hỏi chuyên môn, hỗ trợ soạn đề kiểm tra và tổ chức thi trực tuyến một cách tích hợp đã trở thành đòi hỏi thực tiễn rõ ràng, không chỉ là xu hướng công nghệ. Đây chính là xuất phát điểm của đề tài.
-	
-	\subsubsection*{1.2. Tổng quan nghiên cứu về chatbot giáo dục và kỹ thuật RAG}
-	\addcontentsline{toc}{subsubsection}{1.2. Tổng quan nghiên cứu về chatbot giáo dục và kỹ thuật RAG}
-	
-	Ứng dụng chatbot trí tuệ nhân tạo trong giáo dục đã được nghiên cứu rộng rãi trên bình diện quốc tế. Kav và cộng sự (2024) chỉ ra rằng chatbot AI có khả năng tạo bài giảng và câu hỏi được cá nhân hóa từ kho dữ liệu số, giúp giáo viên tiết kiệm đáng kể thời gian chuẩn bị bài \cite{kav2024}. Tuy nhiên, hạn chế lớn nhất của các mô hình ngôn ngữ lớn (LLM) khi dùng đơn độc là xu hướng ``ảo giác'' --- sinh ra thông tin không có trong tài liệu gốc --- đặc biệt nguy hiểm trong môi trường giáo dục khi nội dung cần bám sát chương trình chuẩn.
-	
-	Kỹ thuật Retrieval-Augmented Generation (RAG) ra đời như một giải pháp hiệu quả cho vấn đề này. Thay vì chỉ dựa vào kiến thức được mã hóa trong trọng số mô hình, RAG truy xuất các đoạn văn bản liên quan từ kho tài liệu đã lập chỉ mục rồi đưa vào ngữ cảnh trước khi sinh câu trả lời. Nguyễn Việt Hà và Trần Tuấn Vinh (2025) đã chứng minh rằng cách tiếp cận này giúp chatbot vượt qua hạn chế của tìm kiếm truyền thống và tăng độ chính xác của câu trả lời trong môi trường giáo dục Việt Nam \cite{nguyen2025rag}. Nghiên cứu của Lewis và cộng sự (2020) --- bài báo gốc đề xuất kiến trúc RAG --- cũng xác nhận rằng việc kết hợp truy xuất dày đặc với sinh ngôn ngữ tự nhiên cải thiện đáng kể hiệu năng trên các tác vụ hỏi đáp yêu cầu kiến thức cụ thể \cite{lewis2020rag}.
-	
-	Về phía tạo đề kiểm tra tự động, Kurdi và cộng sự (2020) tổng hợp các nghiên cứu về sinh câu hỏi tự động và kết luận rằng LLM kết hợp với dữ liệu học liệu có cấu trúc có thể tạo ra câu hỏi trắc nghiệm chất lượng cao với chi phí thời gian thấp hơn phương thức biên soạn thủ công nhiều lần \cite{kurdi2020qg}. Đây là cơ sở lý thuyết trực tiếp cho mô-đun tạo đề thi bằng AI trong hệ thống của đề tài.
-	
-	\subsubsection*{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
-	\addcontentsline{toc}{subsubsection}{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
-	
-	Hiện nay đã tồn tại một số nền tảng hỗ trợ giảng dạy ứng dụng AI. ChatGPT và Google Gemini là hai chatbot tổng quát phổ biến nhất, cung cấp khả năng hỏi đáp và soạn thảo nội dung mạnh mẽ, nhưng không được tối ưu cho học liệu Tin học 12 cụ thể và không có tính năng tổ chức thi tích hợp. Quizlet cung cấp công cụ tạo và ôn luyện câu hỏi trắc nghiệm nhưng thiếu thành phần chatbot AI hỏi đáp theo ngữ cảnh tài liệu. Google Forms và các nền tảng thi trực tuyến thông dụng yêu cầu giáo viên tạo câu hỏi thủ công và xử lý kết quả qua nhiều bước rời rạc trên nhiều nền tảng khác nhau. Trong nước, một số đề tài sinh viên đã thử nghiệm chatbot giáo dục nhưng thường chỉ dừng lại ở thành phần hỏi đáp đơn lẻ, chưa tích hợp với luồng tạo đề, tổ chức thi và theo dõi kết quả thành một hệ thống nhất quán.
-	
-	Khoảng trống mà đề tài hướng đến lấp đầy là: một hệ thống web tích hợp đầy đủ các thành phần chatbot RAG bám sát học liệu môn học, tạo đề thi bằng AI có kiểm soát, tổ chức phòng thi trực tuyến và theo dõi kết quả trên cùng một nền tảng, với giao diện đủ đơn giản để giáo viên vùng Tây Bắc có thể sử dụng hiệu quả ngay từ lần đầu tiếp cận.
-	
-	\subsubsection*{1.4. Lý do chọn đề tài}
-	\addcontentsline{toc}{subsubsection}{1.4. Lý do chọn đề tài}
-	
-	Xuất phát từ bối cảnh thực tiễn tại vùng Tây Bắc và nền tảng lý luận từ các nghiên cứu về RAG, sinh câu hỏi tự động và chatbot giáo dục, đề tài \textbf{Xây dựng chatbot hỗ trợ giáo viên trong giảng dạy Tin học 12} được lựa chọn và xây dựng như một hệ thống web hỗ trợ toàn diện cho hoạt động dạy học môn Tin học lớp 12. Đề tài mang ba ý nghĩa chính:
-	
-	\begin{itemize}[leftmargin=1.5cm]
-		\item \textbf{Ý nghĩa học thuật:} Đề tài vận dụng tổng hợp các kiến thức về phân tích yêu cầu, thiết kế kiến trúc hệ thống nhiều lớp, xây dựng API RESTful, giao tiếp WebSocket thời gian thực, phát triển giao diện người dùng và kỹ thuật RAG. Thành phần chatbot được xây dựng dựa trực tiếp trên cơ sở lý thuyết của Lewis và cộng sự (2020) \cite{lewis2020rag} và kết quả ứng dụng RAG trong giáo dục tại Việt Nam \cite{nguyen2025rag}.
-		\item \textbf{Ý nghĩa thực tiễn:} Hệ thống tạo ra công cụ số hóa trực tiếp ba khâu tốn kém thời gian nhất của giáo viên Tin học: tra cứu và giải đáp chuyên môn, biên soạn đề kiểm tra và tổ chức đánh giá. Điều này phù hợp với bối cảnh thiếu giáo viên chuyên ngành và hạ tầng hạn chế tại khu vực Tây Bắc.
-		\item \textbf{Ý nghĩa kỹ thuật:} Đề tài chứng minh khả năng xây dựng một hệ thống AI giáo dục tích hợp theo từng lớp độc lập, trong đó thành phần RAG có thể được mở rộng sang học liệu môn học khác mà không cần thay đổi kiến trúc lõi --- phù hợp với định hướng mở rộng sang nhiều môn học trong tương lai.
-	\end{itemize}
-	
-	% ------------------------------------------------------------------
+
+	\section*{MỞ ĐẦU}
+	\addcontentsline{toc}{section}{MỞ ĐẦU}
+
+	% -----------------------------------------------------------
+	\subsection*{1. Lý do chọn đề tài}
+	\addcontentsline{toc}{subsection}{1. Lý do chọn đề tài}
+
+	Vùng Tây Bắc Việt Nam, đặc biệt là tỉnh Sơn La với cao nguyên Mộc Châu và các vùng chuyên canh Mai Sơn, Yên Châu, đang từng bước trở thành vùng nông nghiệp ứng dụng công nghệ cao của khu vực. Năm 2025, tỉnh Sơn La có hơn 115 ha nhà lưới, nhà kính, hệ thống tưới nhỏ giọt trên 3.200 ha và hơn 5.500 ha đạt chứng nhận VietGAP \cite{boKhoaHoc2025a}. Tuy nhiên, phần lớn nông hộ tại đây vẫn theo dõi môi trường canh tác theo phương thức thủ công --- dữ liệu rời rạc, phản ứng chậm khi có sự cố và lịch sử can thiệp thiết bị không được lưu vết --- dẫn đến khó khăn trong tối ưu hóa điều kiện sinh trưởng và quản lý hiệu quả vùng trồng.
+
+	Trên bình diện quốc tế, các nghiên cứu về nông nghiệp chính xác đã chứng minh rằng theo dõi liên tục các thông số môi trường (nhiệt độ, độ ẩm, ánh sáng, pH, EC, CO$_2$) kết hợp cơ chế cảnh báo thông minh có thể tăng năng suất từ 20 đến 30\% đồng thời giảm lãng phí tài nguyên đáng kể \cite{soussi2024}. Các giải pháp thương mại hiện có lại được thiết kế cho nông trại quy mô lớn tại các nước phát triển với chi phí ngoài tầm với của nông hộ vừa và nhỏ; trong khi các prototype sinh viên trong nước thiếu bộ quy tắc cảnh báo có căn cứ khoa học và kiến trúc phần mềm đủ chặt chẽ để bảo trì và mở rộng.
+
+	Xuất phát từ khoảng trống đó, đề tài \textbf{AgriSmart} được lựa chọn nhằm xây dựng một nền tảng phần mềm web mã nguồn mở, kiến trúc nhiều lớp, trong đó bộ quy tắc sinh cảnh báo được xây dựng trực tiếp dựa trên ngưỡng tham chiếu khoa học theo từng loại cây trồng \cite{soussi2024}, có đầy đủ lịch sử lệnh điều khiển thiết bị, phù hợp với đặc thù vận hành của nông hộ quy mô vừa và nhỏ tại vùng Tây Bắc Việt Nam.
+
+	% -----------------------------------------------------------
 	\subsection*{2. Mục tiêu nghiên cứu}
 	\addcontentsline{toc}{subsection}{2. Mục tiêu nghiên cứu}
-	% ------------------------------------------------------------------
-	
-	Mục tiêu tổng quát của đề tài là xây dựng một hệ thống web hỗ trợ giáo viên Tin học 12 trong các hoạt động trọng tâm gồm hỏi đáp với trợ lý AI bám sát học liệu môn học, soạn và quản lý đề kiểm tra trắc nghiệm, tổ chức phòng thi trực tuyến cho học sinh và theo dõi kết quả học tập trên cùng một nền tảng.
-	
-	Từ mục tiêu tổng quát đó, đề tài tập trung vào sáu mục tiêu cụ thể sau:
-	
+
+	Mục tiêu tổng quát của đề tài là xây dựng một nền tảng phần mềm web hỗ trợ người quản lý nông trại và nông hộ theo dõi tình trạng môi trường canh tác theo thời gian gần thực, đồng thời cho phép đưa ra hành động điều khiển có kiểm soát đối với các thiết bị như hệ thống tưới, bơm phân, đèn trồng cây, quạt thông gió và máy sưởi.
+
+	Các mục tiêu cụ thể của đề tài bao gồm:
+
 	\begin{itemize}[leftmargin=1.5cm]
-		\item Thiết kế mô hình dữ liệu đủ chặt chẽ để biểu diễn quan hệ giữa người dùng, học liệu, hội thoại, câu hỏi, đề thi, phòng thi, bài làm học sinh và nhật ký hoạt động.
-		\item Xây dựng server theo kiến trúc nhiều lớp, tách biệt rõ tầng API, tầng nghiệp vụ và tầng truy cập dữ liệu, hỗ trợ cả REST API và WebSocket để phục vụ các luồng tương tác thời gian thực.
-		\item Hiện thực mô-đun chatbot RAG kết hợp FAISS và LLM, đảm bảo câu trả lời bám sát nội dung học liệu Tin học 12 đã lập chỉ mục, theo cơ sở lý thuyết của Lewis và cộng sự (2020) \cite{lewis2020rag}.
-		\item Xây dựng mô-đun tạo đề thi bằng AI hỗ trợ giáo viên sinh câu hỏi trắc nghiệm, chỉnh sửa và lưu trữ vào ngân hàng câu hỏi có thể tái sử dụng, theo định hướng của Kurdi và cộng sự (2020) \cite{kurdi2020qg}.
-		\item Xây dựng luồng tổ chức phòng thi trực tuyến cho phép giáo viên tạo phòng, học sinh vào làm bài qua liên kết, và hệ thống chấm điểm tự động ngay sau khi nộp bài.
-		\item Xây dựng giao diện trực quan và phân quyền rõ ràng cho ba vai trò quản trị viên, giáo viên và học sinh, kèm dashboard thống kê tổng quan và bảng xếp hạng giáo viên cho quản trị viên.
+		\item Thiết kế mô hình dữ liệu biểu diễn đầy đủ quan hệ giữa người dùng, khu vực trồng, hồ sơ cây trồng, cảm biến, số đo, thiết bị điều khiển, lệnh tác động và cảnh báo.
+		\item Xây dựng backend theo kiến trúc nhiều lớp (API -- Service -- Repository -- ORM), tách biệt rõ tầng xử lý, phù hợp với định hướng kiến trúc FMIS dựa trên IoT \cite{koksal2019}.
+		\item Xây dựng giao diện trực quan cho hai vai trò Admin và Farmer, với dashboard và phạm vi thao tác tương ứng.
+		\item Hiện thực bộ quy tắc sinh cảnh báo theo ngưỡng đơn và ngưỡng tổ hợp, phân mức độ nghiêm trọng và kèm khuyến nghị hành động, dựa trên phương pháp luận của Soussi và cộng sự (2024) \cite{soussi2024}.
+		\item Xây dựng cơ chế mô phỏng dữ liệu cảm biến tự động theo chu kỳ để kiểm chứng toàn bộ kiến trúc và bộ quy tắc cảnh báo.
+		\item Đóng gói môi trường triển khai bằng Docker Compose, đảm bảo nhất quán giữa các môi trường phát triển và sẵn sàng triển khai thực tế.
 	\end{itemize}
-	
-	% ------------------------------------------------------------------
+
+	% -----------------------------------------------------------
 	\subsection*{3. Đối tượng và phạm vi nghiên cứu}
 	\addcontentsline{toc}{subsection}{3. Đối tượng và phạm vi nghiên cứu}
-	% ------------------------------------------------------------------
-	
-	\subsubsection*{3.1. Đối tượng nghiên cứu}
-	\addcontentsline{toc}{subsubsection}{3.1. Đối tượng nghiên cứu}
-	
-	Đối tượng nghiên cứu của đề tài là bài toán xây dựng hệ thống chatbot hỗ trợ giảng dạy trên nền tảng web, trong đó trọng tâm là kỹ thuật RAG để đảm bảo chatbot trả lời bám sát học liệu môn học \cite{lewis2020rag}, cơ chế sinh câu hỏi trắc nghiệm tự động bằng AI \cite{kurdi2020qg}, và thiết kế luồng tổ chức thi trực tuyến tích hợp đủ đơn giản để phù hợp với điều kiện sử dụng của giáo viên vùng Tây Bắc \cite{gdtd2025}.
-	
-	\subsubsection*{3.2. Phạm vi nghiên cứu}
-	\addcontentsline{toc}{subsubsection}{3.2. Phạm vi nghiên cứu}
-	
-	\textbf{Về phạm vi chức năng}, đề tài tập trung vào các thành phần chính gồm: xác thực người dùng (đăng nhập, đăng xuất, khôi phục mật khẩu); hội thoại với AI và lưu lịch sử hội thoại; tạo đề thi bằng AI và quản lý ngân hàng câu hỏi; tạo và quản lý phòng thi; học sinh làm bài và nhận điểm tự động; dashboard và thống kê cho giáo viên; quản lý tài khoản, biểu đồ xu hướng, bảng xếp hạng và nhật ký hoạt động cho quản trị viên.
-	
-	\textbf{Về phạm vi công nghệ}, backend sử dụng FastAPI, SQLAlchemy, Alembic và PostgreSQL; frontend sử dụng React, TypeScript và Vite; kho vector được xây dựng bằng FAISS; mô hình ngôn ngữ được tích hợp qua API; giao tiếp thời gian thực qua WebSocket; môi trường phát triển được đóng gói bởi Docker Compose; email phát triển được mô phỏng bằng MailHog.
-	
-	\textbf{Giới hạn của đề tài} ở giai đoạn hiện tại là chưa hoàn thiện luồng CRUD bài học đầy đủ trên API, chưa tích hợp gửi email thực trong môi trường sản xuất, chưa mở rộng kho tri thức sang các môn học khác, và giao diện trên thiết bị di động chưa được tối ưu hoàn toàn. Việc xác định rõ phạm vi này giúp hệ thống tập trung vào lõi nghiệp vụ vững chắc trước khi mở rộng.
-	
-	% ------------------------------------------------------------------
+
+	\textbf{Đối tượng nghiên cứu} là bài toán xây dựng hệ thống giám sát nông nghiệp thông minh trên nền tảng web, tập trung vào tổ chức dữ liệu môi trường, chuyển hóa ngưỡng sinh trưởng cây trồng thành logic cảnh báo có căn cứ khoa học và thiết kế giao diện quản trị phù hợp với người dùng nông nghiệp.
+
+	\textbf{Phạm vi chức năng:} Xác thực người dùng; quản lý tài khoản nông dân; quản lý hồ sơ cây trồng và khu vực trồng trọt; quản lý cảm biến và chuỗi số liệu; quản lý thiết bị điều khiển và lịch sử lệnh; sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp; dashboard tổng hợp.
+
+	\textbf{Phạm vi công nghệ:} Backend: FastAPI, SQLAlchemy, Alembic, PostgreSQL; Frontend: React, TypeScript, TanStack Router/Query, Zustand; Triển khai: Docker Compose, MailHog. Giới hạn: chưa tích hợp gateway IoT thực địa, chưa có điều khiển khép kín tự động, chưa mở rộng sang học máy dự báo năng suất.
+
+	% -----------------------------------------------------------
 	\subsection*{4. Phương pháp nghiên cứu}
 	\addcontentsline{toc}{subsection}{4. Phương pháp nghiên cứu}
-	% ------------------------------------------------------------------
-	
-	Đề tài kết hợp bốn phương pháp nghiên cứu chính như sau.
-	
-	\textbf{Phương pháp khảo sát và phân tích nghiệp vụ.} Bài toán được phân tích từ góc nhìn thực tế của giáo viên Tin học THPT: cần biết họ gặp khó khăn gì, bước nào trong quy trình dạy học tốn thời gian nhất, và công cụ nào họ sẵn sàng chấp nhận trong điều kiện hạ tầng thực tế. Trên cơ sở đó, hệ thống được mô hình hóa thành các tác nhân, thực thể dữ liệu và quy trình xử lý có thể kiểm soát được.
-	
-	\textbf{Phương pháp phân tích tài liệu khoa học.} Đề tài dựa trên các tài liệu về kỹ thuật RAG \cite{lewis2020rag}, sinh câu hỏi tự động bằng AI \cite{kurdi2020qg}, ứng dụng RAG trong giáo dục tại Việt Nam \cite{nguyen2025rag}, chatbot cá nhân hóa trong giảng dạy \cite{kav2024} và bối cảnh chuyển đổi số giáo dục tại Tây Bắc \cite{baolao2023, gdtd2025} để định hướng thiết kế kiến trúc và lựa chọn kỹ thuật phù hợp.
-	
-	\textbf{Phương pháp thiết kế phần mềm.} Hệ thống được hiện thực theo kiến trúc nhiều lớp (multi-tier architecture), sử dụng UML để đặc tả tác nhân, ca sử dụng, luồng hoạt động và tuần tự tương tác. Cơ sở dữ liệu được thiết kế theo mô hình quan hệ với các ràng buộc nghiệp vụ rõ ràng, đảm bảo tính toàn vẹn dữ liệu ở cả tầng lưu trữ lẫn tầng ứng dụng.
-	
-	\textbf{Phương pháp kiểm chứng qua thử nghiệm.} Hệ thống được kiểm thử qua các kịch bản thực tế: giáo viên hỏi câu hỏi thuộc nội dung học liệu và ngoài phạm vi, tạo đề thi từ các chủ đề khác nhau, tổ chức phòng thi với nhiều học sinh đồng thời. Kết quả được đánh giá theo tiêu chí độ chính xác của câu trả lời RAG, tính nhất quán của đề thi được sinh, và tính ổn định của luồng làm bài.
-	
-	% ------------------------------------------------------------------
+
+	Đề tài kết hợp bốn phương pháp nghiên cứu chính. \textbf{Phương pháp khảo sát và phân tích nghiệp vụ} từ góc nhìn vận hành nông trại để xác định các tác nhân, thực thể dữ liệu và quy trình có thể kiểm soát. \textbf{Phương pháp phân tích tài liệu khoa học} dựa trên các nghiên cứu tổng quan về nông nghiệp chính xác \cite{soussi2024,ojha2015,wolfert2017,goap2018,koksal2019} để định hướng bộ quy tắc cảnh báo và cấu trúc dữ liệu. \textbf{Phương pháp thiết kế phần mềm} theo kiến trúc nhiều lớp kết hợp UML để đặc tả ca sử dụng, luồng hoạt động và tuần tự tương tác. \textbf{Phương pháp kiểm chứng qua mô phỏng}: dữ liệu cảm biến được mô phỏng tự động theo chu kỳ với biên độ dao động thực tế để kiểm chứng kiến trúc và bộ quy tắc trước khi tích hợp phần cứng thực địa.
+
+	% -----------------------------------------------------------
 	\subsection*{5. Cấu trúc báo cáo}
 	\addcontentsline{toc}{subsection}{5. Cấu trúc báo cáo}
-	% ------------------------------------------------------------------
-	
-	Cấu trúc báo cáo được tổ chức như sau:
-	
-	\textbf{Chương 1 -- Khảo sát và Phân tích Yêu cầu} trình bày mục đích khảo sát, bối cảnh thực tiễn tại vùng Tây Bắc, kết quả khảo sát nghiệp vụ và thiết kế giao diện từ các hệ thống tham khảo, cùng đặc tả yêu cầu chức năng cho từng nhóm người dùng.
-	
-	\textbf{Chương 2 -- Phân tích và Thiết kế Hệ thống} trình bày xác định bài toán, phân tích tác nhân và ca sử dụng, đặc tả các ca sử dụng chi tiết, biểu đồ hoạt động cho từng luồng nghiệp vụ và biểu đồ tuần tự minh họa tương tác giữa các thành phần.
-	
-	\textbf{Chương 3 -- Xây dựng Chương trình} trình bày kiến trúc chi tiết của backend và frontend, thiết kế cơ sở dữ liệu, cơ chế RAG và lập chỉ mục học liệu, mô-đun sinh câu hỏi bằng AI, phương án triển khai Docker Compose, kết quả kiểm thử và giao diện hệ thống.
-	
-	Cách tổ chức này đảm bảo báo cáo đi từ cơ sở lý luận và bối cảnh thực tiễn, sang , rồi đến hiện thực kỹ thuật một cách mạch lạc và có hệ thống.
+
+	Ngoài phần Mở đầu và Kết luận, báo cáo được tổ chức thành ba chương chính:
+
+	\textbf{Chương I -- Khảo sát và Đặc tả Hệ thống} trình bày bối cảnh và tổng quan nghiên cứu về nông nghiệp chính xác, kết quả khảo sát nhu cầu giám sát môi trường canh tác tại vùng Tây Bắc, cùng đặc tả hệ thống gồm tác nhân, yêu cầu chức năng, phi chức năng và ràng buộc nghiệp vụ.
+
+	\textbf{Chương II -- Phân tích và Thiết kế Hệ thống} trình bày các ca sử dụng chi tiết với biểu đồ hoạt động và tuần tự tương tác, cùng thiết kế cơ sở dữ liệu của hệ thống.
+
+	\textbf{Chương III -- Xây dựng Chương trình} trình bày kiến trúc chi tiết backend và frontend, công nghệ sử dụng, cơ chế mô phỏng dữ liệu và bộ quy tắc sinh cảnh báo, phương án triển khai Docker Compose và giao diện hệ thống.
+
+	% ============================================================
+	% CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG
+	% ============================================================
+
+	\newpage
+	\section*{CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
+	\addcontentsline{toc}{section}{CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
+
+	% -----------------------------------------------------------
+	\subsection*{1. Bối cảnh và lý do chọn đề tài}
+	\addcontentsline{toc}{subsection}{1. Bối cảnh và lý do chọn đề tài}
+
+	\subsubsection*{1.1. Bối cảnh nông nghiệp vùng Tây Bắc và nhu cầu chuyển đổi số}
+	\addcontentsline{toc}{subsubsection}{1.1. Bối cảnh nông nghiệp vùng Tây Bắc và nhu cầu chuyển đổi số}
+
+	Vùng Tây Bắc Việt Nam, bao gồm các tỉnh Sơn La, Điện Biên, Lai Châu và Hòa Bình, sở hữu lợi thế địa lý và khí hậu đặc thù với nhiều tiểu vùng khí hậu đan xen, tạo điều kiện thuận lợi cho việc canh tác đa dạng loài cây từ nhiệt đới đến ôn đới. Riêng tỉnh Sơn La, đặc biệt là cao nguyên Mộc Châu và vùng Mai Sơn, Yên Châu, đã hình thành nhiều vùng sản xuất nông nghiệp hàng hóa tập trung với các sản phẩm đặc trưng như mận hậu, nhãn, xoài, cà phê, chè Shan tuyết và các loại rau ôn đới \cite{cucThuongMai2018}. Năm 2025, tỉnh Sơn La đã xây dựng hơn 115 ha nhà lưới, nhà kính, lắp đặt hệ thống tưới nhỏ giọt trên khoảng 3.200 ha cây trồng và hơn 5.500 ha được chứng nhận VietGAP \cite{boKhoaHoc2025a}, từng bước khẳng định định hướng trở thành vùng nông nghiệp ứng dụng công nghệ cao của khu vực Tây Bắc.
+
+	Tuy nhiên, trong thực tế, phần lớn các nông hộ tại khu vực này vẫn đang ghi nhận thông tin canh tác theo phương thức thủ công, quan sát trạng thái khu vực trồng trọt theo định kỳ rồi mới đưa ra các quyết định tưới nước, bón phân, thông gió hay bổ sung ánh sáng. Cách làm này gặp ba hạn chế lớn có tính hệ thống. Thứ nhất, dữ liệu môi trường rời rạc và khó tổng hợp, dẫn đến khó phát hiện sớm các xu hướng biến động bất thường. Thứ hai, phản ứng với sự cố thường chậm do người vận hành không được cảnh báo kịp thời. Thứ ba, các quyết định điều khiển thiết bị không được lưu vết, gây khó khăn khi đánh giá hiệu quả can thiệp hoặc truy nguyên nguyên nhân của sai lệch trong quá trình canh tác.
+
+	Theo khảo sát về thực trạng chuyển đổi số nông nghiệp tại các tỉnh miền núi phía Bắc, một trong những rào cản lớn nhất là quy mô sản xuất còn nhỏ lẻ, manh mún, địa hình chia cắt và trình độ tiếp cận công nghệ chưa đồng đều \cite{boKhoaHoc2025b}. Điều này cho thấy nhu cầu về một giải pháp phần mềm có tính thiết thực, dễ triển khai và phù hợp với đặc thù vận hành của các mô hình canh tác quy mô vừa và nhỏ tại vùng Tây Bắc là hoàn toàn có căn cứ thực tiễn. Đặc biệt trong bối cảnh Nhà nước đang triển khai các chương trình ứng dụng IoT, tự động hóa và quản trị dữ liệu vào sản xuất nông nghiệp theo định hướng Nghị quyết 57 \cite{boKhoaHoc2025a}, nhu cầu về một nền tảng phần mềm hỗ trợ giám sát và điều khiển môi trường canh tác ngày càng trở nên cấp thiết.
+
+	\subsubsection*{1.2. Tổng quan nghiên cứu về nông nghiệp chính xác và hệ thống giám sát thông minh}
+	\addcontentsline{toc}{subsubsection}{1.2. Tổng quan nghiên cứu về nông nghiệp chính xác và hệ thống giám sát thông minh}
+
+	Trên bình diện quốc tế, nông nghiệp chính xác (Precision Agriculture --- PA) đang được thúc đẩy mạnh mẽ bởi sự hội tụ của cảm biến thông minh, phân tích dữ liệu lớn và nền tảng IoT. Nghiên cứu tổng quan của Soussi và cộng sự (2024) chỉ ra rằng mục tiêu cốt lõi của PA là tối ưu hóa thực hành canh tác, nâng cao hiệu quả sử dụng tài nguyên và giảm tác động môi trường thông qua tích hợp cảm biến thông minh với IoT, phân tích dữ liệu lớn và trí tuệ nhân tạo \cite{soussi2024}. Các hệ thống giám sát môi trường vận hành trên nền Mạng Cảm biến Không dây (WSN) cung cấp dịch vụ theo dõi liên tục nhằm duy trì điều kiện tăng trưởng tối ưu và phát hiện sớm các yếu tố có thể gây bệnh hại lan rộng.
+
+	Đặc biệt, Soussi và cộng sự (2024) nhấn mạnh vai trò của các thông số môi trường được đo liên tục --- bao gồm nhiệt độ không khí, độ ẩm tương đối, độ ẩm đất, cường độ ánh sáng, nồng độ CO$_2$, độ pH và độ dẫn điện EC --- trong việc quản lý sức khỏe cây trồng và hiệu quả sử dụng tài nguyên. Nghiên cứu này cũng đề xuất các ngưỡng tham chiếu cho từng thông số theo từng loại cây trồng và điều kiện nhà kính cụ thể --- đây chính là cơ sở khoa học trực tiếp được đề tài AgriSmart sử dụng để xây dựng bộ quy tắc cảnh báo vượt ngưỡng (được trình bày chi tiết tại Chương III).
+
+	Ngoài ra, Wolfert và cộng sự (2017) trong nghiên cứu tổng quan về dữ liệu lớn trong nông nghiệp thông minh cho thấy nông nghiệp hiện đại ngày càng dựa mạnh vào khả năng liên thông dữ liệu và các cơ chế hỗ trợ quyết định theo thời gian gần thực \cite{wolfert2017}. Ojha và cộng sự (2015) chứng minh rằng giá trị thực sự của WSN trong nông nghiệp không chỉ nằm ở khâu đo lường mà ở khả năng kết nối dữ liệu với hành động điều khiển và hỗ trợ ra quyết định \cite{ojha2015}. Ahmed và cộng sự (2018) cũng khẳng định rằng IoT trong nông nghiệp chính xác chỉ phát huy hiệu quả tối đa khi nền tảng phần mềm đủ trưởng thành để chuyển hóa dữ liệu cảm biến thô thành tín hiệu hành động cụ thể \cite{ahmed2018}.
+
+	Các công trình trên đặt nền tảng lý thuyết vững chắc cho cách tiếp cận của đề tài AgriSmart: xây dựng một hệ thống phần mềm lõi có khả năng quản lý dữ liệu môi trường, chuyển hóa ngưỡng sinh trưởng của cây trồng thành logic cảnh báo có mức độ nghiêm trọng và khuyến nghị hành động rõ ràng.
+
+	\subsubsection*{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
+	\addcontentsline{toc}{subsubsection}{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
+
+	Hiện nay trên thị trường đã tồn tại một số nền tảng thương mại phục vụ giám sát và tự động hóa nông nghiệp thông minh. Growlink là hệ thống phần cứng và phần mềm tích hợp của Mỹ, cho phép giám sát và điều khiển từ xa khí hậu, tưới tiêu, bổ sung dinh dưỡng và chiếu sáng trong nhà kính quy mô thương mại lớn \cite{growlink2024}. Farmapp và các nền tảng tương tự trong hệ sinh thái IoT nông nghiệp toàn cầu cung cấp khả năng theo dõi dữ liệu cảm biến thời gian thực kết hợp phân tích học máy để dự báo sản lượng \cite{farmapp2024}. Trong nước, một số đề tài nghiên cứu sinh viên và dự án thí điểm cũng đã xây dựng các prototype giám sát nhà kính dựa trên Arduino/Raspberry Pi kết hợp dashboard web đơn giản.
+
+	Tuy nhiên, các hệ thống thương mại kể trên có hai hạn chế rõ rệt khi xem xét trong bối cảnh vùng Tây Bắc Việt Nam. Thứ nhất, chúng được thiết kế cho quy mô nông trại thương mại lớn tại các nước phát triển, với chi phí triển khai và vận hành nằm ngoài khả năng của hầu hết nông hộ quy mô vừa và nhỏ tại miền núi. Thứ hai, bộ quy tắc cảnh báo và logic nghiệp vụ trong các hệ thống này bị đóng gói hoàn toàn bên trong phần cứng độc quyền, không cho phép người dùng tùy chỉnh ngưỡng theo đặc thù từng loại cây trồng địa phương. Đối với các prototype sinh viên trong nước, vấn đề ngược lại: dữ liệu cảm biến được thu thập nhưng chưa có bộ quy tắc sinh cảnh báo dựa trên căn cứ khoa học, lịch sử lệnh điều khiển chưa được lưu vết có hệ thống và kiến trúc phần mềm thường còn đơn lớp, khó bảo trì và mở rộng.
+
+	Khoảng trống nghiên cứu mà đề tài AgriSmart hướng đến lấp đầy là: một nền tảng phần mềm web mã nguồn mở, kiến trúc nhiều lớp, chi phí triển khai thấp, trong đó bộ quy tắc sinh cảnh báo được xây dựng trực tiếp trên các ngưỡng tham chiếu khoa học theo từng loại cây trồng, có đầy đủ lịch sử lệnh điều khiển, và phù hợp với quy trình vận hành của nông hộ quy mô vừa và nhỏ tại vùng Tây Bắc Việt Nam.
+
+	\subsubsection*{1.4. Lý do chọn đề tài}
+	\addcontentsline{toc}{subsubsection}{1.4. Lý do chọn đề tài}
+
+	Xuất phát từ bối cảnh thực tiễn tại vùng Tây Bắc và nền tảng lý luận từ các nghiên cứu quốc tế về nông nghiệp chính xác, đề tài AgriSmart được lựa chọn và xây dựng như một nền tảng web hỗ trợ giám sát và điều khiển môi trường canh tác thông minh. Đề tài mang ba ý nghĩa chính:
+
+	\begin{itemize}[leftmargin=1.5cm]
+		\item \textbf{Ý nghĩa học thuật:} Đề tài vận dụng tổng hợp các kiến thức về phân tích yêu cầu, thiết kế kiến trúc hệ thống nhiều lớp, xây dựng API RESTful, phát triển giao diện người dùng và tổ chức môi trường triển khai container. Bộ quy tắc sinh cảnh báo được xây dựng dựa trực tiếp trên các ngưỡng tham chiếu và phương pháp luận của nghiên cứu Soussi và cộng sự (2024) \cite{soussi2024}, đảm bảo tính có căn cứ khoa học cho phần logic trọng tâm nhất của hệ thống.
+		\item \textbf{Ý nghĩa thực tiễn:} Hệ thống tạo ra nền tảng số hóa quy trình giám sát và can thiệp trong canh tác nhà kính và khu vực trồng trọt tại miền núi, phù hợp với xu hướng ứng dụng công nghệ cao đang được Sơn La và các tỉnh Tây Bắc đẩy mạnh theo định hướng Nghị quyết 57.
+		\item \textbf{Ý nghĩa kỹ thuật:} Đề tài chứng minh khả năng kiểm chứng một kiến trúc phần mềm IoT-based theo từng lớp độc lập, trong đó phần lõi phần mềm được ổn định hóa trước khi mở rộng tích hợp thiết bị phần cứng thực tế --- phù hợp với định hướng kiến trúc cho hệ thống quản lý trang trại dựa trên IoT được đề xuất bởi Koksal và Tekinerdogan (2019) \cite{koksal2019}.
+	\end{itemize}
+
+	% -----------------------------------------------------------
+	\subsection*{2. Khảo sát thực tế}
+	\addcontentsline{toc}{subsection}{2. Khảo sát thực tế}
+
+	\subsubsection*{2.1. Kết quả khảo sát}
+	\addcontentsline{toc}{subsubsection}{2.1. Kết quả khảo sát}
+
+	Khảo sát nhu cầu giám sát môi trường canh tác tại các mô hình nhà kính và nhà lưới ứng dụng công nghệ cao ở vùng Tây Bắc, đặc biệt tại Sơn La, cho thấy hoạt động vận hành xoay quanh bốn nhóm nghiệp vụ chính.
+
+	\textbf{Giám sát môi trường liên tục:} Người vận hành cần theo dõi liên tục các thông số như nhiệt độ không khí, độ ẩm tương đối, độ ẩm đất, cường độ ánh sáng, độ pH đất, độ dẫn điện (EC) và nồng độ CO$_2$ --- đây là bộ bảy thông số cốt lõi được xác định trong nghiên cứu của Soussi và cộng sự (2024) \cite{soussi2024}. Mỗi loại cây trồng có dải ngưỡng tối ưu riêng biệt; khi thông số vượt ngưỡng, cây có nguy cơ bị stress sinh lý, sâu bệnh hoặc giảm năng suất nghiêm trọng. Việc theo dõi thủ công không đủ tần suất để phát hiện biến động bất thường trong ngày.
+
+	\textbf{Quản lý hồ sơ cây trồng và khu vực trồng:} Một nông trại thường có nhiều khu vực trồng khác nhau (nhà kính, nhà lưới, khu ngoài trời), mỗi khu có thể đang canh tác loại cây khác nhau ở các giai đoạn sinh trưởng khác nhau. Người quản lý cần biết khu vực nào đang áp dụng hồ sơ cây trồng nào, ngưỡng tham chiếu nào đang được sử dụng và trạng thái hoạt động của từng khu vực.
+
+	\textbf{Điều khiển thiết bị chấp hành có kiểm soát:} Khi phát hiện thông số bất thường, người vận hành cần kích hoạt hệ thống tưới (điều chỉnh độ ẩm đất), quạt thông gió (điều chỉnh nhiệt độ và CO$_2$), đèn trồng (bổ sung ánh sáng), bơm phân (điều chỉnh EC) hoặc máy sưởi (tăng nhiệt độ khi quá thấp). Mỗi lệnh điều khiển cần được lưu vết kèm người thực hiện, thời gian và lý do để phục vụ đánh giá hiệu quả can thiệp.
+
+	\textbf{Quản lý cảnh báo và phân công người vận hành:} Một nông trại có thể có nhiều nông dân phụ trách các khu vực khác nhau. Cần có cơ chế phân quyền để mỗi nông dân chỉ nhận cảnh báo và thao tác trên khu vực của mình, trong khi quản trị viên giám sát toàn hệ thống.
+
+	Hiện tại, toàn bộ các hoạt động trên chủ yếu được thực hiện thủ công hoặc dựa vào kinh nghiệm cá nhân của người vận hành, chưa có phần mềm hỗ trợ thu thập dữ liệu liên tục, sinh cảnh báo theo ngưỡng và lưu trữ lịch sử điều khiển một cách có hệ thống.
+
+	\subsubsection*{2.2. Phân tích kết quả khảo sát}
+	\addcontentsline{toc}{subsubsection}{2.2. Phân tích kết quả khảo sát}
+
+	Từ kết quả khảo sát, có thể nhận thấy bài toán giám sát nông nghiệp ẩn chứa sự phức tạp đáng kể khi nhìn từ góc độ luồng dữ liệu và trạng thái nghiệp vụ. Một cảnh báo tưởng chừng đơn giản --- chẳng hạn ``nhiệt độ quá cao'' --- thực tế đòi hỏi hệ thống phải biết: cây trồng nào đang được giám sát, ngưỡng tối ưu của loại cây đó là bao nhiêu, mức độ vượt ngưỡng là bao nhiêu phần trăm (để phân loại LOW/MEDIUM/HIGH), và đã có cảnh báo tương tự chưa được xử lý chưa (để tránh spam cảnh báo).
+
+	Bên cạnh đó, sự phức tạp còn đến từ yêu cầu phát hiện các \textit{điều kiện tổ hợp} --- ví dụ, nhiệt độ cao đồng thời với độ ẩm cao là dấu hiệu nguy cơ bệnh nấm, trong khi nhiệt độ cao kết hợp độ ẩm thấp lại gây stress VPD (Vapour Pressure Deficit). Đây là các tình huống không thể phát hiện bằng cách chỉ theo dõi từng thông số độc lập, dẫn đến yêu cầu thiết kế trọng tâm: hệ thống cần một \textit{rule engine} có khả năng đánh giá cả ngưỡng đơn lẫn điều kiện tổ hợp đa thông số.
+
+	Phân tích cũng cho thấy sự cần thiết của mô hình phân quyền linh hoạt: một khu vực có thể được phân công cho nhiều nông dân, một nông dân có thể quản lý nhiều khu vực, nhưng quyền truy cập phải được kiểm soát chặt chẽ để bảo đảm mỗi người chỉ thao tác trên phạm vi được phân công. Đây là điểm khác biệt quan trọng so với mô hình owner-based đơn giản thường gặp trong các prototype sinh viên.
+
+	% -----------------------------------------------------------
+	\subsection*{3. Đặc tả hệ thống}
+	\addcontentsline{toc}{subsection}{3. Đặc tả hệ thống}
+
+	\subsubsection*{3.1. Tổng quan kiến trúc}
+	\addcontentsline{toc}{subsubsection}{3.1. Tổng quan kiến trúc}
+
+	Hệ thống AgriSmart được đặc tả như một ứng dụng web nhiều người dùng, hoạt động theo mô hình client-server. Phía client, quản trị viên và nông dân thao tác thông qua giao diện đơn trang (SPA) được xây dựng bằng React và TypeScript. Phía server, backend tiếp nhận yêu cầu thông qua API RESTful, thực hiện xác thực danh tính bằng JWT lưu trong HttpOnly cookie, kiểm tra quyền truy cập theo mô hình RBAC, áp dụng logic nghiệp vụ và truy xuất dữ liệu từ cơ sở dữ liệu quan hệ PostgreSQL.
+
+	Ngoài các API phục vụ giao diện, hệ thống còn có một tác vụ nền bất đồng bộ (background task) chạy định kỳ mỗi 60 giây: mô phỏng số liệu đo từ cảm biến, lưu vào bảng \texttt{sensor\_readings}, sau đó đánh giá bộ quy tắc cảnh báo trên dữ liệu vừa thu thập và sinh bản ghi \texttt{alerts} khi phát hiện vi phạm ngưỡng. Toàn bộ hệ thống được đóng gói bằng Docker Compose với năm dịch vụ: backend, frontend, PostgreSQL, Redis và MailHog.
+
+	\subsubsection*{3.2. Các tác nhân và vai trò}
+	\addcontentsline{toc}{subsubsection}{3.2. Các tác nhân và vai trò}
+
+	Hệ thống xác định hai nhóm tác nhân người dùng và một tác nhân hệ thống:
+
+	\begin{itemize}[leftmargin=1.5cm]
+		\item \textbf{Quản trị viên (Admin):} Tạo và quản lý tài khoản nông dân; định nghĩa hồ sơ cây trồng với ngưỡng tối ưu; tạo và quản lý khu vực trồng trọt; phân công nông dân vào khu vực (nhiều-nhiều); theo dõi tổng quan toàn hệ thống.
+		\item \textbf{Nông dân (Farmer):} Xem dashboard và số liệu cảm biến của các khu vực được phân công; xem và đánh dấu cảnh báo; điều khiển thiết bị chấp hành trong khu vực được phân công; xem lịch sử lệnh điều khiển.
+		\item \textbf{Hệ thống nền (Background Task):} Tác nhân tự động chạy mỗi 60 giây; mô phỏng và lưu số liệu cảm biến; đánh giá bộ quy tắc cảnh báo theo ngưỡng hồ sơ cây trồng của từng khu vực; sinh bản ghi cảnh báo với cơ chế chống trùng lặp 1 giờ.
+	\end{itemize}
+
+	\subsubsection*{3.3. Yêu cầu chức năng}
+	\addcontentsline{toc}{subsubsection}{3.3. Yêu cầu chức năng}
+
+	Hệ thống bao gồm các nhóm chức năng chính sau:
+
+	\begin{itemize}[leftmargin=1.5cm]
+		\item \textbf{Xác thực và phân quyền:} Đăng nhập bằng email/mật khẩu; JWT lưu trong HttpOnly cookie; RBAC với hai vai trò Admin và Farmer; đổi mật khẩu; đặt lại mật khẩu qua email.
+		\item \textbf{Quản lý hồ sơ cây trồng:} Admin tạo/sửa/xóa hồ sơ với 7 nhóm ngưỡng môi trường (nhiệt độ, độ ẩm không khí, độ ẩm đất, ánh sáng, pH, EC, thời gian sinh trưởng); tên hồ sơ phải duy nhất trong hệ thống.
+		\item \textbf{Quản lý khu vực trồng trọt:} Admin tạo/sửa/xóa khu vực; gán hồ sơ cây trồng cho khu vực; phân công nông dân vào khu vực qua bảng \texttt{farmer\_zone\_assignments}.
+		\item \textbf{Quản lý cảm biến và số đo:} Thêm/sửa/xóa cảm biến trong khu vực; hệ thống lưu chuỗi số liệu theo thời gian; API truy vấn lịch sử đo theo khoảng thời gian và theo cảm biến.
+		\item \textbf{Quản lý thiết bị và lệnh điều khiển:} Farmer bật/tắt thiết bị trong khu vực được phân công; hệ thống lưu bản ghi \texttt{actuator\_commands} kèm người thực hiện, thời gian thực thi, thời lượng dự kiến và lý do.
+		\item \textbf{Quản lý cảnh báo:} Hệ thống sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp; phân mức LOW/MEDIUM/HIGH theo độ lệch; Farmer xem và đánh dấu đã đọc cảnh báo thuộc khu vực được phân công; Admin xem toàn bộ cảnh báo hệ thống.
+		\item \textbf{Dashboard tổng hợp:} Thẻ tóm tắt số lượng khu vực, cảm biến, thiết bị, cảnh báo chưa đọc; số liệu cảm biến mới nhất theo khu vực; biểu đồ xu hướng theo chuỗi thời gian.
+	\end{itemize}
+
+	\subsubsection*{3.4. Yêu cầu phi chức năng}
+	\addcontentsline{toc}{subsubsection}{3.4. Yêu cầu phi chức năng}
+
+	\begin{itemize}[leftmargin=1.5cm]
+		\item \textbf{Bảo mật:} Mật khẩu được băm bằng bcrypt; JWT có thời hạn 7 ngày lưu trong HttpOnly cookie; mọi endpoint kiểm tra xác thực và quyền trước khi xử lý; Farmer chỉ truy cập khu vực được phân công, yêu cầu vượt phạm vi bị từ chối với mã 403.
+		\item \textbf{Tính nhất quán dữ liệu:} Các thao tác liên quan đến trạng thái (cập nhật thiết bị kèm ghi lịch sử lệnh; sinh cảnh báo với kiểm tra trùng lặp) được thực hiện trong giao dịch cơ sở dữ liệu để đảm bảo toàn vẹn dữ liệu.
+		\item \textbf{Khả năng mở rộng:} Kiến trúc nhiều lớp (API Router -- Service -- Repository -- Model) cho phép bổ sung loại cảm biến mới, loại thiết bị mới hoặc tích hợp gateway IoT thực mà không ảnh hưởng đến các thành phần hiện có.
+		\item \textbf{Khả năng triển khai:} Hệ thống được đóng gói bằng Docker Compose, có thể khởi chạy nhất quán trên mọi môi trường với một lệnh duy nhất, không cần cấu hình thủ công từng thành phần.
+		\item \textbf{Khả năng kiểm chứng:} Background task mô phỏng dữ liệu cảm biến hoạt động độc lập, cho phép kiểm chứng toàn bộ luồng nghiệp vụ từ thu thập số liệu đến sinh cảnh báo mà không cần phần cứng thực địa.
+	\end{itemize}
+
+	\subsubsection*{3.5. Ràng buộc nghiệp vụ}
+	\addcontentsline{toc}{subsubsection}{3.5. Ràng buộc nghiệp vụ}
+
+	Một số ràng buộc nghiệp vụ trọng tâm được đặc tả như sau:
+
+	\begin{itemize}[leftmargin=1.5cm]
+		\item Farmer chỉ được thao tác trên các khu vực được Admin phân công; yêu cầu truy cập khu vực ngoài phạm vi bị từ chối với mã lỗi 403.
+		\item Một khu vực trồng trọt chỉ được gán một hồ sơ cây trồng tại một thời điểm; khi thay đổi hồ sơ, bộ quy tắc cảnh báo tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
+		\item Cảnh báo có cơ chế chống trùng lặp: cùng một loại cảnh báo cho cùng một khu vực không được sinh lại trong vòng 1 giờ nếu cảnh báo trước chưa được đọc; cảnh báo đã đọc cho phép sinh lại.
+		\item Lệnh điều khiển thiết bị luôn được ghi vào bảng \texttt{actuator\_commands} kèm \texttt{commanded\_by} (NULL nếu tự động), thời gian thực thi và lý do; không có điều khiển nào thực hiện mà không lưu vết.
+		\item Bộ quy tắc cảnh báo đánh giá bảy ngưỡng đơn và bốn điều kiện tổ hợp: (i) nhiệt độ cao + độ ẩm cao $\to$ nguy cơ nấm; (ii) nhiệt độ cao + độ ẩm thấp $\to$ stress VPD; (iii) độ ẩm đất cao + pH thấp $\to$ nguy cơ thối rễ; (iv) CO$_2$ thấp + ánh sáng cao $\to$ lãng phí ánh sáng.
+		\item Phân loại mức độ nghiêm trọng dựa trên độ lệch tương đối so với ngưỡng: dưới 10\% --- LOW; từ 10 đến 25\% --- MEDIUM; trên 25\% --- HIGH.
+	\end{itemize}
 	
 	\newpage
 	\section*{CHƯƠNG II: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
     \addcontentsline{toc}{section}{CHƯƠNG II: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
-	\subsection{Phân tích hệ thống}
-	
+    
+	\subsection*{1. Mô hình hóa hệ thống}
+    \addcontentsline{toc}{subsection}{1. Mô hình hóa hệ thống}
+
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.9\linewidth]{images/uc_tong_quat}
 		\caption{Sơ đồ ca sử dụng tổng quát}
 		\label{fig:uctongquat}
-	\end{figure}
+	\end{figure}	
+	Hệ thống AgriSmart xác định hai nhóm tác nhân chính tham gia vào quá trình vận hành: quản trị viên (Admin) và nông dân (Farmer), cùng với tác nhân nền là Hệ thống thực hiện các tác vụ tự động định kỳ. Admin có toàn quyền quản lý người dùng, tạo và chỉnh sửa vùng trồng trọt, định nghĩa hồ sơ cây trồng với các ngưỡng môi trường tối ưu, và phân công vùng trồng cho từng nông dân. Farmer là nhóm người dùng vận hành chính, có thể theo dõi bảng điều khiển tổng quan, xem dữ liệu cảm biến theo thời gian thực từ các vùng được phân công, xem và xử lý cảnh báo môi trường, cũng như điều khiển các thiết bị chấp hành như máy bơm, quạt thông gió, đèn chiếu sáng và máy sưởi. Mô hình phân quyền RBAC đảm bảo mỗi nhóm tác nhân chỉ tiếp cận đúng phạm vi chức năng phù hợp với vai trò, vừa đơn giản hóa trải nghiệm sử dụng vừa tăng tính bảo mật cho hệ thống.
+
+	Hệ thống được tổ chức thành năm nhóm ca sử dụng (UC01--UC05), mỗi nhóm đại diện cho một lĩnh vực nghiệp vụ độc lập: xác thực \& quản lý tài khoản (UC01), giám sát môi trường vùng trồng (UC02), điều khiển thiết bị chấp hành (UC03), quản lý cảnh báo (UC04) và quản trị hệ thống (UC05).
 	
-	Hệ thống xác định ba nhóm tác nhân chính tham gia vào quá trình vận hành: quản trị viên, giáo viên và học sinh. Quản trị viên có toàn quyền quản lý tài khoản người dùng trong hệ thống, theo dõi nhật ký hoạt động và xem biểu đồ thống kê tổng quan về mức độ sử dụng nền tảng. Giáo viên là nhóm người dùng trung tâm, có thể đăng nhập, trao đổi với trợ lý AI thông qua giao diện chat, tạo và quản lý đề thi bằng AI, xây dựng ngân hàng câu hỏi, tổ chức phòng thi trực tuyến và theo dõi kết quả học tập của học sinh trên dashboard. Học sinh không cần tạo tài khoản mà chỉ truy cập phòng thi thông qua liên kết do giáo viên cung cấp, xác thực bằng mã học sinh, làm bài và nhận điểm tự động ngay sau khi nộp. Mô hình phân quyền này đảm bảo mỗi nhóm người dùng chỉ tiếp cận đúng phạm vi chức năng phù hợp với vai trò của mình, vừa đơn giản hóa trải nghiệm sử dụng vừa tăng tính bảo mật cho hệ thống.
-	
-	\subsubsection{Ca sử dụng đăng nhập}
-	
+	\subsubsection*{1.1 Ca sử dụng xác thực và Quản lý tài khoản}
+    \addcontentsline{toc}{subsubsection}{1.1 Ca sử dụng xác thực và Quản lý tài khoản}
+
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_2.png}
-		\caption{Biểu đồ use case đăng nhập}
-		\label{fig:2_2_login}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc01}
+		\caption{Biểu đồ ca sử dụng xác thực và quản lý tài khoản}
+		\label{fig:uc_uc01}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên use case} & \textbf{Đăng nhập} \\
+			\textbf{Tên ca sử dụng} & \textbf{Đăng nhập hệ thống} \\
 			\hline
-			Tác nhân chính & Người dùng đã được cấp tài khoản \\
+			Tác nhân chính & Người dùng đã được cấp tài khoản (Admin hoặc Farmer) \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Người dùng nhập email và mật khẩu.
-					\item Hệ thống kiểm tra thông tin xác thực.
-					\item Nếu hợp lệ, hệ thống tạo phiên đăng nhập và nạp thông tin người dùng.
-					\item Hệ thống điều hướng đến giao diện phù hợp với vai trò người dùng.
+					\item Người dùng nhập email và mật khẩu trên màn hình đăng nhập.
+					\item Hệ thống xác thực thông tin đăng nhập và kiểm tra trạng thái tài khoản.
+					\item Nếu hợp lệ, hệ thống phát hành JWT access token lưu trong HttpOnly cookie.
+					\item Hệ thống điều hướng đến Dashboard tương ứng với vai trò người dùng.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu email, mật khẩu sai hoặc tài khoản bị khóa, hệ thống trả về thông báo lỗi và yêu cầu người dùng nhập lại. \\
+			Dòng sự kiện phụ & Nếu thông tin sai hoặc tài khoản không hoạt động, hệ thống trả thông báo lỗi cụ thể (401 Unauthorized hoặc 403 Forbidden). Tính năng Quên mật khẩu cho phép người dùng đặt lại qua email xác thực có thời hạn. \\
 			\hline
-			Điều kiện tiên quyết & Người dùng đã có tài khoản trong hệ thống. \\
+			Điều kiện tiên quyết & Người dùng đã có tài khoản được Admin tạo trong hệ thống. \\
 			\hline
-			Điều kiện sau & Người dùng đăng nhập thành công và có quyền truy cập các chức năng tương ứng. \\
+			Điều kiện sau & Người dùng đăng nhập thành công và có quyền truy cập các chức năng tương ứng với vai trò. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{2_12.png}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc01}
 		\caption{Biểu đồ hoạt động đăng nhập}
-		\label{fig:2_12_activity_login}
+		\label{fig:activity_uc01}
 	\end{figure}
-	Người dùng nhập email và mật khẩu; hệ thống kiểm tra thông tin xác thực và trạng thái tài khoản, nếu hợp lệ thì cấp phiên đăng nhập và điều hướng theo vai trò, ngược lại trả về thông báo lỗi.
-	
-	
+	Người dùng nhập email và mật khẩu; hệ thống kiểm tra tính hợp lệ của thông tin xác thực và trạng thái tài khoản, nếu hợp lệ thì tạo JWT token và điều hướng theo vai trò, ngược lại trả thông báo lỗi tương ứng (401 hoặc 403).
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_21.png}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc01}
 		\caption{Biểu đồ tuần tự đăng nhập}
-		\label{fig:2_21_sequence_login}
+		\label{fig:sequence_uc01}
 	\end{figure}
-	Frontend gửi email và mật khẩu tới Backend; Backend xác thực thông tin, kiểm tra trạng thái tài khoản, tạo cookie xác thực và trả thông tin vai trò để Frontend điều hướng đến màn hình phù hợp.
-	
-	
-	\subsubsection{Ca sử dụng quên mật khẩu}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_3.png}
-		\caption{Biểu đồ ca sử dụng quên mật khẩu}
-		\label{fig:2_3_forgot_password}
-	\end{figure}
-	
-	\begin{center}
-		\begin{tabular}{|p{4cm}|p{10cm}|}
-			\hline
-			\textbf{Tên use case} & \textbf{Quên mật khẩu} \\
-			\hline
-			Tác nhân chính & Người dùng \\
-			\hline
-			Dòng sự kiện chính &
-			\begin{minipage}[t]{10cm}
-				\vspace{2pt}
-				\begin{enumerate}
-					\item Người dùng chọn chức năng quên mật khẩu.
-					\item Hệ thống yêu cầu nhập email đã đăng ký.
-					\item Hệ thống sinh token đặt lại mật khẩu và tạo đường dẫn khôi phục.
-					\item Người dùng truy cập đường dẫn, nhập mật khẩu mới và xác nhận.
-					\item Hệ thống cập nhật mật khẩu mới thành công.
-				\end{enumerate}
-				\vspace{2pt}
-			\end{minipage} \\
-			\hline
-			Dòng sự kiện phụ & Nếu token không hợp lệ hoặc đã hết hạn, hệ thống từ chối thay đổi mật khẩu và thông báo lỗi. \\
-			\hline
-			Điều kiện tiên quyết & Người dùng đã có tài khoản và nhập đúng email đã đăng ký. \\
-			\hline
-			Điều kiện sau & Mật khẩu của người dùng được cập nhật thành công. \\
-			\hline
-		\end{tabular}
-	\end{center}
-	
-	\paragraph{Biểu đồ hoạt động}	
-	\noindent
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.8\linewidth]{images/action_quen_mk}
-		\caption{Biểu đồ hoạt động quên mật khẩu}
-		\label{fig:actionquenmk}
-	\end{figure}
-	Người dùng nhập email để yêu cầu cấp lại mật khẩu; hệ thống sinh token khôi phục và tạo đường dẫn đặt lại, người dùng truy cập đường dẫn và nhập mật khẩu mới để hoàn tất.
-	
-	
-	\paragraph{Biểu đồ tuần tự}	
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_22.png}
-		\caption{Biểu đồ tuần tự quên mật khẩu}
-		\label{fig:2_22_sequence_forgot}
-	\end{figure}
-	Frontend gửi email đến Backend để yêu cầu token khôi phục; Backend sinh token, tạo đường dẫn đặt lại và trả lại (ghi log trong môi trường phát triển). Sau đó người dùng gửi token và mật khẩu mới; Backend xác thực token và cập nhật mật khẩu.
-	
-	
-	\subsubsection{Ca sử dụng hội thoại với AI}
-	
+	Frontend gửi \texttt{POST /auth/login} với email và mật khẩu đến Auth API; Backend tra cứu tài khoản trong Database, xác thực mật khẩu băm và kiểm tra trạng thái, sau đó phát hành JWT token trong HttpOnly cookie và điều hướng Frontend đến Dashboard phù hợp với vai trò.
+
+
+	\subsubsection*{1.2 Ca sử dụng giám sát môi trường vùng trồng}
+    \addcontentsline{toc}{subsubsection}{1.2 Ca sử dụng giám sát môi trường vùng trồng}
+
 	\paragraph{Biểu đồ ca sử dụng}
-	
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_4.png}
-		\caption{Use case hội thoại với AI}
-		\label{fig:2_4_chat_ai}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc02}
+		\caption{Biểu đồ ca sử dụng giám sát môi trường vùng trồng}
+		\label{fig:uc_uc02}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên use case} & \textbf{Hội thoại với AI} \\
+			\textbf{Tên ca sử dụng} & \textbf{Giám sát môi trường vùng trồng} \\
 			\hline
-			Tác nhân chính & Giáo viên \\
+			Tác nhân chính & Farmer, Admin (xem), Hệ thống nền (thu thập dữ liệu) \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Giáo viên mở màn hình chat.
-					\item Hệ thống thiết lập kết nối WebSocket và tải lịch sử hội thoại nếu có.
-					\item Giáo viên nhập câu hỏi.
-					\item Hệ thống truy xuất ngữ cảnh liên quan từ kho tri thức và gửi yêu cầu đến mô hình AI.
-					\item Hệ thống trả lời và lưu lại cuộc hội thoại.
+					\item Người dùng truy cập Dashboard; hệ thống song song tải danh sách vùng trồng, số liệu cảm biến, thiết bị và cảnh báo hôm nay.
+					\item Hệ thống hiển thị thẻ tóm tắt tổng quan và biểu đồ trạng thái.
+					\item Người dùng chọn một vùng trồng để xem chi tiết các cảm biến.
+					\item Người dùng chọn cảm biến và khoảng thời gian để xem lịch sử dữ liệu đo trên biểu đồ xu hướng.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu không truy xuất được ngữ cảnh phù hợp, hệ thống vẫn phản hồi bằng tri thức tổng quát theo khả năng của mô hình. \\
+			Dòng sự kiện phụ & Background task định kỳ thu thập và lưu dữ liệu cảm biến vào bảng \texttt{sensor\_readings}; nếu không có dữ liệu trong khoảng thời gian chọn, hệ thống hiển thị thông báo tương ứng. \\
 			\hline
-			Điều kiện tiên quyết & Giáo viên đã đăng nhập. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập; vùng trồng đã có cảm biến và background task đang hoạt động. \\
 			\hline
-			Điều kiện sau & Nội dung hỏi đáp được lưu trong lịch sử hội thoại của giáo viên. \\
+			Điều kiện sau & Người dùng nắm được trạng thái môi trường hiện tại và xu hướng thông số theo thời gian của vùng canh tác. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.55\linewidth]{2_13.png}
-		\caption{Biểu đồ hoạt động chat với AI}
-		\label{fig:2_13_activity_chat}
+		\includegraphics[width=0.65\linewidth]{images/activity_uc02}
+		\caption{Biểu đồ hoạt động UC02 xem trang tổng quan}
+		\label{fig:activity_uc02}
 	\end{figure}
-	Giáo viên mở màn hình chat và nhập câu hỏi; hệ thống truy xuất ngữ cảnh từ kho FAISS, gọi mô hình AI để sinh phản hồi và lưu toàn bộ cuộc hội thoại vào cơ sở dữ liệu.
-	
-	
+	Người dùng truy cập Dashboard; hệ thống song song tải tổng số thiết bị và cảm biến, giá trị cảm biến mới nhất và thống kê cảnh báo trong ngày, sau đó hiển thị thẻ tóm tắt — nếu người dùng chọn một vùng trồng cụ thể, hệ thống hiển thị thêm dữ liệu chi tiết của vùng đó.
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_23.png}
-		\caption{Biểu đồ tuần tự chat với AI}
-		\label{fig:2_23_sequence_chat}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc02}
+		\caption{Biểu đồ tuần tự xem dữ liệu cảm biến}
+		\label{fig:sequence_uc02}
 	\end{figure}
-	Frontend thiết lập kết nối WebSocket và gửi câu hỏi; Backend truy xuất ngữ cảnh từ FAISS, gọi OpenAI, nhận phản hồi và phát trực tuyến về Frontend, đồng thời lưu tin nhắn vào cơ sở dữ liệu.
+	Frontend gửi \texttt{GET /readings?sensor\_id=\{id\}\&from\_date=\{from\}\&to\_date=\{to\}} đến Readings API; Backend truy vấn bảng \texttt{sensor\_readings} theo bộ lọc và trả danh sách điểm đo, Frontend vẽ biểu đồ xu hướng hoặc hiển thị thông báo nếu không có dữ liệu.
 	
 	
-	\subsubsection{Ca sử dụng tạo đề thi}
-	
+	\subsubsection*{1.3 Ca sử dụng điều khiển thiết bị chấp hành}
+	\addcontentsline{toc}{subsubsection}{1.3 Ca sử dụng điều khiển thiết bị chấp hành}
+
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_5.png}
-		\caption{Use case tạo đề thi}
-		\label{fig:2_5_create_exam}
+		\includegraphics[width=0.9\linewidth]{images/uc_dieu_khien_thiet_bi}
+		\caption{Biểu đồ ca sử dụng điều khiển thiết bị chấp hành}
+		\label{fig:uc_dieu_khien_thiet_bi}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên use case} & \textbf{Tạo đề thi} \\
+			\textbf{Tên ca sử dụng} & \textbf{Điều khiển thiết bị chấp hành} \\
 			\hline
-			Tác nhân chính & Giáo viên \\
+			Tác nhân chính & Nông dân \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Giáo viên nhập cấu hình đề thi gồm chủ đề, số câu, mức độ và thời lượng.
-					\item Hệ thống gọi AI để sinh danh sách câu hỏi trắc nghiệm.
-					\item Hệ thống hiển thị đề thi để giáo viên xem trước và chỉnh sửa nếu cần.
-					\item Giáo viên lưu đề thi với trạng thái nháp hoặc công bố.
-					\item Hệ thống lưu đề thi, câu hỏi và đáp án vào cơ sở dữ liệu.
+					\item Nông dân chọn khu vực trồng trọt được phân công.
+					\item Hệ thống hiển thị danh sách thiết bị chấp hành trong khu vực kèm trạng thái hiện tại.
+					\item Nông dân bật hoặc tắt một thiết bị (ví dụ: máy tưới nước, quạt thông gió).
+					\item Hệ thống cập nhật trạng thái thiết bị và lưu lệnh điều khiển kèm thời gian.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu việc sinh đề thi thất bại, hệ thống thông báo lỗi và cho phép giáo viên thực hiện lại. \\
+			Dòng sự kiện phụ & Nếu khu vực không được phân công cho nông dân đang đăng nhập, hệ thống từ chối thao tác. \\
 			\hline
-			Điều kiện tiên quyết & Giáo viên đã đăng nhập. \\
+			Điều kiện tiên quyết & Nông dân đã đăng nhập và khu vực được phân công cho tài khoản này. \\
 			\hline
-			Điều kiện sau & Đề thi được tạo và có thể tiếp tục dùng để tạo phòng thi. \\
-			\hline
-		\end{tabular}
-	\end{center}
-	
-	\paragraph{Biểu đồ ca hoạt động}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.7\linewidth]{2_14.png}
-		\caption{Biểu đồ hoạt động tạo đề thi}
-		\label{fig:2_14_activity_exam}
-	\end{figure}
-	Giáo viên cấu hình tham số đề thi; hệ thống gọi AI để sinh câu hỏi trắc nghiệm, hiển thị để giáo viên xem trước và chỉnh sửa, sau đó lưu đề thi cùng toàn bộ câu hỏi và đáp án vào cơ sở dữ liệu.
-	
-	
-	\paragraph{Biểu đồ tuần tự}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_24.png}
-		\caption{Biểu đồ tuần tự tạo đề thi}
-		\label{fig:2_24_sequence_exam}
-	\end{figure}
-	Frontend gửi cấu hình đề thi; Backend gọi OpenAI để sinh câu hỏi và trả danh sách về Frontend. Sau khi giáo viên xác nhận, Frontend gửi yêu cầu lưu; Backend lưu đề thi cùng câu hỏi và đáp án vào cơ sở dữ liệu.
-	
-	
-	\subsubsection{Ca sử dụng tạo phòng thi}
-	
-	\paragraph{Biểu đồ ca sử dụng}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_6.png}
-		\caption{Ca sử dụng tạo phòng thi}
-		\label{fig:2_6_create_room}
-	\end{figure}
-	
-	\begin{center}
-		\begin{tabular}{|p{4cm}|p{10cm}|}
-			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Tạo phòng thi} \\
-			\hline
-			Tác nhân chính & Giáo viên \\
-			\hline
-			Dòng sự kiện chính &
-			\begin{minipage}[t]{10cm}
-				\vspace{2pt}
-				\begin{enumerate}
-					\item Giáo viên chọn một đề thi đã lưu.
-					\item Hệ thống sinh phòng thi với mã truy cập và liên kết công khai.
-					\item Hệ thống hiển thị đường dẫn phòng thi để giáo viên chia sẻ cho học sinh.
-					\item Giáo viên có thể bật hoặc tắt phòng thi khi cần.
-				\end{enumerate}
-				\vspace{2pt}
-			\end{minipage} \\
-			\hline
-			Dòng sự kiện phụ & Giáo viên có thể thiết lập thời điểm hết hạn cho phòng thi. \\
-			\hline
-			Điều kiện tiên quyết & Đề thi đã được lưu thành công. \\
-			\hline
-			Điều kiện sau & Phòng thi được tạo và sẵn sàng cho học sinh truy cập. \\
+			Điều kiện sau & Trạng thái thiết bị được cập nhật; lệnh điều khiển được lưu vào lịch sử \texttt{actuator\_commands}. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{2_15.png}
-		\caption{Biểu đồ hoạt động tạo phòng thi}
-		\label{fig:2_15_activity_room}
+		\includegraphics[width=0.6\linewidth]{images/activity_dieu_khien_thiet_bi}
+		\caption{Biểu đồ hoạt động điều khiển thiết bị chấp hành}
+		\label{fig:activity_dieu_khien_thiet_bi}
 	\end{figure}
-	Giáo viên chọn đề thi đã lưu và yêu cầu tạo phòng thi; hệ thống sinh mã truy cập và liên kết công khai, giáo viên có thể bật hoặc tắt phòng thi bất kỳ lúc nào.
-	
-	
+	Nông dân chọn khu vực và thiết bị, nhấn bật/tắt; hệ thống kiểm tra quyền, cập nhật trạng thái thiết bị và lưu lệnh điều khiển.
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_25.png}
-		\caption{Biểu đồ tuần tự tạo phòng thi}
-		\label{fig:2_25_sequence_room}
+		\includegraphics[width=0.9\linewidth]{images/sequence_dieu_khien_thiet_bi}
+		\caption{Biểu đồ tuần tự điều khiển thiết bị chấp hành}
+		\label{fig:sequence_dieu_khien_thiet_bi}
 	\end{figure}
-	Frontend gửi yêu cầu tạo phòng thi kèm mã đề thi; Backend sinh mã truy cập và liên kết công khai, lưu phòng thi vào cơ sở dữ liệu và trả liên kết về Frontend để giáo viên chia sẻ.
-	
-	
-	\subsubsection{Ca sử dụng làm bài thi trực tuyến}
-	
+	Frontend gửi \texttt{POST /actuators/\{id\}/command} với trạng thái mong muốn; Backend kiểm tra quyền truy cập khu vực, cập nhật \texttt{current\_state} trong bảng \texttt{actuators}, lưu bản ghi vào \texttt{actuator\_commands} và trả kết quả.
+
+
+	\subsubsection*{1.4 Ca sử dụng xem và xử lý cảnh báo}
+	\addcontentsline{toc}{subsubsection}{1.4 Ca sử dụng xem và xử lý cảnh báo}
+
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_7.png}
-		\caption{Biểu đồ ca sử dụng làm bài thi trực tuyến}
-		\label{fig:2_7_take_exam}
+		\includegraphics[width=0.9\linewidth]{images/uc_xem_canh_bao}
+		\caption{Biểu đồ ca sử dụng xem và xử lý cảnh báo}
+		\label{fig:uc_xem_canh_bao}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Làm bài thi} \\
+			\textbf{Tên ca sử dụng} & \textbf{Xem và xử lý cảnh báo} \\
 			\hline
-			Tác nhân chính & Học sinh \\
+			Tác nhân chính & Nông dân / Admin \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Học sinh truy cập đường dẫn phòng thi.
-					\item Học sinh nhập họ tên và mã học sinh để xác thực.
-					\item Hệ thống kiểm tra mã học sinh, sau đó hiển thị đề thi.
-					\item Học sinh chọn đáp án cho từng câu hỏi.
-					\item Học sinh nộp bài.
-					\item Hệ thống chấm điểm tự động và hiển thị kết quả.
+					\item Người dùng truy cập danh sách cảnh báo.
+					\item Hệ thống hiển thị danh sách cảnh báo theo mức độ nghiêm trọng (HIGH, MEDIUM, LOW), loại cảnh báo và thời điểm kích hoạt.
+					\item Người dùng xem chi tiết cảnh báo: thông số lệch ngưỡng, giá trị thực tế và hành động được khuyến nghị.
+					\item Người dùng đánh dấu đã đọc sau khi xử lý.
+					\item Hệ thống cập nhật trạng thái \texttt{is\_read = true} cho cảnh báo đó.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu phòng thi không tồn tại, đã đóng hoặc đã hết hạn, hệ thống từ chối truy cập. \\
+			Dòng sự kiện phụ & Nông dân chỉ thấy cảnh báo thuộc các khu vực được phân công; Admin thấy cảnh báo toàn hệ thống. \\
 			\hline
-			Điều kiện tiên quyết & Học sinh có liên kết phòng thi hợp lệ và mã học sinh tồn tại trong hệ thống. \\
+			Điều kiện tiên quyết & Background task đã sinh cảnh báo dựa trên dữ liệu cảm biến. \\
 			\hline
-			Điều kiện sau & Điểm thi được lưu vào cơ sở dữ liệu. \\
+			Điều kiện sau & Cảnh báo được đánh dấu đã đọc; người dùng đã biết hành động cần thực hiện. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.6\linewidth]{2_17.png}
-		\caption{Biểu đồ hoạt động làm bài thi}
-		\label{fig:2_17_activity_take_exam}
+		\includegraphics[width=0.6\linewidth]{images/activity_xem_canh_bao}
+		\caption{Biểu đồ hoạt động xem cảnh báo}
+		\label{fig:activity_xem_canh_bao}
 	\end{figure}
-	Học sinh truy cập liên kết phòng thi và xác thực bằng mã học sinh; sau khi xác thực thành công, học sinh làm bài trong giới hạn thời gian, nộp bài và nhận kết quả chấm điểm tự động ngay lập tức.
-	
+	Người dùng mở danh sách cảnh báo; hệ thống lọc cảnh báo theo vai trò và hiển thị với màu sắc phân biệt mức độ nghiêm trọng; người dùng xem khuyến nghị và đánh dấu đã xử lý.
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_26.png}
-		\caption{Biểu đồ tuần tự làm bài thi}
-		\label{fig:2_26_sequence_take_exam}
+		\includegraphics[width=0.9\linewidth]{images/sequence_xem_canh_bao}
+		\caption{Biểu đồ tuần tự xem và xử lý cảnh báo}
+		\label{fig:sequence_xem_canh_bao}
 	\end{figure}
-	Frontend gửi mã học sinh để xác thực; Backend kiểm tra và trả đề thi. Sau khi học sinh nộp bài, Frontend gửi danh sách đáp án; Backend chấm điểm tự động, lưu kết quả vào bảng \texttt{scores} và trả điểm về Frontend.
+	Frontend gọi \texttt{GET /alerts}; Backend lọc cảnh báo theo quyền hạn của người dùng và trả danh sách. Khi đánh dấu đã đọc, Frontend gửi \texttt{PATCH /alerts/\{id\}/read}; Backend cập nhật \texttt{is\_read = true} và trả kết quả.
 	
 	
-	\subsubsection{Ca sử dụng xem dashboard}
-	
+	\subsubsection*{1.5 Ca sử dụng quản lý hồ sơ cây trồng}
+	\addcontentsline{toc}{subsubsection}{1.5 Ca sử dụng quản lý hồ sơ cây trồng}
+
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_8.png}
-		\caption{Biểu đồ ca sử dụng xem dashboard}
-		\label{fig:2_8_dashboard}
+		\includegraphics[width=0.8\linewidth]{images/uc_ho_so_cay_trong}
+		\caption{Biểu đồ ca sử dụng quản lý hồ sơ cây trồng}
+		\label{fig:uc_ho_so_cay_trong}
 	\end{figure}
 	
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Xem dashboard} \\
-			\hline
-			Tác nhân chính & Giáo viên \\
-			\hline
-			Dòng sự kiện chính &
-			\begin{minipage}[t]{10cm}
-				\vspace{2pt}
-				\begin{enumerate}
-					\item Giáo viên truy cập dashboard.
-					\item Hệ thống hiển thị số lượng bài học, đề thi, học sinh và lượt hỏi AI.
-					\item Hệ thống hiển thị hoạt động gần đây như tạo đề thi, bài nộp và tiến độ bài học.
-				\end{enumerate}
-				\vspace{2pt}
-			\end{minipage} \\
-			\hline
-			Dòng sự kiện phụ & Khối lịch tuần trên giao diện có thể được dùng để minh họa hoặc mở rộng cho lịch dạy trong các phiên bản sau. \\
-			\hline
-			Điều kiện tiên quyết & Giáo viên đã đăng nhập. \\
-			\hline
-			Điều kiện sau & Giáo viên nắm được tình hình sử dụng hệ thống ở thời điểm hiện tại. \\
-			\hline
-		\end{tabular}
-	\end{center}
-	
-	\paragraph{Biểu đồ hoạt động}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.6\linewidth]{2_16.png}
-		\caption{Biểu đồ hoạt động xem dashboard}
-		\label{fig:2_16_activity_dashboard}
-	\end{figure}
-	Giáo viên truy cập dashboard; hệ thống tổng hợp số liệu về bài học, đề thi, học sinh và lượt hỏi AI, sau đó hiển thị cùng danh sách hoạt động gần đây.
-	
-	
-	\paragraph{Biểu đồ tuần tự}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_27.png}
-		\caption{Biểu đồ tuần tự xem dashboard}
-		\label{fig:2_27_sequence_dashboard}
-	\end{figure}
-	Frontend gọi API dashboard; Backend truy vấn các bảng để tổng hợp số liệu bài học, đề thi, học sinh và lượt hỏi AI trong ngày, sau đó trả dữ liệu JSON để Frontend hiển thị.
-	
-	
-	
-	\subsubsection{Ca sử dụng xem thống kê}
-	\paragraph{Biểu đồ ca sử dụng}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_9.png}
-		\caption{Biểu đồ ca sử dụng xem thống kê}
-		\label{fig:2_9_stats}
-	\end{figure}
-	
-	\begin{center}
-		\begin{tabular}{|p{4cm}|p{10cm}|}
-			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Xem thống kê} \\
-			\hline
-			Tác nhân chính & Giáo viên \\
-			\hline
-			Dòng sự kiện chính &
-			\begin{minipage}[t]{10cm}
-				\vspace{2pt}
-				\begin{enumerate}
-					\item Giáo viên mở trang thống kê.
-					\item Hệ thống tính điểm trung bình, tỷ lệ đạt và số học sinh cần hỗ trợ.
-					\item Hệ thống hiển thị điểm theo chủ đề, phân bố học sinh và bảng xếp hạng.
-				\end{enumerate}
-				\vspace{2pt}
-			\end{minipage} \\
-			\hline
-			Dòng sự kiện phụ & Giáo viên có thể xem thống kê dựa trên các đề thi do chính mình tạo ra. \\
-			\hline
-			Điều kiện tiên quyết & Giáo viên đã đăng nhập và đã có dữ liệu điểm thi. \\
-			\hline
-			Điều kiện sau & Giáo viên có cơ sở để đánh giá kết quả học tập của học sinh. \\
-			\hline
-		\end{tabular}
-	\end{center}
-	
-	\paragraph{Biểu đồ hoạt động}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.6\linewidth]{2_18.png}
-		\caption{Biểu đồ hoạt động thống kê}
-		\label{fig:2_18_activity_stats}
-	\end{figure}
-	Giáo viên mở trang thống kê; hệ thống tính toán các chỉ số như điểm trung bình, tỷ lệ đạt và phân bố kết quả, sau đó hiển thị bảng xếp hạng và biểu đồ để giáo viên phân tích.
-	
-	
-	\paragraph{Biểu đồ tuần tự}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{2_28.png}
-		\caption{Biểu đồ tuần tự xem thống kê}
-		\label{fig:2_28_sequence_stats}
-	\end{figure}
-	Frontend gọi API thống kê; Backend tính các chỉ số điểm trung bình, tỷ lệ đạt, phân bố kết quả và bảng xếp hạng từ bảng \texttt{scores}, sau đó trả về để Frontend hiển thị dưới dạng biểu đồ.
-	
-	
-	\subsubsection{Ca sử dụng quản lý học sinh}
-	\paragraph{Biểu đồ ca sử dụng}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.7\linewidth]{2_10.png}
-		\caption{Biểu đồ ca sử dụng quản lý học sinh}
-		\label{fig:2_10_manage_students}
-	\end{figure}
-	
-	
-	\begin{center}
-		\begin{tabular}{|p{4cm}|p{10cm}|}
-			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Quản lý học sinh} \\
+			\textbf{Tên ca sử dụng} & \textbf{Quản lý hồ sơ cây trồng} \\
 			\hline
 			Tác nhân chính & Admin \\
 			\hline
@@ -951,59 +799,60 @@
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin truy cập màn hình quản lý học sinh.
-					\item Hệ thống hiển thị danh sách học sinh hiện có.
-					\item Admin thêm học sinh mới hoặc khóa, mở khóa học sinh đã tồn tại.
+					\item Admin truy cập danh sách hồ sơ cây trồng.
+					\item Admin tạo hồ sơ mới với tên cây, mô tả và các dải ngưỡng tối ưu cho từng thông số môi trường.
+					\item Hệ thống lưu hồ sơ và cho phép gán hồ sơ vào khu vực trồng trọt.
+					\item Admin có thể chỉnh sửa ngưỡng theo mùa vụ hoặc giai đoạn sinh trưởng.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Hệ thống kiểm tra trùng mã học sinh khi thêm mới. \\
+			Dòng sự kiện phụ & Nếu hồ sơ đang được gán cho khu vực, hệ thống cảnh báo trước khi cho phép xóa. \\
 			\hline
 			Điều kiện tiên quyết & Admin đã đăng nhập. \\
 			\hline
-			Điều kiện sau & Thông tin học sinh được cập nhật trong hệ thống. \\
+			Điều kiện sau & Hồ sơ cây trồng được lưu và rule engine sử dụng ngưỡng này khi sinh cảnh báo. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
 	
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_19.png}
-		\caption{Biểu đồ hoạt động quản lý học sinh}
-		\label{fig:2_19_activity_students}
+		\includegraphics[width=0.7\linewidth]{images/activity_ho_so_cay_trong}
+		\caption{Biểu đồ hoạt động quản lý hồ sơ cây trồng}
+		\label{fig:activity_ho_so_cay_trong}
 	\end{figure}
-	Admin truy cập màn hình quản lý học sinh, xem danh sách hiện có và có thể thêm học sinh mới hoặc thay đổi trạng thái khóa; hệ thống kiểm tra trùng mã học sinh trước khi lưu.
+	Admin nhập các dải ngưỡng tối ưu cho nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC và thời gian sinh trưởng; hệ thống lưu hồ sơ và liên kết với khu vực trồng trọt.
 	
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_29.png}
-		\caption{Biểu đồ tuần tự quản lý học sinh}
-		\label{fig:2_29_sequence_students}
+		\includegraphics[width=0.9\linewidth]{images/sequence_ho_so_cay_trong}
+		\caption{Biểu đồ tuần tự quản lý hồ sơ cây trồng}
+		\label{fig:sequence_ho_so_cay_trong}
 	\end{figure}
-	Frontend gửi thông tin học sinh mới; Backend kiểm tra trùng mã, nếu hợp lệ thì lưu bản ghi mới và trả kết quả. Khi khóa hoặc mở khóa, Backend cập nhật trường \texttt{is\_active} và trả trạng thái mới.
+	Frontend gửi \texttt{POST /plant-profiles} với thông tin ngưỡng; Backend lưu bản ghi \texttt{plant\_profiles} vào cơ sở dữ liệu và trả hồ sơ mới. Rule engine tự động sử dụng ngưỡng này trong lần chạy tiếp theo.
 	
 	
-	\subsubsection{Ca sử dụng quản lý giáo viên}
-	
+	\subsubsection*{1.6 Ca sử dụng quản lý người dùng}
+	\addcontentsline{toc}{subsubsection}{1.6 Ca sử dụng quản lý người dùng}
+
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_11.png}
-		\caption{Biểu đồ ca sử dụng quản lý giáo viên}
-		\label{fig:2_11_manage_teachers}
+		\includegraphics[width=0.8\linewidth]{images/uc_quan_ly_nguoi_dung}
+		\caption{Biểu đồ ca sử dụng quản lý người dùng}
+		\label{fig:uc_quan_ly_nguoi_dung}
 	\end{figure}
 	
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Quản lý giáo viên} \\
+			\textbf{Tên ca sử dụng} & \textbf{Quản lý người dùng} \\
 			\hline
 			Tác nhân chính & Admin \\
 			\hline
@@ -1011,20 +860,19 @@
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin truy cập màn hình quản lý giáo viên.
-					\item Admin nhập thông tin giáo viên mới gồm họ tên, email và mật khẩu.
-					\item Hệ thống tạo tài khoản giáo viên.
-					\item Hệ thống gửi thông tin tài khoản qua SMTP hoặc MailHog trong môi trường phát triển.
-					\item Admin có thể khóa hoặc mở khóa tài khoản giáo viên.
+					\item Admin truy cập màn hình quản lý người dùng.
+					\item Hệ thống hiển thị danh sách người dùng với vai trò và trạng thái.
+					\item Admin tạo tài khoản nông dân mới (họ tên, email, mật khẩu tạm thời).
+					\item Admin kích hoạt, vô hiệu hóa hoặc cấm tài khoản khi cần.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu email đã tồn tại hoặc gửi email thất bại, hệ thống từ chối tạo tài khoản. \\
+			Dòng sự kiện phụ & Nếu email đã tồn tại, hệ thống từ chối tạo tài khoản và thông báo lỗi trùng email. \\
 			\hline
 			Điều kiện tiên quyết & Admin đã đăng nhập. \\
 			\hline
-			Điều kiện sau & Tài khoản giáo viên mới được thêm vào hệ thống. \\
+			Điều kiện sau & Tài khoản nông dân mới được thêm vào hệ thống và có thể được phân công khu vực. \\
 			\hline
 		\end{tabular}
 	\end{center}
@@ -1033,103 +881,39 @@
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_20.png}
-		\caption{Biểu đồ hoạt động quản lý giáo viên}
-		\label{fig:2_20_activity_teachers}
+		\includegraphics[width=0.8\linewidth]{images/activity_quan_ly_nguoi_dung}
+		\caption{Biểu đồ hoạt động quản lý người dùng}
+		\label{fig:activity_quan_ly_nguoi_dung}
 	\end{figure}
-	Admin nhập thông tin tài khoản giáo viên mới; hệ thống tạo tài khoản, gửi thông tin đăng nhập qua email và cho phép admin khóa hoặc mở khóa tài khoản giáo viên khi cần.
+	Admin nhập thông tin tài khoản nông dân; hệ thống kiểm tra trùng email, tạo tài khoản và ghi nhận; admin có thể thay đổi trạng thái tài khoản bất kỳ lúc nào.
 	
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{2_30.png}
-		\caption{Biểu đồ tuần tự quản lý giáo viên}
-		\label{fig:2_30_sequence_teachers}
+		\includegraphics[width=0.9\linewidth]{images/sequence_quan_ly_nguoi_dung}
+		\caption{Biểu đồ tuần tự quản lý người dùng}
+		\label{fig:sequence_quan_ly_nguoi_dung}
 	\end{figure}
-	Frontend gửi thông tin tài khoản giáo viên mới; Backend tạo tài khoản, gọi dịch vụ email để gửi thông tin đăng nhập và trả kết quả. Nếu gửi email thất bại, Backend rollback và trả về thông báo lỗi.
+	Frontend gửi \texttt{POST /admin/users} với thông tin tài khoản; Backend kiểm tra trùng email, băm mật khẩu, lưu bản ghi \texttt{users} và trả kết quả. Khi thay đổi trạng thái, Backend cập nhật trường \texttt{status} và trả trạng thái mới.
 	
 	
-	
-	\subsubsection{Ca sử dụng quản lý ngân hàng câu hỏi}
-	
+	\subsubsection*{1.7 Ca sử dụng phân công khu vực trồng trọt}
+	\addcontentsline{toc}{subsubsection}{1.7 Ca sử dụng phân công khu vực trồng trọt}
+
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.65\linewidth]{images/us_questions_bank}
-		\caption{Biểu đồ ca sử dụng quản lý ngân hàng của hỏi}
-		\label{fig:2_31_question_bank}
+		\includegraphics[width=0.8\linewidth]{images/uc_phan_cong_khu_vuc}
+		\caption{Biểu đồ ca sử dụng phân công khu vực trồng trọt}
+		\label{fig:uc_phan_cong_khu_vuc}
 	\end{figure}
-	
 	
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Quản lý ngân hàng câu hỏi} \\
-			\hline
-			Tác nhân chính & Giáo viên \\
-			\hline
-			Dòng sự kiện chính &
-			\begin{minipage}[t]{10cm}
-				\vspace{2pt}
-				\begin{enumerate}
-					\item Giáo viên truy cập màn hình ngân hàng câu hỏi.
-					\item Hệ thống hiển thị danh sách câu hỏi hiện có của giáo viên với các bộ lọc theo chủ đề, mức độ và từ khóa tìm kiếm.
-					\item Giáo viên có thể tạo câu hỏi mới thủ công hoặc dùng AI để sinh câu hỏi xem trước.
-					\item Hệ thống lưu câu hỏi và các đáp án vào cơ sở dữ liệu.
-					\item Giáo viên có thể xóa câu hỏi không còn cần thiết.
-				\end{enumerate}
-				\vspace{2pt}
-			\end{minipage} \\
-			\hline
-			Dòng sự kiện phụ & Hệ thống hiển thị số lần sử dụng của từng câu hỏi trong các đề thi để giáo viên tham khảo trước khi xóa. \\
-			\hline
-			Điều kiện tiên quyết & Giáo viên đã đăng nhập. \\
-			\hline
-			Điều kiện sau & Câu hỏi được lưu vào ngân hàng và có thể tái sử dụng cho nhiều đề thi khác nhau. \\
-			\hline
-		\end{tabular}
-	\end{center}
-	
-	
-	\paragraph{Biểu đồ hoạt động}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.7\linewidth]{images/action_question_bank}
-		\caption{Biểu đồ hoạt động quản lý ngân hàng câu hỏi}
-		\label{fig:2_21_activity_question_bank}
-	\end{figure}
-	Giáo viên xem danh sách câu hỏi trong ngân hàng với bộ lọc theo chủ đề và mức độ; giáo viên có thể tạo câu hỏi mới thủ công hoặc dùng AI sinh trước, sau đó lưu hoặc xóa câu hỏi không còn cần thiết.
-	
-	
-	\paragraph{Biểu đồ tuần tự}
-	\noindent
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.7\linewidth]{images/sequence_question_bank}
-		\caption{Biểu đồ tuần tự quản lý ngân hàng câu hỏi}
-		\label{fig:2_31_sequence_question_bank}
-	\end{figure}
-	Frontend gửi nội dung câu hỏi và đáp án; Backend lưu câu hỏi vào bảng \texttt{questions}, lưu các đáp án vào bảng \texttt{question\_options}, ghi nhật ký hoạt động và trả bản ghi câu hỏi về Frontend.
-	
-	
-	\subsubsection{Ca sử dụng xem nhật ký hoạt động}
-	\paragraph{Biểu đồ ca sử dụng}
-	\noindent	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\linewidth]{images/us_active_logs}
-		\caption{Biểu đồ xem nhật ký hoạt động}
-		\label{fig:2_32_activity_logs}
-	\end{figure}
-	
-	
-	\begin{center}
-		\begin{tabular}{|p{4cm}|p{10cm}|}
-			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Xem nhật ký hoạt động} \\
+			\textbf{Tên ca sử dụng} & \textbf{Phân công khu vực trồng trọt} \\
 			\hline
 			Tác nhân chính & Admin \\
 			\hline
@@ -1137,19 +921,19 @@
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin truy cập màn hình nhật ký hoạt động.
-					\item Hệ thống tải danh sách bản ghi kèm thông tin người thực hiện, loại thao tác, đối tượng tác động và thời điểm.
-					\item Admin lọc nhật ký theo loại hành động nếu cần theo dõi một nhóm sự kiện cụ thể.
-					\item Admin xem thông tin chi tiết của từng bản ghi.
+					\item Admin chọn một nông dân trong danh sách.
+					\item Hệ thống hiển thị danh sách khu vực hiện đang được phân công và danh sách khu vực khả dụng.
+					\item Admin thêm hoặc gỡ khu vực cho nông dân đó.
+					\item Hệ thống cập nhật bảng \texttt{farmer\_zone\_assignments}.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu không có bản ghi phù hợp với bộ lọc, hệ thống hiển thị thông báo danh sách rỗng. \\
+			Dòng sự kiện phụ & Một khu vực có thể được phân công cho nhiều nông dân; một nông dân có thể quản lý nhiều khu vực. \\
 			\hline
-			Điều kiện tiên quyết & Admin đã đăng nhập. \\
+			Điều kiện tiên quyết & Admin đã đăng nhập; khu vực và nông dân đã tồn tại trong hệ thống. \\
 			\hline
-			Điều kiện sau & Admin nắm được lịch sử các thao tác quan trọng trong hệ thống. \\
+			Điều kiện sau & Nông dân có quyền truy cập khu vực được phân công và nhận cảnh báo liên quan. \\
 			\hline
 		\end{tabular}
 	\end{center}
@@ -1158,26 +942,26 @@
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/sequence_active_logs}
-		\caption{Biểu đồ hoạt động xem nhật ký hoạt động}
-		\label{fig:2_22_activity_logs}
+		\includegraphics[width=0.7\linewidth]{images/activity_phan_cong_khu_vuc}
+		\caption{Biểu đồ hoạt động phân công khu vực trồng trọt}
+		\label{fig:activity_phan_cong_khu_vuc}
 	\end{figure}
-	Admin truy cập trang nhật ký và tùy chọn lọc theo loại hành động; hệ thống truy vấn bảng \texttt{activity\_logs} và hiển thị danh sách bản ghi theo thứ tự thời gian.	
-	
+	Admin chọn nông dân và khu vực cần phân công; hệ thống cập nhật bảng \texttt{farmer\_zone\_assignments} và cấp quyền truy cập khu vực tương ứng.
 	
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
-	Frontend gửi yêu cầu lấy nhật ký kèm tham số lọc và phân trang; Backend truy vấn bảng \texttt{activity\_logs} theo điều kiện, sau đó trả danh sách bản ghi về Frontend để Admin xem.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/sequence_active_logsok}
-		\caption{Biểu đồ tuần tự xem nhật ký hoạt động}
-		\label{fig:2_32_sequence_logs}
+		\includegraphics[width=0.9\linewidth]{images/sequence_phan_cong_khu_vuc}
+		\caption{Biểu đồ tuần tự phân công khu vực trồng trọt}
+		\label{fig:sequence_phan_cong_khu_vuc}
 	\end{figure}
+	Frontend gửi \texttt{POST /admin/zone-assignments} với farmer\_id và zone\_id; Backend kiểm tra quyền admin, thêm hoặc xóa bản ghi trong \texttt{farmer\_zone\_assignments} và trả kết quả cập nhật.
 	
 	
 	
-	\subsection{Mô hình hóa dữ liệu}
+	\subsection*{2. Mô hình hóa dữ liệu}
+	\addcontentsline{toc}{subsection}{2. Mô hình hóa dữ liệu}
 	
 	\paragraph{Sơ đồ thiết kế cơ sở dữ liệu}
 	\noindent
@@ -1190,7 +974,7 @@
 	\end{figure}
 	
 	\paragraph{Danh sách các đối tượng}
-	Hệ thống sử dụng 12 bảng chính để lưu trữ thông tin người dùng, đề thi, hội thoại và kết quả học tập. Danh sách các bảng được trình bày trong Bảng \ref{tab:doi-tuong}.
+	Hệ thống AgriSmart sử dụng 9 bảng chính để lưu trữ thông tin người dùng, khu vực trồng trọt, cảm biến, thiết bị điều khiển và lịch sử cảnh báo môi trường. Danh sách các bảng được trình bày trong Bảng \ref{tab:doi-tuong}.
 	
 	\begin{table}[H]
 		\centering
@@ -1200,29 +984,23 @@
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên bảng} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & Users & Lưu thông tin tài khoản giáo viên và quản trị viên. \\
+			1 & users & Lưu thông tin tài khoản người dùng (Admin và Farmer). \\
 			\hline
-			2 & Lessons & Lưu danh mục bài học và trạng thái chuẩn bị bài học. \\
+			2 & growing\_zones & Lưu thông tin các khu vực trồng trọt. \\
 			\hline
-			3 & Students & Lưu thông tin học sinh tham gia làm bài. \\
+			3 & plant\_profiles & Lưu hồ sơ cây trồng và ngưỡng thông số môi trường tối ưu. \\
 			\hline
-			4 & Conversations & Lưu thông tin các cuộc hội thoại của giáo viên với AI. \\
+			4 & farmer\_zone\_assignments & Bảng phân công nông dân quản lý khu vực (nhiều-nhiều). \\
 			\hline
-			5 & Messages & Lưu từng tin nhắn trong một cuộc hội thoại. \\
+			5 & sensors & Lưu thông tin các cảm biến môi trường trong khu vực. \\
 			\hline
-			6 & Exams & Lưu thông tin đề thi do giáo viên tạo. \\
+			6 & sensor\_readings & Lưu bản ghi đo của cảm biến theo chuỳ kỳ thời gian. \\
 			\hline
-			7 & Exam\_rooms & Lưu phòng thi, mã truy cập, trạng thái và thời hạn. \\
+			7 & actuators & Lưu thông tin thiết bị chấp hành trong khu vực. \\
 			\hline
-			8 & Questions & Lưu nội dung câu hỏi trắc nghiệm. \\
+			8 & actuator\_commands & Lưu lịch sử lệnh điều khiển thiết bị. \\
 			\hline
-			9 & Question\_options & Lưu các lựa chọn đáp án của câu hỏi. \\
-			\hline
-			10 & Exam\_questions & Bảng trung gian liên kết đề thi với câu hỏi và thứ tự hiển thị. \\
-			\hline
-			11 & Scores & Lưu kết quả bài làm của học sinh. \\
-			\hline
-			12 & Activity\_logs & Ghi lại nhật ký các thao tác quan trọng trong hệ thống. \\
+			9 & alerts & Lưu cảnh báo môi trường khi thông số vượt ngưỡng hồ sơ cây trồng. \\
 			\hline
 		\end{tabular}
 	\end{table}
@@ -1232,418 +1010,315 @@
 		\centering
 		\caption{Bảng users}
 		\label{tab:users}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\begin{tabular}{|p{1cm}|p{4cm}|p{4cm}|p{5.5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã người dùng. \\
+			1 & id & UUID & Mã người dùng, khóa chính. \\
 			\hline
-			2 & name & VARCHAR(100) & Họ và tên người dùng. \\
+			2 & email & VARCHAR(255) & Email đăng nhập, duy nhất và được đánh chỉ mục. \\
 			\hline
-			3 & email & VARCHAR(150) & Email đăng nhập, duy nhất. \\
+			3 & hashed\_password & VARCHAR(255) & Mật khẩu đã được băm bằng bcrypt. \\
 			\hline
-			4 & password & VARCHAR(255) & Mật khẩu đã được băm. \\
+			4 & full\_name & VARCHAR(255) & Họ và tên người dùng. \\
 			\hline
-			5 & role & VARCHAR(20) & Vai trò: teacher hoặc admin. \\
+			5 & role & ENUM & Vai trò: admin hoặc user (farmer). \\
 			\hline
-			6 & is\_active & BOOLEAN & Trạng thái khóa hoặc mở khóa tài khoản. \\
+			6 & status & ENUM & Trạng thái tài khoản: active, inactive hoặc banned. \\
 			\hline
-			7 & created\_at & DATETIME & Thời điểm tạo tài khoản. \\
+			7 & is\_verified & BOOLEAN & Đã xác minh địa chỉ email hay chưa. \\
+			\hline
+			8 & created\_at & TIMESTAMPTZ & Thời điểm tạo tài khoản. \\
+			\hline
+			9 & updated\_at & TIMESTAMPTZ & Thời điểm cập nhật gần nhất. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng lessons}
-		\label{tab:lessons}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng growing\_zones}
+		\label{tab:growing_zones}
+		\begin{tabular}{|p{1cm}|p{4.5cm}|p{4cm}|p{5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã bài học. \\
+			1 & id & UUID & Mã khu vực trồng trọt, khóa chính. \\
 			\hline
-			2 & number & VARCHAR(5) & Số thứ tự bài học. \\
+			2 & name & VARCHAR(255) & Tên khu vực. \\
 			\hline
-			3 & name & VARCHAR(200) & Tên bài học. \\
+			3 & description & VARCHAR(1000) & Mô tả khu vực. \\
 			\hline
-			4 & description & VARCHAR(300) & Mô tả ngắn nội dung bài học. \\
+			4 & location & VARCHAR(255) & Vị trí địa lý. \\
 			\hline
-			5 & icon & VARCHAR(10) & Biểu tượng hiển thị trên giao diện. \\
+			5 & area\_sqm & FLOAT & Diện tích khu vực (m\textsuperscript{2}). \\
 			\hline
-			6 & icon\_bg & VARCHAR(20) & Màu nền biểu tượng. \\
+			6 & plant\_profile\_id & UUID (FK) & Hồ sơ cây trồng đang được áp dụng. \\
 			\hline
-			7 & chapter & VARCHAR(50) & Chương của bài học. \\
+			7 & is\_active & BOOLEAN & Trạng thái hoạt động của khu vực. \\
 			\hline
-			8 & status & VARCHAR(20) & Trạng thái chuẩn bị bài học. \\
+			8 & planting\_date & DATE & Ngày bắt đầu trồng. \\
 			\hline
-			9 & created\_by & INT & Mã người tạo. \\
+			9 & expected\_harvest\_date & DATE & Ngày thu hoạch dự kiến. \\
 			\hline
-			10 & created\_at & DATETIME & Thời điểm tạo bản ghi. \\
+			10 & created\_at / updated\_at & TIMESTAMPTZ & Thời điểm tạo và cập nhật bản ghi. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng students}
-		\label{tab:students}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng plant\_profiles}
+		\label{tab:plant_profiles}
+		\begin{tabular}{|p{1cm}|p{4.5cm}|p{4cm}|p{5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã học sinh. \\
+			1 & id & UUID & Mã hồ sơ cây trồng, khóa chính. \\
 			\hline
-			2 & name & VARCHAR(100) & Họ và tên học sinh. \\
+			2 & name & VARCHAR(255) & Tên cây trồng, ràng buộc duy nhất. \\
 			\hline
-			3 & class\_name & VARCHAR(20) & Tên lớp. \\
+			3 & description & VARCHAR(1000) & Mô tả đặc điểm sinh trưởng. \\
 			\hline
-			4 & student\_code & VARCHAR(20) & Mã số học sinh. \\
+			4 & temp\_min / temp\_max & FLOAT & Dải nhiệt độ không khí tối ưu (\textdegree C). \\
 			\hline
-			5 & email & VARCHAR(150) & Email học sinh. \\
+			5 & humidity\_min / max & FLOAT & Dải độ ẩm không khí tối ưu (\%). \\
 			\hline
-			6 & avatar & VARCHAR(1) & Ký tự đại diện hiển thị trên giao diện. \\
+			6 & soil\_moisture\_min / max & FLOAT & Dải độ ẩm đất tối ưu (\%). \\
 			\hline
-			7 & is\_active & BOOLEAN & Trạng thái hoạt động của học sinh. \\
+			7 & light\_min / light\_max & FLOAT & Dải cường độ ánh sáng tối ưu (lux). \\
 			\hline
-			8 & created\_at & DATETIME & Thời điểm tạo bản ghi. \\
+			8 & ph\_min / ph\_max & FLOAT & Dải pH đất tối ưu. \\
+			\hline
+			9 & ec\_min / ec\_max & FLOAT & Dải độ dẫn điện tối ưu ($\mu$S/cm). \\
+			\hline
+			10 & growth\_period\_days & INTEGER & Thời gian sinh trưởng điển hình (ngày). \\
+			\hline
+			11 & created\_at / updated\_at & TIMESTAMPTZ & Thời điểm tạo và cập nhật hồ sơ. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng conversations}
-		\label{tab:conversations}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng farmer\_zone\_assignments}
+		\label{tab:farmer_zone_assignments}
+		\begin{tabular}{|p{1cm}|p{4.5cm}|p{4cm}|p{5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã cuộc hội thoại. \\
+			1 & farmer\_id & UUID (PK, FK) & Khóa chính và khóa ngoại tới bảng users. \\
 			\hline
-			2 & user\_id & INT & Mã giáo viên sở hữu cuộc hội thoại. \\
+			2 & zone\_id & UUID (PK, FK) & Khóa chính và khóa ngoại tới bảng growing\_zones. \\
 			\hline
-			3 & title & VARCHAR(300) & Tiêu đề cuộc hội thoại, thường lấy từ tin nhắn đầu tiên. \\
-			\hline
-			4 & created\_at & DATETIME & Thời điểm tạo cuộc hội thoại. \\
+			3 & assigned\_at & TIMESTAMPTZ & Thời điểm phân công khu vực. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng messages}
-		\label{tab:messages}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng sensors}
+		\label{tab:sensors}
+		\begin{tabular}{|p{1cm}|p{4cm}|p{4cm}|p{5.5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã tin nhắn. \\
+			1 & id & UUID & Mã cảm biến, khóa chính. \\
 			\hline
-			2 & conversation\_id & INT & Mã cuộc hội thoại liên quan. \\
+			2 & name & VARCHAR(255) & Tên cảm biến. \\
 			\hline
-			3 & role & VARCHAR(10) & Vai trò gửi tin nhắn: user hoặc ai. \\
+			3 & sensor\_type & ENUM & Loại: temperature, humidity, soil\_moisture, light, pH, EC, CO2. \\
 			\hline
-			4 & content & TEXT & Nội dung tin nhắn. \\
+			4 & unit & VARCHAR(50) & Đơn vị đo của cảm biến. \\
 			\hline
-			5 & created\_at & DATETIME & Thời điểm gửi tin nhắn. \\
+			5 & zone\_id & UUID (FK) & Khóa ngoại tới khu vực trồng trọt. \\
+			\hline
+			6 & is\_active & BOOLEAN & Trạng thái hoạt động. \\
+			\hline
+			7 & created\_at / updated\_at & TIMESTAMPTZ & Thời điểm tạo và cập nhật. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng exams}
-		\label{tab:exams}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng sensor\_readings}
+		\label{tab:sensor_readings}
+		\begin{tabular}{|p{1cm}|p{4cm}|p{4cm}|p{5.5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã đề thi. \\
+			1 & id & UUID & Mã bản ghi đo, khóa chính. \\
 			\hline
-			2 & title & VARCHAR(300) & Tên đề thi. \\
+			2 & sensor\_id & UUID (FK) & Khóa ngoại tới cảm biến nguồn. \\
 			\hline
-			3 & topic & VARCHAR(200) & Chủ đề đề thi. \\
+			3 & value & FLOAT & Giá trị đo được (đơn vị theo loại cảm biến). \\
 			\hline
-			4 & duration & VARCHAR(10) & Thời gian làm bài. \\
-			\hline
-			5 & level\_mix & VARCHAR(20) & Cấu hình mức độ câu hỏi. \\
-			\hline
-			6 & status & VARCHAR(20) & Trạng thái đề thi: draft hoặc published. \\
-			\hline
-			7 & created\_by & INT & Mã giáo viên tạo đề thi. \\
-			\hline
-			8 & created\_at & DATETIME & Thời điểm tạo đề thi. \\
+			4 & recorded\_at & TIMESTAMPTZ & Thời điểm ghi đo, được đánh chỉ mục. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng exam\_rooms}
-		\label{tab:exam_rooms}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng actuators}
+		\label{tab:actuators}
+		\begin{tabular}{|p{1cm}|p{4.5cm}|p{4cm}|p{5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã phòng thi. \\
+			1 & id & UUID & Mã thiết bị chấp hành, khóa chính. \\
 			\hline
-			2 & exam\_id & INT & Mã đề thi được gắn với phòng thi. \\
+			2 & name & VARCHAR(255) & Tên thiết bị. \\
 			\hline
-			3 & access\_code & VARCHAR(36) & Mã truy cập phòng thi. \\
+			3 & actuator\_type & ENUM & Loại: irrigation, fertilizer\_pump, grow\_light, ventilation\_fan, heater. \\
 			\hline
-			4 & is\_active & BOOLEAN & Trạng thái bật hoặc tắt phòng thi. \\
+			4 & zone\_id & UUID (FK) & Khóa ngoại tới khu vực trồng trọt. \\
 			\hline
-			5 & expires\_at & DATETIME & Thời điểm hết hạn truy cập phòng thi. \\
+			5 & is\_active & BOOLEAN & Trạng thái hoạt động. \\
 			\hline
-			6 & created\_at & DATETIME & Thời điểm tạo phòng thi. \\
+			6 & current\_state & ENUM & Trạng thái hiện tại: on hoặc off. \\
+			\hline
+			7 & created\_at / updated\_at & TIMESTAMPTZ & Thời điểm tạo và cập nhật. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng questions}
-		\label{tab:questions}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng actuator\_commands}
+		\label{tab:actuator_commands}
+		\begin{tabular}{|p{1cm}|p{4.5cm}|p{4cm}|p{5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã câu hỏi. \\
+			1 & id & UUID & Mã lệnh điều khiển, khóa chính. \\
 			\hline
-			2 & lesson\_id & INT & Mã bài học liên quan, có thể rỗng. \\
+			2 & actuator\_id & UUID (FK) & Khóa ngoại tới thiết bị được điều khiển. \\
 			\hline
-			3 & content & TEXT & Nội dung câu hỏi. \\
+			3 & commanded\_by & UUID (FK) & Mã người ra lệnh; NULL nếu lệnh tự động. \\
 			\hline
-			4 & level & VARCHAR(10) & Mức độ câu hỏi: easy, med, hard. \\
+			4 & command & ENUM & Lệnh điều khiển: on hoặc off. \\
 			\hline
-			5 & topic & VARCHAR(200) & Chủ đề câu hỏi, dùng để lọc và phân nhóm, có thể rỗng. \\
+			5 & duration\_seconds & INTEGER & Thời gian thực thi dự kiến (giây). \\
 			\hline
-			6 & created\_by & INT & Mã người tạo câu hỏi. \\
+			6 & reason & VARCHAR(500) & Lý do điều khiển thiết bị. \\
 			\hline
-			7 & created\_at & DATETIME & Thời điểm tạo câu hỏi. \\
+			7 & executed\_at & TIMESTAMPTZ & Thời điểm thực thi lệnh, được đánh chỉ mục. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
+
 	\begin{table}[H]
 		\centering
-		\caption{Bảng question\_options}
-		\label{tab:question_options}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+		\caption{Bảng alerts}
+		\label{tab:alerts}
+		\begin{tabular}{|p{1cm}|p{4.5cm}|p{4cm}|p{5cm}|}
 			\hline
 			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
 			\hline
-			1 & id & INT & Mã đáp án lựa chọn. \\
+			1 & id & UUID & Mã cảnh báo, khóa chính. \\
 			\hline
-			2 & question\_id & INT & Mã câu hỏi tương ứng. \\
+			2 & zone\_id & UUID (FK) & Khu vực phát sinh cảnh báo. \\
 			\hline
-			3 & letter & VARCHAR(1) & Ký hiệu đáp án: A, B, C, D. \\
+			3 & sensor\_id & UUID (FK) & Cảm biến liên quan, có thể rỗng. \\
 			\hline
-			4 & content & TEXT & Nội dung đáp án. \\
+			4 & alert\_type & ENUM & Loại: above\_max, below\_min, compound\_condition, device\_offline. \\
 			\hline
-			5 & is\_correct & BOOLEAN & Đánh dấu đáp án đúng hoặc sai. \\
+			5 & severity & ENUM & Mức độ nghiêm trọng: low, medium, high. \\
 			\hline
-		\end{tabular}
-	\end{table}
-	
-	\begin{table}[H]
-		\centering
-		\caption{Bảng exam\_questions}
-		\label{tab:exam_questions}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
+			6 & parameter & ENUM & Thông số môi trường lệch ngưỡng (loại cảm biến). \\
 			\hline
-			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
+			7 & actual\_value & FLOAT & Giá trị thực tế đo được tại thời điểm kích hoạt. \\
 			\hline
-			1 & id & INT & Mã bản ghi trung gian. \\
+			8 & threshold\_value & FLOAT & Ngưỡng tham chiếu bị vi phạm. \\
 			\hline
-			2 & exam\_id & INT & Mã đề thi. \\
+			9 & message & VARCHAR(500) & Thông điệp mô tả cảnh báo. \\
 			\hline
-			3 & question\_id & INT & Mã câu hỏi. \\
+			10 & recommended\_action & VARCHAR(500) & Hành động được khuyến nghị cho người vận hành. \\
 			\hline
-			4 & order\_num & INT & Thứ tự câu hỏi trong đề thi. \\
+			11 & is\_read & BOOLEAN & Đã được đọc và xử lý hay chưa. \\
+			\hline
+			12 & triggered\_at & TIMESTAMPTZ & Thời điểm kích hoạt cảnh báo, được đánh chỉ mục. \\
 			\hline
 		\end{tabular}
 	\end{table}
-	
-	\begin{table}[H]
-		\centering
-		\caption{Bảng scores}
-		\label{tab:scores}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
-			\hline
-			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
-			\hline
-			1 & id & INT & Mã kết quả thi. \\
-			\hline
-			2 & student\_id & INT & Mã học sinh. \\
-			\hline
-			3 & exam\_id & INT & Mã đề thi. \\
-			\hline
-			4 & score & FLOAT & Điểm số sau khi chấm bài. \\
-			\hline
-			5 & taken\_at & DATETIME & Thời điểm nộp bài. \\
-			\hline
-		\end{tabular}
-	\end{table}
-	
-	\begin{table}[H]
-		\centering
-		\caption{Bảng activity\_logs}
-		\label{tab:activity_logs}
-		\begin{tabular}{|p{1.5cm}|p{4cm}|p{4cm}|p{5.5cm}|}
-			\hline
-			\centering\textbf{STT} & \centering\textbf{Tên thuộc tính} & \centering\textbf{Kiểu dữ liệu} & \centering\arraybackslash\textbf{Mô tả} \\
-			\hline
-			1 & id & INT & Mã bản ghi nhật ký. \\
-			\hline
-			2 & user\_id & INT & Mã người dùng thực hiện thao tác, có thể rỗng nếu tài khoản đã bị xóa. \\
-			\hline
-			3 & user\_name & VARCHAR(100) & Tên người dùng tại thời điểm thực hiện thao tác. \\
-			\hline
-			4 & action & VARCHAR(50) & Loại hành động: login, create\_exam, create\_room, create\_question, lock\_user, v.v. \\
-			\hline
-			5 & target\_type & VARCHAR(50) & Loại đối tượng bị tác động: exam, question, student, instructor, room. Có thể rỗng. \\
-			\hline
-			6 & target\_id & INT & Mã đối tượng bị tác động. Có thể rỗng. \\
-			\hline
-			7 & detail & TEXT & Mô tả chi tiết hành động. Có thể rỗng. \\
-			\hline
-			8 & ip\_address & VARCHAR(50) & Địa chỉ IP của người thực hiện. Có thể rỗng. \\
-			\hline
-			9 & created\_at & DATETIME & Thời điểm ghi nhật ký. \\
-			\hline
-		\end{tabular}
-	\end{table}
-	
+
+    \newpage
 	\section*{CHƯƠNG III: XÂY DỰNG CHƯƠNG TRÌNH}
     \addcontentsline{toc}{section}{CHƯƠNG III: XÂY DỰNG CHƯƠNG TRÌNH}
+
+    \subsection*{1. Kiến trúc hệ thống}
+    \addcontentsline{toc}{subsection}{1. Kiến trúc hệ thống}
+    
+    \subsection*{3.2. Công nghệ sử dụng}
+	\addcontentsline{toc}{subsection}{3.2. Công nghệ sử dụng}
 	
-	\subsection{Công nghệ sử dụng}
+	\subsubsection*{3.2.1. Python và FastAPI}
+	\addcontentsline{toc}{subsubsection}{3.2.1. Python và FastAPI}
 	
-	\subsubsection{Python \& FastAPI}
-	FastAPI là framework web chính được sử dụng ở backend để xây dựng API và WebSocket. Việc sử dụng FastAPI giúp hệ thống dễ tổ chức theo module, hỗ trợ xác thực, xử lý dữ liệu đầu vào và phát triển nhanh các endpoint cho từng tính năng.
-	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item Cung cấp API cho đăng nhập, quên mật khẩu, tạo đề thi, tạo phòng thi, thống kê và quản trị.
-		\item Cung cấp WebSocket cho luồng chat thời gian thực với AI.
-		\item Kết hợp tốt với Pydantic để kiểm tra dữ liệu đầu vào và đầu ra.
-	\end{itemize}
-	
-	\subsubsection{PostgreSQL}
-	PostgreSQL được sử dụng làm hệ quản trị cơ sở dữ liệu quan hệ cho toàn bộ hệ thống. Đây là nơi lưu trữ thông tin người dùng, đề thi, câu hỏi, phòng thi, hội thoại và điểm số.
-	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item Lưu trữ dữ liệu nghiệp vụ của giáo viên, học sinh và quản trị viên.
-		\item Đảm bảo truy vấn ổn định cho các chức năng dashboard, thống kê và lịch sử hoạt động.
-		\item Dễ dàng mở rộng khi số lượng đề thi, câu hỏi và kết quả học tập tăng lên.
-	\end{itemize}
+	Phía máy chủ, hệ thống sử dụng Python kết hợp framework FastAPI để xây dựng lớp API RESTful phục vụ các chức năng giám sát cảm biến, điều khiển thiết bị chấp hành và sinh cảnh báo môi trường. FastAPI được lựa chọn nhờ khả năng xử lý bất đồng bộ qua \texttt{async/await}, phù hợp với mô hình background task định kỳ thu thập và lưu dữ liệu cảm biến mỗi 60 giây đồng thời đánh giá luật cảnh báo theo ngưỡng hồ sơ cây trồng. Framework tích hợp Pydantic để kiểm tra kiểu dữ liệu đầu vào tại các endpoint như tạo hồ sơ cây trồng, ghi nhận lệnh điều khiển và truy vấn lịch sử đo cảm biến, đồng thời hỗ trợ Dependency Injection giúp tách biệt rõ ràng các tầng xác thực, phân quyền và xử lý nghiệp vụ. Cơ chế xác thực JWT với HttpOnly cookie và bcrypt băm mật khẩu đảm bảo an toàn truy cập cho cả hai vai trò Admin và Farmer.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{postgres.png}
-		\caption{PostgreSQL}
-		\label{fig:postgres}
+		\includegraphics[width=0.75\linewidth]{images/fastapi}
+		\caption{FastAPI -- Framework xây dựng API phía backend}
+		\label{fig:fastapi}
 	\end{figure}
 	
-	\subsubsection{SQLAlchemy \& Alembic}
-	SQLAlchemy được sử dụng để ánh xạ các đối tượng Python với bảng dữ liệu trong PostgreSQL. Alembic được sử dụng để quản lý migration, giúp đồng bộ cấu trúc dữ liệu trong quá trình phát triển.
+	\subsubsection*{3.2.2. PostgreSQL, SQLAlchemy và Alembic}
+	\addcontentsline{toc}{subsubsection}{3.2.2. PostgreSQL, SQLAlchemy và Alembic}
 	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item Định nghĩa model cho các bảng như users, students, exams, scores, conversations.
-		\item Giúp viết truy vấn rõ ràng, dễ bảo trì và gắn với logic nghiệp vụ ở backend.
-		\item Hỗ trợ thay đổi cấu trúc cơ sở dữ liệu theo từng phiên bản của đề tài.
-	\end{itemize}
-	
-	\subsubsection{React, TypeScript \& Vite}
-	Frontend của hệ thống được xây dựng bằng React, TypeScript và Vite. React hỗ trợ xây dựng giao diện theo component, TypeScript giúp kiểm soát kiểu dữ liệu, còn Vite cung cấp môi trường phát triển nhanh và tối ưu quá trình build.
-	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item Xây dựng giao diện cho giáo viên, học sinh và quản trị viên.
-		\item Tổ chức các màn hình theo route rõ ràng như login, dashboard, chat, exam, stats, admin.
-		\item Bảo đảm mã nguồn frontend rõ ràng, dễ mở rộng và giảm lỗi nhờ kiểm tra kiểu dữ liệu.
-	\end{itemize}
+	PostgreSQL được chọn làm hệ quản trị cơ sở dữ liệu quan hệ nhờ hỗ trợ đầy đủ các kiểu dữ liệu UUID, ENUM, TIMESTAMPTZ và khả năng xử lý giao dịch nguyên tử -- điều quan trọng khi ghi đồng thời bản ghi \texttt{sensor\_readings} và sinh cảnh báo trong cùng một chu kỳ nền. Toàn bộ tương tác được thực hiện qua SQLAlchemy 2.0 ở chế độ bất đồng bộ hoàn toàn với driver \texttt{asyncpg}; các thực thể nghiệp vụ như \texttt{GrowingZone}, \texttt{PlantProfile}, \texttt{Sensor}, \texttt{Actuator} và \texttt{Alert} được định nghĩa dưới dạng ORM model, giúp lớp repository dễ bảo trì và kiểm thử độc lập. Alembic quản lý lịch sử thay đổi lược đồ qua các file migration đánh số phiên bản -- từ thiết kế ban đầu đến tái cấu trúc quan hệ phân công nông dân-khu vực và bổ sung loại cảnh báo tổ hợp (compound condition).
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{react.png}
-		\caption{ReactJS}
-		\label{fig:react}
+		\includegraphics[width=0.75\linewidth]{images/postgres}
+		\caption{PostgreSQL -- Hệ quản trị cơ sở dữ liệu quan hệ}
+		\label{fig:tech-postgresql}
 	\end{figure}
 	
-	\subsubsection{Tailwind CSS và shadcn/ui}
-	Tailwind CSS và shadcn/ui được sử dụng để xây dựng giao diện theo hướng component hóa, giúp hệ thống có giao diện hiện đại, đồng bộ và dễ tùy chỉnh.
+	\subsubsection*{3.2.3. React, TypeScript và Vite}
+	\addcontentsline{toc}{subsubsection}{3.2.3. React, TypeScript và Vite}
 	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item Tăng tốc độ xây dựng giao diện người dùng.
-		\item Giúp các màn hình như dashboard, bảng thống kê, form quản trị và khung chat có phong cách trực quan, nhất quán.
-		\item Hỗ trợ tốt cho việc tái sử dụng component ở nhiều màn hình khác nhau.
-	\end{itemize}
+	Giao diện người dùng được xây dựng dưới dạng ứng dụng đơn trang (SPA) sử dụng React 19 kết hợp TypeScript. React cho phép tổ chức màn hình theo hướng component -- từ thẻ tóm tắt trạng thái khu vực, biểu đồ xu hướng cảm biến theo chuỗi thời gian, bảng cảnh báo phân loại theo mức độ nghiêm trọng đến bảng điều khiển thiết bị chấp hành -- đều là component độc lập, tái sử dụng được trên nhiều khu vực trồng. TypeScript bổ sung hệ thống kiểu tĩnh, giúp phát hiện sớm sai lệch kiểu dữ liệu khi tương tác với các cấu trúc API như \texttt{SensorReading}, \texttt{Alert} hay \texttt{ActuatorCommand}. Vite cung cấp môi trường phát triển với hot-reload tức thì, rút ngắn chu kỳ kiểm tra giao diện trong quá trình phát triển tính năng mới.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{tailwindcss.png}
-		\caption{Tailwind CSS}
-		\label{fig:tailwindcss}
+		\includegraphics[width=0.75\linewidth]{images/react-vite}
+		\caption{React và TypeScript -- Nền tảng xây dựng giao diện người dùng}
+		\label{fig:react-vite}
 	\end{figure}
 	
-	\subsubsection{TanStack Router, React Query và Zustand}
-	Ngoài bộ công nghệ chính, frontend còn sử dụng TanStack Router để định tuyến, React Query để quản lý dữ liệu bất đồng bộ và Zustand để quản lý trạng thái cục bộ. Đây là những thành phần giúp kiến trúc frontend gọn, rõ ràng và dễ bảo trì.
+	\subsubsection*{3.2.4. TanStack Router, TanStack Query và Zustand}
+	\addcontentsline{toc}{subsubsection}{3.2.4. TanStack Router, TanStack Query và Zustand}
 	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item TanStack Router quản lý các route như \texttt{/dashboard}, \texttt{/chat}, \texttt{/exam}, \texttt{/stats}, \texttt{/admin/students}.
-		\item React Query quản lý các request như lấy danh sách đề thi, thống kê, người dùng quản trị.
-		\item Zustand lưu các trạng thái dùng chung như giao diện, thông báo và một số cài đặt trong ứng dụng.
-	\end{itemize}
+	TanStack Router đảm nhận điều hướng phía client với cơ chế bảo vệ route theo vai trò, đảm bảo Admin mới truy cập được các trang quản trị (quản lý người dùng, hồ sơ cây trồng, phân công khu vực) trong khi Farmer chỉ thấy các khu vực được phân công cho tài khoản mình. TanStack Query quản lý vòng đời yêu cầu HTTP bao gồm cache, refetch tự động và cập nhật lạc quan (optimistic update) -- đặc biệt phù hợp khi đồng bộ dữ liệu cảm biến cập nhật mỗi 60 giây và trạng thái cảnh báo thay đổi theo chu kỳ nền. Zustand lưu trữ trạng thái toàn cục phía client gồm thông tin phiên đăng nhập và danh sách cảnh báo chưa đọc, với cú pháp gọn nhẹ không đòi hỏi boilerplate.
 	
-	\subsubsection{OpenAI, FAISS và WebSocket}
-	Đây là nhóm công nghệ quan trọng nhất cho chức năng AI của hệ thống. Chatbot sử dụng mô hình ngôn ngữ lớn thông qua OpenAI, FAISS để truy xuất ngữ cảnh từ bộ dữ liệu đã lập chỉ mục, và WebSocket để duy trì trao đổi thời gian thực giữa frontend và backend.
+	\subsubsection*{3.2.5. Shadcn/UI, Tailwind CSS và Recharts}
+	\addcontentsline{toc}{subsubsection}{3.2.5. Shadcn/UI, Tailwind CSS và Recharts}
 	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item FAISS lưu trữ vector của bộ học liệu, cho phép tìm đoạn nội dung liên quan tới câu hỏi của người dùng.
-		\item OpenAI được sử dụng cho hai luồng: sinh câu trả lời chat và sinh câu hỏi trắc nghiệm cho đề thi.
-		\item WebSocket giúp màn hình chat phản hồi theo thời gian thực và hỗ trợ nạp lại lịch sử hội thoại cũ.
-	\end{itemize}
-	
-	\subsubsection{Docker Compose, MailHog và SMTP}
-	Hệ thống được cấu hình để có thể chạy bằng Docker Compose với các dịch vụ PostgreSQL, backend, frontend và MailHog. MailHog được dùng làm hộp thư giả lập trong quá trình phát triển để kiểm tra email tài khoản giáo viên.
-	
-	\paragraph{Vai trò trong hệ thống}
-	\begin{itemize}
-		\item Tạo môi trường chạy thống nhất và thuận tiện cho phát triển.
-		\item Hỗ trợ kiểm thử chức năng gửi email khi quản trị viên tạo tài khoản giáo viên.
-		\item Dễ dàng mở rộng sang môi trường triển khai thật bằng cách thay thế cấu hình SMTP.
-	\end{itemize}
-	
-	\subsubsection{Mô hình client -- server}
-	Kiến trúc tổng thể của hệ thống được xây dựng theo mô hình client -- server. Frontend đảm nhiệm giao diện và tương tác với người dùng. Backend tiếp nhận yêu cầu, xử lý nghiệp vụ, kết nối cơ sở dữ liệu và tích hợp AI.
+	Shadcn/UI cung cấp bộ component sẵn có (dialog, dropdown, badge, bảng dữ liệu, form, toast) được tổ chức trên nền Radix UI với khả năng tiếp cận tích hợp, phục vụ các giao diện như form tạo khu vực trồng, bảng cảnh báo phân loại theo mức HIGH/MEDIUM/LOW và nút bật/tắt thiết bị chấp hành. Tailwind CSS định dạng toàn bộ giao diện theo hướng utility-first, đảm bảo nhất quán về màu sắc phân loại cảnh báo (đỏ-cam-vàng) và trạng thái thiết bị (xanh-xám) trên mọi màn hình mà không cần file CSS riêng. Recharts hiển thị biểu đồ xu hướng các thông số cảm biến (nhiệt độ, độ ẩm, ánh sáng, pH, EC, CO\textsubscript{2}) theo chuỗi thời gian, giúp người vận hành dễ dàng nhận ra xu hướng bất thường trong ngày canh tác.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{client-server.png}
-		\caption{Mô hình client -- server}
-		\label{fig:client-server}
+		\includegraphics[width=0.75\linewidth]{images/tailwind-css}
+		\caption{Tailwind CSS và Shadcn/UI -- Hệ thống giao diện người dùng}
+		\label{fig:tailwind-css}
 	\end{figure}
 	
-	\subsection{Kiến trúc triển khai chương trình}
-	Kiến trúc hệ thống gồm các thành phần chính sau:
+	\subsubsection*{3.2.6. Docker Compose}
+	\addcontentsline{toc}{subsubsection}{3.2.6. Docker Compose}
 	
-	\begin{itemize}
-		\item \textbf{Frontend}: ứng dụng React hiển thị giao diện cho giáo viên, học sinh và quản trị viên.
-		\item \textbf{Backend}: FastAPI cung cấp API và WebSocket, xử lý xác thực, quản lý đề thi, chấm điểm và quản trị.
-		\item \textbf{Database}: PostgreSQL lưu trữ dữ liệu nghiệp vụ.
-		\item \textbf{AI layer}: OpenAI và FAISS xử lý hỏi đáp và sinh đề thi.
-		\item \textbf{Mail service}: MailHog hoặc SMTP phục vụ gửi email tài khoản giáo viên.
-	\end{itemize}
+	Toàn bộ hệ thống được đóng gói và vận hành bằng Docker Compose với năm dịch vụ: \textbf{backend} (FastAPI kèm background task mô phỏng cảm biến), \textbf{frontend} (React/Nginx), \textbf{db} (PostgreSQL 16 Alpine), \textbf{redis} (Redis 7 Alpine phục vụ cache) và \textbf{mailhog} (giả lập SMTP để kiểm thử email đặt lại mật khẩu trong môi trường phát triển). Mỗi dịch vụ chạy trong container riêng với biến môi trường được quản lý qua file \texttt{.env}, đảm bảo mọi môi trường phát triển và triển khai đều hoạt động trên cùng cấu hình. Cách tiếp cận này cho phép khởi chạy toàn bộ hệ thống với một lệnh duy nhất và tạo nền thuận lợi để tích hợp thêm dịch vụ IoT gateway khi mở rộng sang phần cứng thực địa.
 	
-	Trong luồng chat, backend nhận câu hỏi từ WebSocket, truy xuất ngữ cảnh liên quan từ chỉ mục FAISS và gửi prompt tới mô hình AI. Trong luồng tạo đề thi, backend gửi prompt sinh câu hỏi trắc nghiệm cho mô hình AI, sau đó frontend cho phép giáo viên chỉnh sửa trước khi lưu. Trong luồng làm bài thi, học sinh truy cập phòng thi công khai, backend kiểm tra mã học sinh, chấm tự động và lưu điểm vào bảng \texttt{scores}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\linewidth]{images/docker}
+		\caption{Docker Compose -- Môi trường container hóa và triển khai hệ thống}
+		\label{fig:docker}
+	\end{figure}
 	
 	\subsection{Xây dựng chương trình}
 	
@@ -1657,216 +1332,50 @@
 		\label{fig:35dangnhap}
 	\end{figure}
 	
-	\subsubsection{Giao diện quên mật khẩu}
-	Màn hình quên mật khẩu cho phép người dùng nhập email để yêu cầu cấp lại mật khẩu. Backend sẽ sinh token khôi phục và tạo đường dẫn đặt lại mật khẩu. Trong môi trường phát triển, đường dẫn này được ghi ra log để kiểm thử; khi cấu hình SMTP đầy đủ, luồng này có thể mở rộng sang gửi email thực tế.
 	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{3_6_quen_mk}
-		\caption{Giao diện quên mật khẩu cho phép người dùng nhập email để nhận đường dẫn đặt lại mật khẩu}
-		\label{fig:36quenmk}
-	\end{figure}
-	
-	\subsubsection{Giao diện trang chủ}
-	Sau khi đăng nhập, giáo viên được đưa đến trang chủ dạng dashboard. Tại đây hệ thống hiển thị các số liệu tổng quan như số bài học, số đề thi, số học sinh đã tham gia làm bài và số lượt hỏi AI trong ngày. Ngoài ra còn có khối hoạt động gần đây để giúp giáo viên nắm được những thay đổi mới nhất. Trong phiên bản hiện tại, khối lịch tuần trên giao diện được dùng chủ yếu để minh họa bố cục và định hướng mở rộng.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_trang_chu}
-		\caption{Giao diện trang chủ hiển thị các số liệu tổng quan và hoạt động gần đây của giáo viên}
-		\label{fig:37trangchu}
-	\end{figure}
-	
-	%	\begin{figure}[H]
-		%		\centering
-		%		\includegraphics[width=0.9\linewidth]{3_7_trang_chu}
-		%		\caption{Giao diện trang chủ hiển thị các số liệu tổng quan và hoạt động gần đây của giáo viên}
-		%		\label{fig:37trangchu}
-		%	\end{figure}
-	
-	\subsubsection{Giao diện chat với AI}
-	Màn hình chat cho phép giáo viên trao đổi trực tiếp với trợ lý AI. Hệ thống sử dụng WebSocket để gửi và nhận phản hồi theo thời gian thực. Cột bên trái hiển thị lịch sử hội thoại, người dùng có thể tạo cuộc trò chuyện mới hoặc mở lại hội thoại cũ. Khu vực bên phải có phần gợi ý chủ đề để giáo viên bắt đầu nhanh các câu hỏi thường gặp. Nội dung phản hồi được hiển thị dưới dạng văn bản có hỗ trợ markdown.
-	
-	%	\begin{figure}[H]
-		%		\centering
-		%		\includegraphics[width=0.9\linewidth]{3_8_chat_ai}
-		%		\caption{Giao diện chat với AI hỗ trợ lịch sử hội thoại và phản hồi theo thời gian thực}
-		%		\label{fig:38chatai}
-		%	\end{figure}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_chat_voi_AI}
-		\caption{Giao diện chat với AI hỗ trợ lịch sử hội thoại và phản hồi theo thời gian thực}
-		\label{fig:38chatai}
-	\end{figure}
-	
-	
-	\subsubsection{Giao diện tạo đề thi}
-	Giao diện tạo đề thi cho phép giáo viên cấu hình chủ đề, số câu hỏi, mức độ và thời gian làm bài. Sau khi gửi yêu cầu, AI sinh ra danh sách câu hỏi trắc nghiệm để giáo viên xem trước. Giáo viên có thể lưu đề thi dưới dạng nháp hoặc công bố chính thức. Sau khi lưu, giáo viên có thể tạo phòng thi ngay từ đề thi đó. Ở tab danh sách đề thi, giáo viên còn có thể xem lại đề, tạo phòng thi, bật hoặc tắt phòng thi và xem điểm theo đề thi.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{images/UI_tao_de_thi}
-		\caption{Giao diện tạo đề thi bằng AI với cấu hình chủ đề, số câu hỏi và mức độ}
-		\label{fig:39taodethi1}
-	\end{figure}
-	
-	
-	Sau khi phòng thi được tạo, hệ thống sinh ra liên kết công khai chứa mã phòng để giáo viên gửi cho học sinh. Liên kết này có thể được chia sẻ qua bất kỳ kênh giao tiếp nào; học sinh chỉ cần truy cập và nhập mã học sinh để vào giao diện làm bài mà không cần đăng ký tài khoản.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\linewidth]{3_9_2_lam_bai_thi}
-		\caption{Giao diện nhập thông tin học sinh trước khi vào phòng thi trực tuyến}
-		\label{fig:392lambaithi}
-	\end{figure}
-	
-	\subsubsection{Giao diện làm bài thi của học sinh}
-	Trước khi bắt đầu làm bài, học sinh nhập họ tên và mã học sinh để hệ thống xác thực. Giao diện hiện có thêm trường lớp và email nhằm phục vụ mở rộng, tuy nhiên ở phiên bản backend hiện tại việc xác thực và lưu điểm được thực hiện chủ yếu dựa trên mã học sinh. Khi xác thực thành công, học sinh được chuyển tới màn hình làm bài có bộ đếm thời gian, danh sách câu hỏi và nút nộp bài. Giao diện làm bài được thiết kế tối giản nhằm hạn chế phân tâm, tập trung vào nội dung câu hỏi và thời gian còn lại. Sau khi nộp, hệ thống chấm điểm tự động và trả về điểm số cùng số câu đúng ngay trên màn hình.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_lam_bai_thi}
-		\caption{Giao diện làm bài thi của học sinh với bộ đếm thời gian và danh sách câu hỏi}
-		\label{fig:393lambaithi}
-	\end{figure}
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_ket_qua_thi}
-		\caption{Giao diện học sinh làm bài và nhận kết quả}
-		\label{fig:uiketquathi}
-	\end{figure}
-	
-	
-	
-	\subsubsection{Giao diện thống kê}
-	Màn hình thống kê cung cấp cho giáo viên các chỉ số quan trọng như điểm trung bình, tỷ lệ đạt yêu cầu, số học sinh cần hỗ trợ, điểm trung bình theo chủ đề, phân bố kết quả học sinh và bảng xếp hạng. Đây là căn cứ để giáo viên đánh giá chất lượng học tập sau mỗi đợt kiểm tra.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_ui_thong_ke_cho_gv}
-		\caption{Giao diện thống kê kết quả học sinh bao gồm điểm trung bình, phẩn bố kết quả và bảng xếp hạng}
-		\label{fig:310thongke}
-	\end{figure}
-	
-	
-	\subsubsection{Giao diện thống kê cho admin}
-	Màn hình dashboard của quản trị viên hiển thị số lượng học sinh, số lượng giáo viên, số lượng đề thi và tổng số câu hỏi toàn hệ thống. Ngoài các số liệu tổng hợp, quản trị viên còn có thể theo dõi biểu đồ xu hướng sử dụng theo ngày trong 7 ngày gần nhất, thể hiện số đề thi được tạo và số lượt nộp bài của học sinh. Bảng xếp hạng giáo viên tích cực nhất cũng được hiển thị dựa trên số lượng đề thi mà mỗi giáo viên đã tạo. Đây là những chỉ số giúp quản trị viên nắm bắt nhanh mức độ sử dụng nền tảng và phát hiện xu hướng hoạt động bất thường nếu có.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_ui_thong_ke_cho_ad}
-		\caption{Giao diện tổng quan thống kê dành cho quản trị viên, bao gồm số liệu tổng hợp và biểu đồ xu hướng}
-		\label{fig:uiuithongkechoad}
-	\end{figure}
-	
-	\subsubsection{Giao diện quản lý học sinh cho admin}
-	Màn hình này cho phép quản trị viên thêm học sinh mới vào hệ thống, theo dõi danh sách học sinh hiện có và khóa hoặc mở khóa học sinh khi cần. Hệ thống kiểm tra trùng mã học sinh trước khi lưu nhằm hạn chế lỗi dữ liệu.
-	
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_ql_hs}
-		\caption{Giao diện quản lý học sinh cho phép thêm mới và khóa, mở khóa tài khoản học sinh}
-		\label{fig:312quanlihs}
-	\end{figure}
-	
-	
-	\subsubsection{Giao diện quản lý giáo viên cho admin}
-	Màn hình này cho phép quản trị viên tạo tài khoản giáo viên mới, nhập họ tên, email và mật khẩu khởi tạo. Sau khi tạo thành công, hệ thống tự động gửi thông tin tài khoản tới giáo viên thông qua MailHog hoặc SMTP. Trong trường hợp dịch vụ email không khả dụng, hệ thống sẽ từ chối tạo tài khoản và thông báo lỗi để quản trị viên kiểm tra cấu hình. Quản trị viên cũng có thể khóa hoặc mở khóa tài khoản giáo viên khi cần thiết, trạng thái tài khoản được cập nhật ngay lập tức trên danh sách.
-	
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_ql_gv}
-		\caption{Giao diện quản lý giáo viên cho phép tạo tài khoản mới và quản lý trạng thái tài khoản}
-		\label{fig:uiqlgv}
-	\end{figure}
-	
-	\subsubsection{Giao diện ngân hàng câu hỏi}
-	Màn hình ngân hàng câu hỏi cho phép giáo viên quản lý kho câu hỏi riêng của mình một cách tập trung. Giáo viên có thể xem danh sách toàn bộ câu hỏi đã tạo, lọc theo chủ đề, mức độ khó hoặc tìm kiếm theo từ khóa. Mỗi câu hỏi hiển thị số lần được sử dụng trong các đề thi, giúp giáo viên đánh giá mức độ khai thác và quyết định có nên giữ lại hay không. Giáo viên có thể tạo câu hỏi mới thủ công với bốn đáp án A, B, C, D hoặc dùng chức năng sinh câu hỏi bằng AI để xem trước trước khi lưu chính thức. Câu hỏi trong ngân hàng có thể được tái sử dụng cho nhiều đề thi khác nhau mà không cần nhập lại.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_ngan_hang_cau_hoi}
-		\caption{Giao diện ngân hàng câu hỏi với chức năng lọc theo chủ đề, mức độ và tạo câu hỏi mới}
-		\label{fig:314nganhangcauhoi}
-	\end{figure}
-	
-	\subsubsection{Giao diện theo dõi kết quả học tập của học sinh}
-	Màn hình theo dõi kết quả học tập của học sinh qua các học sinh tham gia thi. Từ dữ liệu này giáo viên có thể theo dõi để đánh giá sự tiến bộ của học sinh, từ đó có những giải pháp phù hợp giúp học sinh cải thiện kết quả học tập
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_gv_xem_kq_hoc_tap_hs}
-		\caption{Giao diện giáo viên theo dõi kết quả học tập của các học sinh}
-		\label{fig:uigvxemkqhoctaphs}
-	\end{figure}
-	
-	
-	
-	\subsubsection{Giao diện nhật ký hoạt động cho admin}
-	Màn hình nhật ký hoạt động cung cấp cho quản trị viên lịch sử các thao tác quan trọng đã xảy ra trong hệ thống. Mỗi bản ghi nhật ký bao gồm tên người dùng, loại hành động, đối tượng bị tác động, địa chỉ IP và thời điểm thực hiện. Các hành động được ghi nhật ký bao gồm: đăng nhập, tạo đề thi, tạo phòng thi, tạo câu hỏi, xóa câu hỏi, khóa và mở khóa tài khoản, thêm học sinh và thêm giáo viên. Quản trị viên có thể lọc nhật ký theo loại hành động để tập trung theo dõi một nhóm sự kiện cụ thể, ví dụ chỉ xem các lần đăng nhập hoặc các thao tác quản lý tài khoản.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/UI_nhat_ky_hoat_dong}
-		\caption{Giao diện nhật ký hoạt động hệ thống dành cho quản trị viên với bộ lọc theo loại hành động}
-		\label{fig:315nhatkyhoatdong}
-	\end{figure}
+	\newpage
+	\section*{KẾT LUẬN}
 	
 	
 	\newpage
-	\section{KẾT LUẬN VÀ KIẾN NGHỊ}
-	
-	Sau quá trình nghiên cứu, thiết kế và phát triển, đồ án đã xây dựng được một hệ thống web hỗ trợ giáo viên trong giảng dạy Tin học 12 với đầy đủ các chức năng trọng tâm hoạt động ổn định theo đúng kiến trúc đã đề ra. Hệ thống đã triển khai thành công luồng đăng nhập và xác thực người dùng, khôi phục mật khẩu bằng token, hỏi đáp với AI qua WebSocket có lưu lịch sử hội thoại, tạo đề thi bằng AI với khả năng xem trước và chỉnh sửa, quản lý ngân hàng câu hỏi tái sử dụng, tạo và điều hành phòng thi trực tuyến, chấm điểm tự động sau khi học sinh nộp bài, cùng với dashboard thống kê học tập, quản trị tài khoản giáo viên và học sinh và theo dõi nhật ký hoạt động hệ thống. Đây là những chức năng có giá trị sử dụng thực tế, trực tiếp hỗ trợ giáo viên tiết kiệm thời gian trong hai khâu tốn kém nhất là chuẩn bị bài kiểm tra và đánh giá kết quả học sinh.
-	
-	Bên cạnh những kết quả đạt được, hệ thống vẫn còn một số hạn chế cần được nhìn nhận khách quan. Chất lượng phản hồi của chatbot phụ thuộc trực tiếp vào dữ liệu đã được lập chỉ mục trong bộ học liệu và năng lực của mô hình AI được tích hợp, do đó câu trả lời có thể chưa bao phủ toàn bộ các tình huống câu hỏi thực tế của giáo viên. Chức năng quên mật khẩu đã có đủ luồng tạo token và đặt lại mật khẩu, nhưng việc gửi email khôi phục trong môi trường phát triển chưa được hoàn thiện tương đương luồng gửi email tài khoản giáo viên. Ngoài ra, phần bài học hiện mới dừng lại ở mức danh mục và mô hình dữ liệu, chưa có API CRUD đầy đủ như các module chat, đề thi và thống kê; giao diện trên thiết bị di động cũng cần được tiếp tục tối ưu để phục vụ tốt hơn trong điều kiện sử dụng thực tế của giáo viên vùng Tây Bắc.
-	
-	Từ những hạn chế trên, hướng phát triển tiếp theo được đề xuất tập trung vào bốn điểm chính. Thứ nhất, hoàn thiện module bài học và quản lý tri thức, cho phép cập nhật học liệu trực tiếp từ giao diện quản trị để không cần can thiệp thủ công vào bộ chỉ mục FAISS mỗi khi nội dung thay đổi. Thứ hai, tích hợp luồng gửi email thực tế cho chức năng quên mật khẩu và các thông báo hệ thống, đồng thời mở rộng nguồn học liệu bằng cách bổ sung nhiều bộ sách và tài liệu ôn tập để nâng cao chất lượng phản hồi của chatbot. Thứ ba, nâng cấp phần thống kê với khả năng lọc sâu hơn theo lớp, chủ đề hoặc khoảng thời gian kiểm tra, và hoàn thiện tính năng liên kết câu hỏi trong ngân hàng với bài học tương ứng để hỗ trợ tổ chức nội dung tốt hơn. Thứ tư, tối ưu toàn diện giao diện và trải nghiệm người dùng trên thiết bị di động, ưu tiên các màn hình mà giáo viên sử dụng thường xuyên nhất như chat, tạo đề thi và xem kết quả.
-	
-	Nhìn chung, đồ án đã đạt được mục tiêu chính là xây dựng một nền tảng hỗ trợ giảng dạy tích hợp có ứng dụng thực tế, đồng thời tạo ra nền tảng kỹ thuật đủ vững chắc để tiếp tục phát triển thành một hệ thống hoàn chỉnh hơn trong tương lai, có thể mở rộng sang nhiều môn học khác mà không cần thay đổi kiến trúc lõi.
-	
-	\newpage
-	\begin{thebibliography}{99}
-		
-		% --- Văn bản pháp lý và thực tiễn Việt Nam ---
-		\bibitem{qd749}
-		Thủ tướng Chính phủ, \textit{Quyết định số 749/QĐ-TTg phê duyệt Chương trình Chuyển đổi số quốc gia đến năm 2025, định hướng đến năm 2030}, 2020. Truy cập tại: \url{https://chinhphu.vn/default.aspx?pageid=27160&docid=200163}
-		
-		\bibitem{baolao2023}
-		Báo Lào Cai, \textit{Lai Châu thiếu gần 300 giáo viên Tin học và Tiếng Anh}, 2023. Truy cập tại: \url{https://baolaocai.vn}
-		
-		\bibitem{gdtd2025}
-		Tạp chí Giáo dục và Thời đại, \textit{Giáo viên vùng cao và thực trạng tiếp cận chuyển đổi số}, 2025. Truy cập tại: \url{https://giaoducthoidai.vn}
-		
-		\bibitem{fptis2023}
-		FPT IS, \textit{Chuyển đổi số giáo dục tại vùng sâu vùng xa: Thực trạng và giải pháp}, 2023. Truy cập tại: \url{https://fptis.vn}
-		
-		\bibitem{jvs2025}
-		Tạp chí Khoa học Việt Nam, \textit{Khảo sát hạ tầng Internet trường học vùng khó khăn}, 2025.
-		
-		% --- Nghiên cứu về RAG và mô hình ngôn ngữ ---
-		\bibitem{lewis2020rag}
-		Lewis, P., Perez, E., Piktus, A., et al., \textit{Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks}, Advances in Neural Information Processing Systems (NeurIPS), Vol.~33, pp.~9459--9474, 2020.
-		
-		\bibitem{nguyen2025rag}
-		Nguyễn Việt Hà, Trần Tuấn Vinh, \textit{Ứng dụng Retrieval-Augmented Generation trong xây dựng chatbot giáo dục tiếng Việt}, Tạp chí Khoa học và Công nghệ Việt Nam, 2025.
-		
-		% --- Nghiên cứu về sinh câu hỏi và chatbot giáo dục ---
-		\bibitem{kurdi2020qg}
-		Kurdi, G., Leo, J., Parsia, B., Sattler, U., Al-Emari, S., \textit{A Systematic Review of Automatic Question Generation for Educational Purposes}, International Journal of Artificial Intelligence in Education, Vol.~30, pp.~121--204, 2020.
-		
-		\bibitem{kav2024}
-		Kav, M., et al., \textit{Personalized AI Chatbots in Education: Generating Lessons and Questions from Digital Resources}, Computers \& Education, 2024.
-		
-		% --- Hệ thống liên quan ---
-		\bibitem{openai_chatgpt}
-		OpenAI, \textit{ChatGPT: Optimizing Language Models for Dialogue}, 2023. Truy cập tại: \url{https://openai.com/chatgpt}
-		
-		\bibitem{google_gemini}
-		Google DeepMind, \textit{Gemini: A Family of Highly Capable Multimodal Models}, 2024. Truy cập tại: \url{https://gemini.google.com}
-		
-	\end{thebibliography}
+    \begin{thebibliography}{99}
+    
+        \bibitem{cucThuongMai2018}
+        Cục Thương mại Biên giới và Miền núi, \textit{Sơn La đã phát triển nhiều sản phẩm nông nghiệp mang tính đặc trưng của vùng miền}, 2018. Truy cập tại: \url{https://thuongmaibiengioimiennui.gov.vn/san-pham-vung-mien/mien-bac/2018/8/son-la-da-phat-trien-nhieu-san-pham-nong-nghiep-mang-tinh-dac-trung-cua-vung-mien}
+        
+        \bibitem{boKhoaHoc2025a}
+        Bộ Khoa học và Công nghệ, \textit{Tầm nhìn chiến lược của Nghị quyết 57 cho nông nghiệp Việt Nam: Sơn La đột phá trong phát triển nông nghiệp công nghệ cao}, 2025. Truy cập tại: \url{https://mst.gov.vn/tam-nhin-chien-luoc-cua-nghi-quyet-57-cho-nong-nghiep-viet-nam-son-la-dot-pha.htm}
+        
+        \bibitem{boKhoaHoc2025b}
+        Bộ Khoa học và Công nghệ, \textit{Nhận diện rào cản để người dân vùng cao tiếp cận chuyển đổi số}, 2025. Truy cập tại: \url{https://mst.gov.vn/nhan-dien-rao-can-de-nguoi-dan-vung-cao-tiep-can-chuyen-doi-so-197251109191.htm}
+        
+        \bibitem{soussi2024}
+        Abdellatif Soussi, Enrico Zero, Roberto Sacile, Daniele Trinchero, Marco Fossa, \textit{Smart Sensors and Smart Data for Precision Agriculture: A Review}, Sensors, MDPI, 2024.
+        
+        \bibitem{wolfert2017}
+        Wolfert, S., Ge, L., Verdouw, C., Bogaardt, M.J., \textit{Big Data in Smart Farming -- A Review}, Agricultural Systems, Vol. 153, pp. 69--80, 2017.
+        
+        \bibitem{ojha2015}
+        Ojha, T., Misra, S., Raghuwanshi, N.S., \textit{Wireless Sensor Networks for Agriculture: The State-of-the-Art in Practice and Future Challenges}, Computers and Electronics in Agriculture, Vol. 118, pp. 66--84, 2015.
+        
+        \bibitem{ahmed2018}
+        Ahmed, N., De, D., Hussain, I., \textit{Internet of Things (IoT) for Smart Precision Agriculture and Farming in Rural Areas}, IEEE Internet of Things Journal, Vol. 5, No. 6, pp. 4890--4899, 2018.
+        
+        \bibitem{koksal2019}
+        Koksal, O., Tekinerdogan, B., \textit{Architecture Design Approach for IoT-Based Farm Management Information Systems}, Precision Agriculture, Vol. 20, pp. 926--958, 2019.
+        
+        \bibitem{goap2018}
+        Goap, A., Sharma, D., Shukla, A.K., Kumar, C.R., \textit{An IoT Based Smart Irrigation Management System Using Machine Learning and Open Source Technologies}, Computers and Electronics in Agriculture, Vol. 155, pp. 41--49, 2018.
+        
+        \bibitem{growlink2024}
+        Growlink, \textit{Smart Farm Automation and Monitoring Platform}, 2024. Truy cập tại: \url{https://www.growlink.ag}
+        
+        \bibitem{farmapp2024}
+        Farmapp, \textit{Farmapp --- Smart Agriculture IoT Platform}, 2024. % TODO: cập nhật URL chính thức của Farmapp
+        
+        \bibitem{li2014}
+        Li, L., Zhang, Q., Huang, D., \textit{A Review of Imaging Techniques for Plant Phenotyping}, Sensors, Vol. 14, No. 11, pp. 20078--20111, 2014.
+    
+    \end{thebibliography}
 	
 \end{document}
