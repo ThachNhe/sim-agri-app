@@ -21,6 +21,7 @@
 \usepackage{tikz}
 \usepackage{scrextend}
 \usepackage{listings}
+\usepackage{xurl}
 \usetikzlibrary{calc,positioning,arrows.meta,shapes.geometric,fit,backgrounds}
 
 \definecolor{myblue}{RGB}{0,72,160}
@@ -377,7 +378,7 @@
     
     \textbf{Chương I -- Khảo sát và Đặc tả Hệ thống} trình bày tổng quan nghiên cứu về nông nghiệp chính xác, kết quả khảo sát nhu cầu tại vùng Tây Bắc, phân tích các hệ thống liên quan và khoảng trống nghiên cứu, cùng đặc tả đầy đủ tác nhân, yêu cầu chức năng, phi chức năng và ràng buộc nghiệp vụ.
     
-    \textbf{Chương II -- Phân tích và Thiết kế Hệ thống} trình bày các ca sử dụng chi tiết kèm biểu đồ hoạt động và tuần tự tương tác, cùng thiết kế cơ sở dữ liệu của hệ thống.
+    \textbf{Chương II -- Phân tích và Thiết kế Hệ thống} trình bày phân tích chi tiết luồng xử lý dữ liệu cảm biến và cơ chế sinh cảnh báo tự động có căn cứ khoa học, bao gồm sơ đồ data flow, phân tích rule engine theo ngưỡng đơn và tổ hợp, cùng bảng khuyến nghị hành động theo mức độ nghiêm trọng. Tiếp theo là mô hình hóa hệ thống qua các ca sử dụng chi tiết kèm biểu đồ hoạt động và tuần tự tương tác, cùng thiết kế cơ sở dữ liệu của hệ thống.
     
     \textbf{Chương III -- Xây dựng Chương trình} trình bày kiến trúc chi tiết backend và frontend, cơ chế mô phỏng dữ liệu, bộ quy tắc sinh cảnh báo, phương án triển khai Docker Compose và minh họa giao diện hệ thống.
     
@@ -542,9 +543,115 @@
 	\newpage
 	\section*{CHƯƠNG II: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
     \addcontentsline{toc}{section}{CHƯƠNG II: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
-    
-	\subsection*{1. Mô hình hóa hệ thống}
-    \addcontentsline{toc}{subsection}{1. Mô hình hóa hệ thống}
+
+    % -----------------------------------------------------------
+    \subsection*{1. Phân tích luồng xử lý dữ liệu và sinh cảnh báo}
+    \addcontentsline{toc}{subsection}{1. Phân tích luồng xử lý dữ liệu và sinh cảnh báo}
+
+    Trước khi bước vào mô hình hóa hệ thống bằng các biểu đồ ca sử dụng và tuần tự, cần phân tích rõ luồng xử lý trung tâm của AgriSmart: cơ chế tự động thu thập dữ liệu cảm biến, đánh giá ngưỡng và sinh cảnh báo hướng tới giúp cây trồng phát triển tốt hơn. Đây là nhân tố kỹ thuật cốt lõi phân biệt hệ thống với các ứng dụng giám sát đơn thuần.
+
+    \subsubsection*{1.1. Tổng quan luồng dữ liệu}
+    \addcontentsline{toc}{subsubsection}{1.1. Tổng quan luồng dữ liệu}
+
+    Luồng xử lý được thực hiện bởi một background task bất đồng bộ chạy định kỳ mỗi 60 giây, trải qua bốn giai đoạn chính: \textbf{(1) Thu thập dữ liệu} --- mô phỏng hoặc đọc giá trị từ các cảm biến môi trường trong từng khu vực trồng trọt và lưu vào chuỗi thời gian; \textbf{(2) Tra cứu ngưỡng} --- lấy hồ sơ cây trồng đang được áp dụng cho khu vực đó để xác định ngưỡng tối ưu cho từng thông số; \textbf{(3) Đánh giá rule engine} --- so sánh giá trị thực tế với ngưỡng và đánh giá các điều kiện tổ hợp; \textbf{(4) Sinh cảnh báo} --- tạo bản ghi cảnh báo kèm mức độ nghiêm trọng và khuyến nghị hành động, với cơ chế chống trùng lặp 1 giờ.
+
+    Sơ đồ dưới đây mô tả toàn bộ luồng dữ liệu từ cảm biến đến cảnh báo:
+
+    \begin{figure}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tikzpicture}[
+        node distance=0.7cm and 1.4cm,
+        box/.style={rectangle, rounded corners=4pt, draw=myblue, fill=lightblue, text width=3.2cm, align=center, minimum height=1cm, font=\small},
+        decision/.style={diamond, draw=myblue, fill=lightgreen, text width=2.2cm, align=center, aspect=1.6, font=\small},
+        store/.style={rectangle, draw=myblue!60, fill=white, text width=3cm, align=center, minimum height=0.8cm, font=\small, dashed},
+        arrow/.style={-{Stealth[length=5pt]}, myblue, thick},
+        label/.style={font=\footnotesize, color=linegray}
+    ]
+        % Nodes
+        \node[box] (sensor) {Cảm biến\\(7 loại)};
+        \node[box, right=of sensor] (collect) {Thu thập \&\\Lưu số liệu};
+        \node[store, below=0.5cm of collect] (readings) {};
+        \node[box, right=of collect] (profile) {Tra cứu\\Hồ sơ cây trồng};
+        \node[store, below=0.5cm of profile] (profiles) {};
+        \node[box, right=of profile] (engine) {Rule Engine\\Đánh giá ngưỡng};
+        \node[decision, right=of engine] (vipham) {Vi phạm\\ngưỡng?};
+        \node[box, above right=0.4cm and 0.8cm of vipham] (dedup) {Kiểm tra\\trùng lặp};
+        \node[store, above=0.4cm of dedup] (alerts_db) {\texttt{alerts}};
+        \node[box, below right=0.4cm and 0.8cm of vipham] (skip) {Bỏ qua\\chu kỳ này};
+        \node[box, right=1.2cm of dedup] (severity) {Phân mức\\nghiêm trọng};
+        \node[box, right=of severity] (alert_out) {Sinh Cảnh Báo\\+ Khuyến nghị};
+
+        % Arrows
+        \draw[arrow] (sensor) -- (collect);
+        \draw[arrow] (collect) -- (profile);
+        \draw[arrow] (collect) -- (readings);
+        \draw[arrow] (profile) -- (engine);
+        \draw[arrow] (profile) -- (profiles);
+        \draw[arrow] (engine) -- (vipham);
+        \draw[arrow] (vipham) -- node[label, above left]{Có} (dedup);
+        \draw[arrow] (vipham) -- node[label, below left]{Không} (skip);
+        \draw[arrow] (dedup) -- node[label, above]{Chưa có} (severity);
+        \draw[arrow] (dedup.north) -- (alerts_db.south);
+        \draw[arrow] (severity) -- (alert_out);
+        \draw[arrow] (alert_out) -- ++(0,-1.5) -| (alerts_db);
+    \end{tikzpicture}
+    }
+    \caption{Luồng xử lý dữ liệu và sinh cảnh báo tự động}
+    \label{fig:data-flow-alert}
+    \end{figure}
+
+    \subsubsection*{1.2. Chi tiết từng giai đoạn}
+    \addcontentsline{toc}{subsubsection}{1.2. Chi tiết từng giai đoạn}
+
+    \textbf{Giai đoạn 1 --- Thu thập dữ liệu cảm biến.} Mỗi 60 giây, background task duyệt qua toàn bộ khu vực trồng đang hoạt động. Với mỗi cảm biến trong khu vực, hệ thống mô phỏng giá trị đo dựa trên khoảng dao động thực tế theo từng loại cảm biến (nhiệt độ, độ ẩm không khí, độ ẩm đất, ánh sáng, pH, EC, CO$_2$) và lưu bản ghi \texttt{SensorReading} có dấu thời gian vào cơ sở dữ liệu. Khi tích hợp phần cứng thực, giai đoạn này được thay bằng lệnh đọc từ gateway IoT mà không ảnh hưởng đến các bước tiếp theo.
+
+    \textbf{Giai đoạn 2 --- Tra cứu ngưỡng theo hồ sơ cây trồng.} Sau khi lưu số liệu, rule engine tra cứu \texttt{PlantProfile} đang được gán cho khu vực đó. Hồ sơ lưu trữ các cặp ngưỡng tối thiểu và tối đa cho từng thông số môi trường, được thiết lập theo căn cứ khoa học từ nghiên cứu Soussi và cộng sự (2024) \cite{soussi2024}. Nếu khu vực chưa được gán hồ sơ, bước đánh giá bị bỏ qua.
+
+    \textbf{Giai đoạn 3 --- Đánh giá rule engine.} Rule engine thực hiện hai lớp đánh giá đồng thời:
+
+    \begin{itemize}[leftmargin=1.5cm]
+        \item \textbf{Ngưỡng đơn (7 quy tắc):} Với mỗi thông số, so sánh giá trị thực tế với \texttt{[min, max]} của hồ sơ. Nếu vượt ngưỡng, tính độ lệch tương đối $\delta = \frac{|v - v_{ref}|}{v_{ref}} \times 100\%$. Phân loại mức độ: $\delta < 10\%$ $\to$ LOW; $10\% \le \delta < 25\%$ $\to$ MEDIUM; $\delta \ge 25\%$ $\to$ HIGH.
+        \item \textbf{Điều kiện tổ hợp (4 quy tắc):} Phát hiện các kết hợp thông số nguy hiểm mà đánh giá đơn lẻ không thể nhận ra: (i)~nhiệt độ cao + độ ẩm cao $\to$ nguy cơ nấm bệnh; (ii)~nhiệt độ cao + độ ẩm thấp $\to$ stress VPD; (iii)~độ ẩm đất cao + pH thấp $\to$ nguy cơ thối rễ; (iv)~CO$_2$ thấp + ánh sáng cao $\to$ lãng phí quang hợp.
+    \end{itemize}
+
+    Ý nghĩa khoa học của từng điều kiện tổ hợp được giải thích cụ thể: khi nhiệt độ vượt 30\textdegree C đồng thời độ ẩm vượt 85\%, môi trường tạo điều kiện lý tưởng cho nấm phát triển và lan rộng nhanh chóng; khi nhiệt độ cao kết hợp độ ẩm thấp, chỉ số VPD tăng cao khiến cây mất nước qua lá nhanh hơn khả năng hút nước từ rễ, dẫn đến héo và giảm năng suất.
+
+    \textbf{Giai đoạn 4 --- Kiểm tra trùng lặp và sinh cảnh báo.} Trước khi ghi cảnh báo mới, hệ thống kiểm tra: nếu đã tồn tại một cảnh báo \textit{cùng loại, cùng khu vực, cùng thông số} được tạo trong vòng 1 giờ gần nhất và \textit{chưa được đọc}, cảnh báo mới sẽ bị bỏ qua (tránh spam). Ngược lại, nếu cảnh báo cũ đã được đọc, hệ thống cho phép sinh lại ngay khi điều kiện vi phạm vẫn tiếp diễn --- phản ánh đúng thực tế người vận hành đã xử lý nhưng vấn đề chưa được khắc phục. Mỗi cảnh báo được lưu kèm giá trị thực tế, ngưỡng vi phạm, mức độ nghiêm trọng và khuyến nghị hành động cụ thể theo từng mức.
+
+    \subsubsection*{1.3. Phân tích tác động đến cây trồng}
+    \addcontentsline{toc}{subsubsection}{1.3. Phân tích tác động đến cây trồng}
+
+    Giá trị cốt lõi của luồng xử lý trên không chỉ nằm ở việc phát hiện sự cố mà còn ở việc \textit{hướng dẫn hành động} cụ thể để cải thiện điều kiện sinh trưởng. Bảng dưới đây minh họa cách hệ thống chuyển hóa một vi phạm ngưỡng thành khuyến nghị hành động phân theo mức độ:
+
+    \begin{table}[H]
+    \centering
+    \caption{Ví dụ phân tích cảnh báo và khuyến nghị hành động theo mức độ nghiêm trọng}
+    \label{tab:alert-action}
+    \begin{tabular}{|p{2.5cm}|p{2cm}|p{4cm}|p{5.5cm}|}
+    \hline
+    \textbf{Thông số} & \textbf{Mức độ} & \textbf{Tình huống} & \textbf{Khuyến nghị hành động} \\
+    \hline
+    Nhiệt độ cao & LOW & Lệch ngưỡng $< 10\%$ & Theo dõi thêm; kiểm tra thông gió. \\
+    \hline
+    Nhiệt độ cao & MEDIUM & Lệch $10-25\%$ & Bật quạt thông gió; giảm thời lượng chiếu sáng nhân tạo. \\
+    \hline
+    Nhiệt độ cao & HIGH & Lệch $> 25\%$ & Bật quạt ngay; mở cửa thông gió; giảm tải nhiệt. \\
+    \hline
+    Độ ẩm đất thấp & MEDIUM & Đất khô, ngưỡng lệch 15\% & Kích hoạt hệ thống tưới nhỏ giọt. \\
+    \hline
+    CO$_2$ thấp + ánh sáng cao & COMPOUND & Quang hợp kém hiệu quả & Giảm cường độ đèn; kiểm tra thông gió để tăng CO$_2$. \\
+    \hline
+    Nhiệt độ cao + Độ ẩm cao & COMPOUND & Nguy cơ nấm bệnh & Bật quạt thông gió; giảm tưới; theo dõi dấu hiệu nấm. \\
+    \hline
+    \end{tabular}
+    \end{table}
+
+    Như vậy, thay vì chỉ thông báo ``nhiệt độ quá cao'', hệ thống cung cấp đủ ngữ cảnh để người vận hành ra quyết định can thiệp phù hợp ngay lập tức --- góp phần giảm thiểu thiệt hại cho cây trồng và tối ưu hóa điều kiện sinh trưởng theo thời gian.
+
+    % -----------------------------------------------------------
+    \subsection*{2. Mô hình hóa hệ thống}
+    \addcontentsline{toc}{subsection}{2. Mô hình hóa hệ thống}
 
 	\begin{figure}[H]
 		\centering
@@ -556,8 +663,8 @@
 
 	Hệ thống được tổ chức thành năm nhóm ca sử dụng (UC01--UC05), mỗi nhóm đại diện cho một lĩnh vực nghiệp vụ độc lập: xác thực \& quản lý tài khoản (UC01), giám sát môi trường vùng trồng (UC02), điều khiển thiết bị chấp hành (UC03), quản lý cảnh báo (UC04) và quản trị hệ thống (UC05).
 	
-	\subsubsection*{1.1 Ca sử dụng xác thực và Quản lý tài khoản}
-    \addcontentsline{toc}{subsubsection}{1.1 Ca sử dụng xác thực và Quản lý tài khoản}
+	\subsubsection*{1.1 Ca sử dụng đăng nhập}
+    \addcontentsline{toc}{subsubsection}{1.1 Ca sử dụng đăng nhập}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
@@ -985,8 +1092,8 @@
 	
 	
 	
-	\subsection*{2. Mô hình hóa dữ liệu}
-	\addcontentsline{toc}{subsection}{2. Mô hình hóa dữ liệu}
+	\subsection*{3. Mô hình hóa dữ liệu}
+	\addcontentsline{toc}{subsection}{3. Mô hình hóa dữ liệu}
 	
 	\paragraph{Sơ đồ thiết kế cơ sở dữ liệu}
 	\noindent
@@ -1292,8 +1399,8 @@
 		\label{fig:fastapi}
 	\end{figure}
 	
-	\subsubsection*{3.2.2. PostgreSQL, SQLAlchemy và Alembic}
-	\addcontentsline{toc}{subsubsection}{3.2.2. PostgreSQL, SQLAlchemy và Alembic}
+	\subsubsection*{3.2.2. PostgreSQL}
+	\addcontentsline{toc}{subsubsection}{3.2.2. PostgreSQL}
 	
 	PostgreSQL được chọn làm hệ quản trị cơ sở dữ liệu quan hệ nhờ hỗ trợ đầy đủ các kiểu dữ liệu UUID, ENUM, TIMESTAMPTZ và khả năng xử lý giao dịch nguyên tử -- điều quan trọng khi ghi đồng thời bản ghi \texttt{sensor\_readings} và sinh cảnh báo trong cùng một chu kỳ nền. Toàn bộ tương tác được thực hiện qua SQLAlchemy 2.0 ở chế độ bất đồng bộ hoàn toàn với driver \texttt{asyncpg}; các thực thể nghiệp vụ như \texttt{GrowingZone}, \texttt{PlantProfile}, \texttt{Sensor}, \texttt{Actuator} và \texttt{Alert} được định nghĩa dưới dạng ORM model, giúp lớp repository dễ bảo trì và kiểm thử độc lập. Alembic quản lý lịch sử thay đổi lược đồ qua các file migration đánh số phiên bản -- từ thiết kế ban đầu đến tái cấu trúc quan hệ phân công nông dân-khu vực và bổ sung loại cảnh báo tổ hợp (compound condition).
 	
@@ -1333,8 +1440,8 @@
 		\label{fig:tailwind-css}
 	\end{figure}
 	
-	\subsubsection*{3.2.6. Docker Compose}
-	\addcontentsline{toc}{subsubsection}{3.2.6. Docker Compose}
+	\subsubsection*{3.2.6. Docker}
+	\addcontentsline{toc}{subsubsection}{3.2.6. Docker}
 	
 	Toàn bộ hệ thống được đóng gói và vận hành bằng Docker Compose với năm dịch vụ: \textbf{backend} (FastAPI kèm background task mô phỏng cảm biến), \textbf{frontend} (React/Nginx), \textbf{db} (PostgreSQL 16 Alpine), \textbf{redis} (Redis 7 Alpine phục vụ cache) và \textbf{mailhog} (giả lập SMTP để kiểm thử email đặt lại mật khẩu trong môi trường phát triển). Mỗi dịch vụ chạy trong container riêng với biến môi trường được quản lý qua file \texttt{.env}, đảm bảo mọi môi trường phát triển và triển khai đều hoạt động trên cùng cấu hình. Cách tiếp cận này cho phép khởi chạy toàn bộ hệ thống với một lệnh duy nhất và tạo nền thuận lợi để tích hợp thêm dịch vụ IoT gateway khi mở rộng sang phần cứng thực địa.
 	
