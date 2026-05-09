@@ -65,7 +65,6 @@ UC01e  ..> UC01  : <<extend>>
 
 
 @startuml UC01_Dang_Nhap_Activity
-title UC01 – Đăng nhập (Biểu đồ hoạt động)
 
 start
 :Người dùng nhập email và mật khẩu;
@@ -81,7 +80,6 @@ stop
 @enduml
 
 @startuml UC01_Dang_Nhap_Sequence
-title UC01 – Đăng nhập (Biểu đồ tuần tự)
 
 actor       "Người dùng"  as USER
 participant "Giao diện"   as UI
@@ -108,7 +106,6 @@ end
 ' ╚══════════════════════════════════════════════════════════╝
 @startuml UC04_Cam_Bien_Moi_Nhat_UseCase
 left to right direction
-title UC04 – Xem dữ liệu cảm biến mới nhất
 
 actor "Admin"  as ADMIN
 actor "Farmer" as FARMER
@@ -127,7 +124,6 @@ UC04   ..> UC04c : <<include>>
 
 
 @startuml UC02_Cam_Bien_Moi_Nhat_Activity
-title UC02 – Xem dữ liệu cảm biến mới nhất (Biểu đồ hoạt động)
 
 start
 :Người dùng chọn khu vực trồng trọt;
@@ -144,7 +140,6 @@ stop
 @enduml
 
 @startuml UC02_Cam_Bien_Moi_Nhat_Sequence
-title UC02 – Xem dữ liệu cảm biến mới nhất (Biểu đồ tuần tự)
 
 actor       "Người dùng"   as USER
 participant "Giao diện"    as UI
@@ -172,7 +167,6 @@ end
 ' ╚══════════════════════════════════════════════════════════╝
 @startuml UC06_Dieu_Khien_Thiet_Bi_UseCase
 left to right direction
-title UC06 – Bật / Tắt thiết bị chấp hành
 
 actor "Farmer" as FARMER
 
@@ -193,7 +187,6 @@ UC06   ..> UC06d : <<include>>
 
 
 @startuml UC03_Dieu_Khien_Thiet_Bi_Activity
-title UC03 – Bật / Tắt thiết bị chấp hành (Biểu đồ hoạt động)
 
 start
 :Farmer chọn thiết bị trong khu vực được phân công;
@@ -210,7 +203,6 @@ stop
 @enduml
 
 @startuml UC03_Dieu_Khien_Thiet_Bi_Sequence
-title UC03 – Bật / Tắt thiết bị chấp hành (Biểu đồ tuần tự)
 
 actor       "Farmer"        as USER
 participant "Giao diện"     as UI
@@ -238,7 +230,6 @@ end
 ' ╚══════════════════════════════════════════════════════════╝
 @startuml UC07_Xem_Canh_Bao_UseCase
 left to right direction
-title UC07 – Xem và xử lý cảnh báo
 
 actor "Admin"  as ADMIN
 actor "Farmer" as FARMER
@@ -259,7 +250,6 @@ UC07c  ..> UC07  : <<extend>>
 
 
 @startuml UC04_Xem_Canh_Bao_Activity
-title UC04 – Xem và xử lý cảnh báo (Biểu đồ hoạt động)
 
 start
 :Người dùng mở trang Cảnh báo;
@@ -275,7 +265,6 @@ stop
 @enduml
 
 @startuml UC04_Xem_Canh_Bao_Sequence
-title UC04 – Xem và xử lý cảnh báo (Biểu đồ tuần tự)
 
 actor       "Người dùng"  as USER
 participant "Giao diện"   as UI
@@ -303,7 +292,6 @@ UI  --> USER: Cập nhật trạng thái
 
 @startuml UC08_Tao_Ho_So_Cay_Trong_UseCase
 left to right direction
-title UC08 – Tạo hồ sơ cây trồng
 
 actor "Admin" as ADMIN
 
@@ -324,7 +312,6 @@ UC08e ..> UC08  : <<extend>>
 
 
 @startuml UC05_Tao_Ho_So_Activity
-title UC05 – Tạo hồ sơ cây trồng (Biểu đồ hoạt động)
 
 start
 :Admin nhập tên, mô tả và 7 dải ngưỡng môi trường;
@@ -339,7 +326,6 @@ stop
 @enduml
 
 @startuml UC05_Tao_Ho_So_Sequence
-title UC05 – Tạo hồ sơ cây trồng (Biểu đồ tuần tự)
 
 actor       "Admin"              as ADMIN
 participant "Giao diện"          as UI
@@ -367,7 +353,6 @@ end
 ' ╚══════════════════════════════════════════════════════════╝
 @startuml UC10_Tao_Tai_Khoan_UseCase
 left to right direction
-title UC10 – Tạo tài khoản nông dân
 
 actor "Admin" as ADMIN
 
@@ -388,7 +373,6 @@ UC10d ..> UC10  : <<extend>>
 
 
 @startuml UC06_Tao_Tai_Khoan_Activity
-title UC06 – Tạo tài khoản nông dân (Biểu đồ hoạt động)
 
 start
 :Admin nhập họ tên, email và mật khẩu tạm thời;
@@ -403,7 +387,6 @@ stop
 @enduml
 
 @startuml UC06_Tao_Tai_Khoan_Sequence
-title UC06 – Tạo tài khoản nông dân (Biểu đồ tuần tự)
 
 actor       "Admin"         as ADMIN
 participant "Giao diện"     as UI
@@ -433,7 +416,6 @@ end
 
 @startuml UC11_Phan_Cong_UseCase
 left to right direction
-title UC11 – Phân công nông dân vào khu vực
 
 actor "Admin" as ADMIN
 
@@ -454,7 +436,6 @@ UC11e ..> UC11  : <<extend>>
 
 
 @startuml UC07_Phan_Cong_Activity
-title UC07 – Phân công nông dân vào khu vực (Biểu đồ hoạt động)
 
 start
 :Admin chọn nông dân;
@@ -473,7 +454,6 @@ stop
 @enduml
 
 @startuml UC07_Phan_Cong_Sequence
-title UC07 – Phân công nông dân vào khu vực (Biểu đồ tuần tự)
 
 actor       "Admin"      as ADMIN
 participant "Giao diện"  as UI
@@ -506,7 +486,6 @@ UI  --> ADMIN: Khu vực biến mất khỏi danh sách Farmer
 ' ╚══════════════════════════════════════════════════════════╝
 @startuml UC12_Background_Task_UseCase
 left to right direction
-title UC12 – Thu thập & sinh cảnh báo tự động
 
 actor "Hệ thống nền\n(Background Task)" as SYS
 
@@ -531,7 +510,6 @@ UC12 ..> UC12g : <<include>>
 
 
 @startuml UC08_Background_Task_Activity
-title UC08 – Thu thập & sinh cảnh báo tự động (Biểu đồ hoạt động)
 
 start
 :Background Task kích hoạt mỗi 60 giây;
@@ -555,7 +533,6 @@ stop
 @enduml
 
 @startuml UC08_Background_Task_Sequence
-title UC08 – Thu thập & sinh cảnh báo tự động (Biểu đồ tuần tự)
 
 participant "Scheduler"       as SCHED
 participant "Background Task" as BG
