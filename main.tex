@@ -659,12 +659,12 @@
 		\caption{Sơ đồ ca sử dụng tổng quát}
 		\label{fig:uctongquat}
 	\end{figure}	
-	Hệ thống AgriSmart xác định hai nhóm tác nhân chính tham gia vào quá trình vận hành: quản trị viên (Admin) và nông dân (Farmer), cùng với tác nhân nền là Hệ thống thực hiện các tác vụ tự động định kỳ. Admin có toàn quyền quản lý người dùng, tạo và chỉnh sửa vùng trồng trọt, định nghĩa hồ sơ cây trồng với các ngưỡng môi trường tối ưu, và phân công vùng trồng cho từng nông dân. Farmer là nhóm người dùng vận hành chính, có thể theo dõi bảng điều khiển tổng quan, xem dữ liệu cảm biến theo thời gian thực từ các vùng được phân công, xem và xử lý cảnh báo môi trường, cũng như điều khiển các thiết bị chấp hành như máy bơm, quạt thông gió, đèn chiếu sáng và máy sưởi. Mô hình phân quyền RBAC đảm bảo mỗi nhóm tác nhân chỉ tiếp cận đúng phạm vi chức năng phù hợp với vai trò, vừa đơn giản hóa trải nghiệm sử dụng vừa tăng tính bảo mật cho hệ thống.
+	Hệ thống AgriSmart xác định ba tác nhân tham gia vào quá trình vận hành: \textbf{Quản trị viên (Admin)}, \textbf{Nông dân (Farmer)} và \textbf{Hệ thống nền (Background Task)}. Admin có toàn quyền quản lý tài khoản nông dân, định nghĩa hồ sơ cây trồng với các dải ngưỡng môi trường tối ưu, phân công nông dân vào khu vực trồng trọt theo quan hệ nhiều-nhiều, và giám sát toàn bộ cảnh báo lẫn dữ liệu cảm biến trên hệ thống. Farmer là nhóm người dùng vận hành chính, có thể xem dữ liệu cảm biến mới nhất từ các khu vực được phân công, điều khiển thiết bị chấp hành (bơm tưới, bơm phân, đèn trồng cây, quạt thông gió, máy sưởi) và xem, xử lý cảnh báo môi trường liên quan đến khu vực của mình. Hệ thống nền là tác nhân tự động, chạy mỗi 60 giây để mô phỏng và lưu số liệu từ bảy loại cảm biến, sau đó đánh giá bộ quy tắc cảnh báo theo ngưỡng đơn và tổ hợp, sinh bản ghi cảnh báo khi phát hiện vi phạm với cơ chế chống trùng lặp trong vòng một giờ.
 
-	Hệ thống được tổ chức thành năm nhóm ca sử dụng (UC01--UC05), mỗi nhóm đại diện cho một lĩnh vực nghiệp vụ độc lập: xác thực \& quản lý tài khoản (UC01), giám sát môi trường vùng trồng (UC02), điều khiển thiết bị chấp hành (UC03), quản lý cảnh báo (UC04) và quản trị hệ thống (UC05).
+	Hệ thống được tổ chức thành tám nhóm ca sử dụng (UC01--UC08), mỗi nhóm đại diện cho một lĩnh vực nghiệp vụ độc lập: đăng nhập (UC01), xem dữ liệu cảm biến mới nhất (UC02), bật/tắt thiết bị chấp hành (UC03), xem và xử lý cảnh báo (UC04), tạo hồ sơ cây trồng (UC05), tạo tài khoản nông dân (UC06), phân công nông dân vào khu vực (UC07) và thu thập \& sinh cảnh báo tự động (UC08). Mô hình phân quyền RBAC đảm bảo mỗi tác nhân chỉ tiếp cận đúng phạm vi chức năng phù hợp với vai trò.
 	
-	\subsubsection*{1.1 Ca sử dụng đăng nhập}
-    \addcontentsline{toc}{subsubsection}{1.1 Ca sử dụng đăng nhập}
+	\subsubsection*{2.1. UC01 -- Đăng nhập}
+    \addcontentsline{toc}{subsubsection}{2.1. UC01 -- Đăng nhập}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
@@ -723,43 +723,45 @@
 	\end{figure}
 	Frontend gửi \texttt{POST /auth/login} với email và mật khẩu đến Auth API; Backend tra cứu tài khoản trong Database, xác thực mật khẩu băm và kiểm tra trạng thái, sau đó phát hành JWT token trong HttpOnly cookie và điều hướng Frontend đến Dashboard phù hợp với vai trò.
 
-
-	\subsubsection*{1.2 Ca sử dụng giám sát môi trường vùng trồng}
-    \addcontentsline{toc}{subsubsection}{1.2 Ca sử dụng giám sát môi trường vùng trồng}
+	% -------------------------------------------------------
+	\subsubsection*{2.2. UC02 -- Xem dữ liệu cảm biến mới nhất}
+	\addcontentsline{toc}{subsubsection}{2.2. UC02 -- Xem dữ liệu cảm biến mới nhất}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.85\linewidth]{images/uc_uc02}
-		\caption{Biểu đồ ca sử dụng giám sát môi trường vùng trồng}
+		\caption{Biểu đồ ca sử dụng xem dữ liệu cảm biến mới nhất}
 		\label{fig:uc_uc02}
 	\end{figure}
 
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Giám sát môi trường vùng trồng} \\
+			\textbf{Tên ca sử dụng} & \textbf{Xem dữ liệu cảm biến mới nhất} \\
 			\hline
-			Tác nhân chính & Farmer, Admin (xem), Hệ thống nền (thu thập dữ liệu) \\
+			Tác nhân chính & Admin hoặc Farmer đã đăng nhập \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Người dùng truy cập Dashboard; hệ thống song song tải danh sách vùng trồng, số liệu cảm biến, thiết bị và cảnh báo hôm nay.
-					\item Hệ thống hiển thị thẻ tóm tắt tổng quan và biểu đồ trạng thái.
-					\item Người dùng chọn một vùng trồng để xem chi tiết các cảm biến.
-					\item Người dùng chọn cảm biến và khoảng thời gian để xem lịch sử dữ liệu đo trên biểu đồ xu hướng.
+					\item Người dùng chọn khu vực trồng trọt muốn theo dõi.
+					\item Hệ thống kiểm tra quyền truy cập khu vực của người dùng.
+					\item Hệ thống lấy số liệu mới nhất của từng cảm biến trong khu vực.
+					\item Hệ thống so sánh từng giá trị với ngưỡng hồ sơ cây trồng đang áp dụng.
+					\item Hệ thống tính trạng thái NORMAL / WARNING / CRITICAL cho từng thông số.
+					\item Giao diện hiển thị 7 thẻ cảm biến kèm màu sắc phân biệt trạng thái.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Background task định kỳ thu thập và lưu dữ liệu cảm biến vào bảng \texttt{sensor\_readings}; nếu không có dữ liệu trong khoảng thời gian chọn, hệ thống hiển thị thông báo tương ứng. \\
+			Dòng sự kiện phụ & Nếu người dùng không có quyền truy cập khu vực, hệ thống trả về 403 Forbidden và hiển thị thông báo không có quyền. \\
 			\hline
-			Điều kiện tiên quyết & Người dùng đã đăng nhập; vùng trồng đã có cảm biến và background task đang hoạt động. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập; khu vực tồn tại và người dùng có quyền truy cập (Admin hoặc Farmer được phân công). \\
 			\hline
-			Điều kiện sau & Người dùng nắm được trạng thái môi trường hiện tại và xu hướng thông số theo thời gian của vùng canh tác. \\
+			Điều kiện sau & Người dùng thấy được số liệu cảm biến mới nhất kèm trạng thái môi trường theo màu sắc trực quan. \\
 			\hline
 		\end{tabular}
 	\end{center}
@@ -768,59 +770,61 @@
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.65\linewidth]{images/activity_uc02}
-		\caption{Biểu đồ hoạt động UC02 xem trang tổng quan}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc02}
+		\caption{Biểu đồ hoạt động xem dữ liệu cảm biến mới nhất}
 		\label{fig:activity_uc02}
 	\end{figure}
-	Người dùng truy cập Dashboard; hệ thống song song tải tổng số thiết bị và cảm biến, giá trị cảm biến mới nhất và thống kê cảnh báo trong ngày, sau đó hiển thị thẻ tóm tắt — nếu người dùng chọn một vùng trồng cụ thể, hệ thống hiển thị thêm dữ liệu chi tiết của vùng đó.
+	Người dùng chọn khu vực trồng trọt; hệ thống kiểm tra quyền truy cập, nếu không có quyền thì thông báo lỗi, ngược lại lấy số liệu mới nhất của từng cảm biến, so sánh với ngưỡng hồ sơ cây trồng và hiển thị 7 thẻ cảm biến kèm trạng thái màu sắc.
 
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.9\linewidth]{images/sequence_uc02}
-		\caption{Biểu đồ tuần tự xem dữ liệu cảm biến}
+		\caption{Biểu đồ tuần tự xem dữ liệu cảm biến mới nhất}
 		\label{fig:sequence_uc02}
 	\end{figure}
-	Frontend gửi \texttt{GET /readings?sensor\_id=\{id\}\&from\_date=\{from\}\&to\_date=\{to\}} đến Readings API; Backend truy vấn bảng \texttt{sensor\_readings} theo bộ lọc và trả danh sách điểm đo, Frontend vẽ biểu đồ xu hướng hoặc hiển thị thông báo nếu không có dữ liệu.
-	
-	
-	\subsubsection*{1.3 Ca sử dụng điều khiển thiết bị chấp hành}
-	\addcontentsline{toc}{subsubsection}{1.3 Ca sử dụng điều khiển thiết bị chấp hành}
+	Frontend gửi \texttt{GET /readings/latest?zone\_id=\{id\}} đến Readings API; Backend kiểm tra quyền truy cập, truy vấn Database lấy số liệu mới nhất và ngưỡng hồ sơ cây trồng, tính trạng thái NORMAL/WARNING/CRITICAL cho mỗi thông số, trả về danh sách \texttt{[\{sensor\_type, value, unit, status\}]} để Frontend hiển thị 7 thẻ cảm biến với màu trạng thái tương ứng.
+
+	% -------------------------------------------------------
+	\subsubsection*{2.3. UC03 -- Bật / Tắt thiết bị chấp hành}
+	\addcontentsline{toc}{subsubsection}{2.3. UC03 -- Bật / Tắt thiết bị chấp hành}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/uc_dieu_khien_thiet_bi}
-		\caption{Biểu đồ ca sử dụng điều khiển thiết bị chấp hành}
-		\label{fig:uc_dieu_khien_thiet_bi}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc03}
+		\caption{Biểu đồ ca sử dụng bật/tắt thiết bị chấp hành}
+		\label{fig:uc_uc03}
 	\end{figure}
 
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Điều khiển thiết bị chấp hành} \\
+			\textbf{Tên ca sử dụng} & \textbf{Bật / Tắt thiết bị chấp hành} \\
 			\hline
-			Tác nhân chính & Nông dân \\
+			Tác nhân chính & Farmer đã đăng nhập và được phân công khu vực chứa thiết bị \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Nông dân chọn khu vực trồng trọt được phân công.
-					\item Hệ thống hiển thị danh sách thiết bị chấp hành trong khu vực kèm trạng thái hiện tại.
-					\item Nông dân bật hoặc tắt một thiết bị (ví dụ: máy tưới nước, quạt thông gió).
-					\item Hệ thống cập nhật trạng thái thiết bị và lưu lệnh điều khiển kèm thời gian.
+					\item Farmer chọn thiết bị chấp hành trong khu vực được phân công.
+					\item Farmer nhấn nút Bật hoặc Tắt trên giao diện.
+					\item Hệ thống kiểm tra quyền truy cập khu vực của Farmer.
+					\item Hệ thống cập nhật trạng thái hiện tại của thiết bị.
+					\item Hệ thống ghi bản ghi lịch sử lệnh điều khiển kèm người thực hiện và thời gian.
+					\item Giao diện cập nhật trạng thái thiết bị ngay lập tức.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu khu vực không được phân công cho nông dân đang đăng nhập, hệ thống từ chối thao tác. \\
+			Dòng sự kiện phụ & Nếu Farmer không có quyền trên khu vực chứa thiết bị, hệ thống trả về 403 Forbidden. Farmer cũng có thể xem lịch sử lệnh điều khiển của từng thiết bị. \\
 			\hline
-			Điều kiện tiên quyết & Nông dân đã đăng nhập và khu vực được phân công cho tài khoản này. \\
+			Điều kiện tiên quyết & Farmer đã đăng nhập và được Admin phân công vào khu vực chứa thiết bị cần điều khiển. \\
 			\hline
-			Điều kiện sau & Trạng thái thiết bị được cập nhật; lệnh điều khiển được lưu vào lịch sử \texttt{actuator\_commands}. \\
+			Điều kiện sau & Trạng thái thiết bị được cập nhật, bản ghi lịch sử lệnh được lưu vào cơ sở dữ liệu và giao diện phản ánh trạng thái mới. \\
 			\hline
 		\end{tabular}
 	\end{center}
@@ -829,33 +833,33 @@
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.6\linewidth]{images/activity_dieu_khien_thiet_bi}
-		\caption{Biểu đồ hoạt động điều khiển thiết bị chấp hành}
-		\label{fig:activity_dieu_khien_thiet_bi}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc03}
+		\caption{Biểu đồ hoạt động bật/tắt thiết bị chấp hành}
+		\label{fig:activity_uc03}
 	\end{figure}
-	Nông dân chọn khu vực và thiết bị, nhấn bật/tắt; hệ thống kiểm tra quyền, cập nhật trạng thái thiết bị và lưu lệnh điều khiển.
+	Farmer chọn thiết bị và nhấn Bật hoặc Tắt; hệ thống kiểm tra quyền khu vực, nếu không có quyền thì thông báo lỗi, ngược lại cập nhật trạng thái thiết bị, ghi lịch sử lệnh điều khiển và cập nhật giao diện.
 
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/sequence_dieu_khien_thiet_bi}
-		\caption{Biểu đồ tuần tự điều khiển thiết bị chấp hành}
-		\label{fig:sequence_dieu_khien_thiet_bi}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc03}
+		\caption{Biểu đồ tuần tự bật/tắt thiết bị chấp hành}
+		\label{fig:sequence_uc03}
 	\end{figure}
-	Frontend gửi \texttt{POST /actuators/\{id\}/command} với trạng thái mong muốn; Backend kiểm tra quyền truy cập khu vực, cập nhật \texttt{current\_state} trong bảng \texttt{actuators}, lưu bản ghi vào \texttt{actuator\_commands} và trả kết quả.
+	Frontend gửi \texttt{POST /actuators/\{id\}/command} với tham số \texttt{\{command: "on"|"off"\}} đến Actuators API; Backend kiểm tra quyền khu vực của Farmer trong Database, nếu hợp lệ thực hiện \texttt{UPDATE current\_state} và \texttt{INSERT actuator\_command}, trả về \texttt{\{actuator\_id, current\_state\}} để Frontend cập nhật trạng thái thiết bị trên giao diện.
 
-
-	\subsubsection*{1.4 Ca sử dụng xem và xử lý cảnh báo}
-	\addcontentsline{toc}{subsubsection}{1.4 Ca sử dụng xem và xử lý cảnh báo}
+	% -------------------------------------------------------
+	\subsubsection*{2.4. UC04 -- Xem và xử lý cảnh báo}
+	\addcontentsline{toc}{subsubsection}{2.4. UC04 -- Xem và xử lý cảnh báo}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/uc_xem_canh_bao}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc04}
 		\caption{Biểu đồ ca sử dụng xem và xử lý cảnh báo}
-		\label{fig:uc_xem_canh_bao}
+		\label{fig:uc_uc04}
 	\end{figure}
 
 	\begin{center}
@@ -863,26 +867,27 @@
 			\hline
 			\textbf{Tên ca sử dụng} & \textbf{Xem và xử lý cảnh báo} \\
 			\hline
-			Tác nhân chính & Nông dân / Admin \\
+			Tác nhân chính & Admin hoặc Farmer đã đăng nhập \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Người dùng truy cập danh sách cảnh báo.
-					\item Hệ thống hiển thị danh sách cảnh báo theo mức độ nghiêm trọng (HIGH, MEDIUM, LOW), loại cảnh báo và thời điểm kích hoạt.
-					\item Người dùng xem chi tiết cảnh báo: thông số lệch ngưỡng, giá trị thực tế và hành động được khuyến nghị.
-					\item Người dùng đánh dấu đã đọc sau khi xử lý.
-					\item Hệ thống cập nhật trạng thái \texttt{is\_read = true} cho cảnh báo đó.
+					\item Người dùng mở trang Cảnh báo.
+					\item Hệ thống lọc danh sách cảnh báo theo quyền hạn: Admin thấy tất cả, Farmer chỉ thấy cảnh báo từ khu vực được phân công.
+					\item Giao diện hiển thị danh sách cảnh báo phân màu theo mức độ (LOW/MEDIUM/HIGH).
+					\item Người dùng chọn cảnh báo để xem chi tiết.
+					\item Người dùng đánh dấu cảnh báo đã đọc.
+					\item Hệ thống cập nhật trường \texttt{is\_read = true} cho bản ghi cảnh báo.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nông dân chỉ thấy cảnh báo thuộc các khu vực được phân công; Admin thấy cảnh báo toàn hệ thống. \\
+			Dòng sự kiện phụ & Admin có thể xem thống kê cảnh báo tổng hợp toàn hệ thống theo loại và mức độ. Cảnh báo chưa đọc được làm mới khi background task sinh cảnh báo trùng loại trong vòng 1 giờ. \\
 			\hline
-			Điều kiện tiên quyết & Background task đã sinh cảnh báo dựa trên dữ liệu cảm biến. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập; hệ thống nền đã sinh ít nhất một bản ghi cảnh báo. \\
 			\hline
-			Điều kiện sau & Cảnh báo được đánh dấu đã đọc; người dùng đã biết hành động cần thực hiện. \\
+			Điều kiện sau & Cảnh báo được đánh dấu đã đọc, không còn hiển thị trong danh sách chưa đọc. \\
 			\hline
 		\end{tabular}
 	\end{center}
@@ -891,207 +896,272 @@
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.6\linewidth]{images/activity_xem_canh_bao}
-		\caption{Biểu đồ hoạt động xem cảnh báo}
-		\label{fig:activity_xem_canh_bao}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc04}
+		\caption{Biểu đồ hoạt động xem và xử lý cảnh báo}
+		\label{fig:activity_uc04}
 	\end{figure}
-	Người dùng mở danh sách cảnh báo; hệ thống lọc cảnh báo theo vai trò và hiển thị với màu sắc phân biệt mức độ nghiêm trọng; người dùng xem khuyến nghị và đánh dấu đã xử lý.
+	Người dùng mở trang Cảnh báo; hệ thống lấy danh sách theo vai trò (Admin: tất cả, Farmer: khu vực được phân công), hiển thị phân màu theo mức độ; người dùng xem chi tiết và đánh dấu đã đọc, hệ thống cập nhật \texttt{is\_read = true}.
 
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/sequence_xem_canh_bao}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc04}
 		\caption{Biểu đồ tuần tự xem và xử lý cảnh báo}
-		\label{fig:sequence_xem_canh_bao}
+		\label{fig:sequence_uc04}
 	\end{figure}
-	Frontend gọi \texttt{GET /alerts}; Backend lọc cảnh báo theo quyền hạn của người dùng và trả danh sách. Khi đánh dấu đã đọc, Frontend gửi \texttt{PATCH /alerts/\{id\}/read}; Backend cập nhật \texttt{is\_read = true} và trả kết quả.
-	
-	
-	\subsubsection*{1.5 Ca sử dụng quản lý hồ sơ cây trồng}
-	\addcontentsline{toc}{subsubsection}{1.5 Ca sử dụng quản lý hồ sơ cây trồng}
+	Frontend gửi \texttt{GET /alerts} đến Alerts API; Backend truy vấn Database theo quyền (Admin: tất cả, Farmer: khu vực được phân công), trả về danh sách với các trường \texttt{severity}, \texttt{message}, \texttt{is\_read} để Frontend hiển thị phân màu. Khi người dùng đánh dấu đã đọc, Frontend gửi \texttt{PATCH /alerts/\{id\}/read}; Backend cập nhật \texttt{is\_read = true} và trả về 200 OK.
+
+	% -------------------------------------------------------
+	\subsubsection*{2.5. UC05 -- Tạo hồ sơ cây trồng}
+	\addcontentsline{toc}{subsubsection}{2.5. UC05 -- Tạo hồ sơ cây trồng}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{images/uc_ho_so_cay_trong}
-		\caption{Biểu đồ ca sử dụng quản lý hồ sơ cây trồng}
-		\label{fig:uc_ho_so_cay_trong}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc05}
+		\caption{Biểu đồ ca sử dụng tạo hồ sơ cây trồng}
+		\label{fig:uc_uc05}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Quản lý hồ sơ cây trồng} \\
+			\textbf{Tên ca sử dụng} & \textbf{Tạo hồ sơ cây trồng} \\
 			\hline
-			Tác nhân chính & Admin \\
+			Tác nhân chính & Admin đã đăng nhập \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin truy cập danh sách hồ sơ cây trồng.
-					\item Admin tạo hồ sơ mới với tên cây, mô tả và các dải ngưỡng tối ưu cho từng thông số môi trường.
-					\item Hệ thống lưu hồ sơ và cho phép gán hồ sơ vào khu vực trồng trọt.
-					\item Admin có thể chỉnh sửa ngưỡng theo mùa vụ hoặc giai đoạn sinh trưởng.
+					\item Admin điền tên, mô tả và 7 dải ngưỡng môi trường tối ưu (nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC, CO$_2$).
+					\item Hệ thống kiểm tra tính hợp lệ của dữ liệu đầu vào và kiểm tra tên hồ sơ chưa trùng lặp.
+					\item Hệ thống lưu hồ sơ vào cơ sở dữ liệu.
+					\item Rule engine tự động áp dụng ngưỡng mới từ chu kỳ 60 giây tiếp theo.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu hồ sơ đang được gán cho khu vực, hệ thống cảnh báo trước khi cho phép xóa. \\
+			Dòng sự kiện phụ & Nếu tên hồ sơ đã tồn tại, hệ thống trả về 409 Conflict. Nếu dữ liệu không hợp lệ (giá trị ngoài phạm vi, thiếu trường bắt buộc), hệ thống trả về 422 Unprocessable Entity kèm thông báo lỗi cụ thể. \\
 			\hline
-			Điều kiện tiên quyết & Admin đã đăng nhập. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập với vai trò Admin. \\
 			\hline
-			Điều kiện sau & Hồ sơ cây trồng được lưu và rule engine sử dụng ngưỡng này khi sinh cảnh báo. \\
+			Điều kiện sau & Hồ sơ cây trồng được lưu vào Database; rule engine sinh cảnh báo dựa trên ngưỡng mới kể từ chu kỳ tiếp theo. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/activity_ho_so_cay_trong}
-		\caption{Biểu đồ hoạt động quản lý hồ sơ cây trồng}
-		\label{fig:activity_ho_so_cay_trong}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc05}
+		\caption{Biểu đồ hoạt động tạo hồ sơ cây trồng}
+		\label{fig:activity_uc05}
 	\end{figure}
-	Admin nhập các dải ngưỡng tối ưu cho nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC và thời gian sinh trưởng; hệ thống lưu hồ sơ và liên kết với khu vực trồng trọt.
-	
+	Admin nhập tên, mô tả và 7 dải ngưỡng môi trường; hệ thống kiểm tra tính hợp lệ và tên không trùng lặp, nếu có lỗi thì thông báo, ngược lại lưu hồ sơ vào Database và rule engine tự động áp dụng ngưỡng mới.
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/sequence_ho_so_cay_trong}
-		\caption{Biểu đồ tuần tự quản lý hồ sơ cây trồng}
-		\label{fig:sequence_ho_so_cay_trong}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc05}
+		\caption{Biểu đồ tuần tự tạo hồ sơ cây trồng}
+		\label{fig:sequence_uc05}
 	\end{figure}
-	Frontend gửi \texttt{POST /plant-profiles} với thông tin ngưỡng; Backend lưu bản ghi \texttt{plant\_profiles} vào cơ sở dữ liệu và trả hồ sơ mới. Rule engine tự động sử dụng ngưỡng này trong lần chạy tiếp theo.
-	
-	
-	\subsubsection*{1.6 Ca sử dụng quản lý người dùng}
-	\addcontentsline{toc}{subsubsection}{1.6 Ca sử dụng quản lý người dùng}
+	Frontend gửi \texttt{POST /plant-profiles} với dữ liệu hồ sơ đến Plant Profiles API; Backend kiểm tra tên trùng lặp trong Database, nếu hợp lệ thực hiện \texttt{INSERT INTO plant\_profiles}, trả về 201 Created; từ chu kỳ 60 giây tiếp theo, rule engine sẽ đánh giá dữ liệu cảm biến theo ngưỡng vừa định nghĩa.
+
+	% -------------------------------------------------------
+	\subsubsection*{2.6. UC06 -- Tạo tài khoản nông dân}
+	\addcontentsline{toc}{subsubsection}{2.6. UC06 -- Tạo tài khoản nông dân}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{images/uc_quan_ly_nguoi_dung}
-		\caption{Biểu đồ ca sử dụng quản lý người dùng}
-		\label{fig:uc_quan_ly_nguoi_dung}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc06}
+		\caption{Biểu đồ ca sử dụng tạo tài khoản nông dân}
+		\label{fig:uc_uc06}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Quản lý người dùng} \\
+			\textbf{Tên ca sử dụng} & \textbf{Tạo tài khoản nông dân} \\
 			\hline
-			Tác nhân chính & Admin \\
+			Tác nhân chính & Admin đã đăng nhập \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin truy cập màn hình quản lý người dùng.
-					\item Hệ thống hiển thị danh sách người dùng với vai trò và trạng thái.
-					\item Admin tạo tài khoản nông dân mới (họ tên, email, mật khẩu tạm thời).
-					\item Admin kích hoạt, vô hiệu hóa hoặc cấm tài khoản khi cần.
+					\item Admin điền họ tên, địa chỉ email và mật khẩu tạm thời cho tài khoản Farmer mới.
+					\item Hệ thống kiểm tra định dạng email hợp lệ và chưa tồn tại trong hệ thống.
+					\item Hệ thống băm mật khẩu bằng bcrypt và tạo tài khoản với vai trò FARMER, trạng thái ACTIVE.
+					\item Hệ thống gửi email chứa thông tin đăng nhập đến địa chỉ vừa đăng ký.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Nếu email đã tồn tại, hệ thống từ chối tạo tài khoản và thông báo lỗi trùng email. \\
+			Dòng sự kiện phụ & Nếu địa chỉ email đã tồn tại trong hệ thống, hệ thống trả về 409 Conflict. Admin cũng có thể thay đổi trạng thái tài khoản Farmer (ACTIVE/INACTIVE/BANNED) sau khi tạo. \\
 			\hline
-			Điều kiện tiên quyết & Admin đã đăng nhập. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập với vai trò Admin. \\
 			\hline
-			Điều kiện sau & Tài khoản nông dân mới được thêm vào hệ thống và có thể được phân công khu vực. \\
+			Điều kiện sau & Tài khoản Farmer được tạo thành công với trạng thái ACTIVE, mật khẩu đã được băm; email thông tin đăng nhập được gửi đến Farmer. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{images/activity_quan_ly_nguoi_dung}
-		\caption{Biểu đồ hoạt động quản lý người dùng}
-		\label{fig:activity_quan_ly_nguoi_dung}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc06}
+		\caption{Biểu đồ hoạt động tạo tài khoản nông dân}
+		\label{fig:activity_uc06}
 	\end{figure}
-	Admin nhập thông tin tài khoản nông dân; hệ thống kiểm tra trùng email, tạo tài khoản và ghi nhận; admin có thể thay đổi trạng thái tài khoản bất kỳ lúc nào.
-	
+	Admin nhập họ tên, email và mật khẩu tạm thời; hệ thống kiểm tra email hợp lệ và chưa tồn tại, nếu có lỗi thì thông báo, ngược lại băm mật khẩu, tạo tài khoản với vai trò FARMER và gửi email thông tin đăng nhập.
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/sequence_quan_ly_nguoi_dung}
-		\caption{Biểu đồ tuần tự quản lý người dùng}
-		\label{fig:sequence_quan_ly_nguoi_dung}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc06}
+		\caption{Biểu đồ tuần tự tạo tài khoản nông dân}
+		\label{fig:sequence_uc06}
 	\end{figure}
-	Frontend gửi \texttt{POST /admin/users} với thông tin tài khoản; Backend kiểm tra trùng email, băm mật khẩu, lưu bản ghi \texttt{users} và trả kết quả. Khi thay đổi trạng thái, Backend cập nhật trường \texttt{status} và trả trạng thái mới.
-	
-	
-	\subsubsection*{1.7 Ca sử dụng phân công khu vực trồng trọt}
-	\addcontentsline{toc}{subsubsection}{1.7 Ca sử dụng phân công khu vực trồng trọt}
+	Frontend gửi \texttt{POST /admin/users} với \texttt{\{full\_name, email, password\}} đến Admin API; Backend kiểm tra email trùng lặp trong Database, nếu hợp lệ thực hiện \texttt{INSERT user (role=FARMER, status=ACTIVE)}, gửi email thông tin đăng nhập qua Email Service, trả về 201 Created và Farmer xuất hiện trong danh sách người dùng.
+
+	% -------------------------------------------------------
+	\subsubsection*{2.7. UC07 -- Phân công nông dân vào khu vực}
+	\addcontentsline{toc}{subsubsection}{2.7. UC07 -- Phân công nông dân vào khu vực}
 
 	\paragraph{Biểu đồ ca sử dụng}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{images/uc_phan_cong_khu_vuc}
-		\caption{Biểu đồ ca sử dụng phân công khu vực trồng trọt}
-		\label{fig:uc_phan_cong_khu_vuc}
+		\includegraphics[width=0.85\linewidth]{images/uc_uc07}
+		\caption{Biểu đồ ca sử dụng phân công nông dân vào khu vực}
+		\label{fig:uc_uc07}
 	\end{figure}
-	
+
 	\begin{center}
 		\begin{tabular}{|p{4cm}|p{10cm}|}
 			\hline
-			\textbf{Tên ca sử dụng} & \textbf{Phân công khu vực trồng trọt} \\
+			\textbf{Tên ca sử dụng} & \textbf{Phân công nông dân vào khu vực trồng trọt} \\
 			\hline
-			Tác nhân chính & Admin \\
+			Tác nhân chính & Admin đã đăng nhập \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin chọn một nông dân trong danh sách.
-					\item Hệ thống hiển thị danh sách khu vực hiện đang được phân công và danh sách khu vực khả dụng.
-					\item Admin thêm hoặc gỡ khu vực cho nông dân đó.
-					\item Hệ thống cập nhật bảng \texttt{farmer\_zone\_assignments}.
+					\item Admin chọn tài khoản Farmer cần phân công.
+					\item Hệ thống hiển thị danh sách khu vực đã và chưa được phân công cho Farmer đó.
+					\item Admin chọn khu vực muốn thêm hoặc gỡ bỏ phân công.
+					\item Hệ thống kiểm tra tính tồn tại của Farmer và khu vực, cùng trạng thái phân công hiện tại.
+					\item Hệ thống thêm hoặc xóa bản ghi trong bảng \texttt{farmer\_zone\_assignments}.
+					\item Quyền truy cập khu vực của Farmer được cập nhật ngay lập tức.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Một khu vực có thể được phân công cho nhiều nông dân; một nông dân có thể quản lý nhiều khu vực. \\
+			Dòng sự kiện phụ & Nếu phân công đã tồn tại, hệ thống trả về 409 Conflict. Nếu Farmer hoặc khu vực không tồn tại, hệ thống trả về 404 Not Found. Sau khi gỡ phân công, Farmer mất quyền truy cập khu vực ngay lập tức. \\
 			\hline
-			Điều kiện tiên quyết & Admin đã đăng nhập; khu vực và nông dân đã tồn tại trong hệ thống. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập với vai trò Admin; tài khoản Farmer và khu vực trồng trọt đã được tạo trong hệ thống. \\
 			\hline
-			Điều kiện sau & Nông dân có quyền truy cập khu vực được phân công và nhận cảnh báo liên quan. \\
+			Điều kiện sau & Bảng \texttt{farmer\_zone\_assignments} được cập nhật; Farmer có hoặc mất quyền truy cập khu vực tương ứng ngay lập tức. \\
 			\hline
 		\end{tabular}
 	\end{center}
-	
+
 	\paragraph{Biểu đồ hoạt động}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/activity_phan_cong_khu_vuc}
-		\caption{Biểu đồ hoạt động phân công khu vực trồng trọt}
-		\label{fig:activity_phan_cong_khu_vuc}
+		\includegraphics[width=0.7\linewidth]{images/activity_uc07}
+		\caption{Biểu đồ hoạt động phân công nông dân vào khu vực}
+		\label{fig:activity_uc07}
 	\end{figure}
-	Admin chọn nông dân và khu vực cần phân công; hệ thống cập nhật bảng \texttt{farmer\_zone\_assignments} và cấp quyền truy cập khu vực tương ứng.
-	
+	Admin chọn Farmer và xem danh sách khu vực; nếu thêm phân công thì kiểm tra chưa tồn tại rồi lưu, Farmer có quyền ngay; nếu gỡ phân công thì xóa bản ghi, Farmer mất quyền ngay lập tức.
+
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{images/sequence_phan_cong_khu_vuc}
-		\caption{Biểu đồ tuần tự phân công khu vực trồng trọt}
-		\label{fig:sequence_phan_cong_khu_vuc}
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc07}
+		\caption{Biểu đồ tuần tự phân công nông dân vào khu vực}
+		\label{fig:sequence_uc07}
 	\end{figure}
-	Frontend gửi \texttt{POST /admin/zone-assignments} với farmer\_id và zone\_id; Backend kiểm tra quyền admin, thêm hoặc xóa bản ghi trong \texttt{farmer\_zone\_assignments} và trả kết quả cập nhật.
-	
-	
-	
+	Để thêm phân công, Frontend gửi \texttt{POST /admin/zone-assignments} với \texttt{\{farmer\_id, zone\_id\}} đến Admin API; Backend kiểm tra tính tồn tại và trùng lặp, nếu hợp lệ thực hiện \texttt{INSERT farmer\_zone\_assignments} và trả về 201 Created. Để gỡ phân công, Frontend gửi \texttt{DELETE /admin/zone-assignments}; Backend xóa bản ghi và trả về 200 OK, khu vực biến mất khỏi danh sách của Farmer ngay lập tức.
+
+	% -------------------------------------------------------
+	\subsubsection*{2.8. UC08 -- Thu thập và sinh cảnh báo tự động}
+	\addcontentsline{toc}{subsubsection}{2.8. UC08 -- Thu thập và sinh cảnh báo tự động}
+
+	\paragraph{Biểu đồ ca sử dụng}
+	\noindent
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.85\linewidth]{images/uc_uc08}
+		\caption{Biểu đồ ca sử dụng thu thập và sinh cảnh báo tự động}
+		\label{fig:uc_uc08}
+	\end{figure}
+
+	\begin{center}
+		\begin{tabular}{|p{4cm}|p{10cm}|}
+			\hline
+			\textbf{Tên ca sử dụng} & \textbf{Thu thập \& sinh cảnh báo tự động} \\
+			\hline
+			Tác nhân chính & Hệ thống nền (Background Task) \\
+			\hline
+			Dòng sự kiện chính &
+			\begin{minipage}[t]{10cm}
+				\vspace{2pt}
+				\begin{enumerate}
+					\item Background Task được kích hoạt mỗi 60 giây bởi scheduler.
+					\item Hệ thống lấy danh sách các khu vực đang hoạt động.
+					\item Với mỗi khu vực, hệ thống mô phỏng và lưu số liệu của 7 loại cảm biến vào bảng \texttt{sensor\_readings}.
+					\item Nếu khu vực có hồ sơ cây trồng, hệ thống lấy ngưỡng tham chiếu và đánh giá 7 quy tắc ngưỡng đơn cùng 4 quy tắc điều kiện tổ hợp.
+					\item Với mỗi vi phạm phát hiện, hệ thống kiểm tra xem đã có cảnh báo chưa đọc cùng loại trong 1 giờ gần nhất chưa.
+					\item Nếu chưa có, hệ thống tạo bản ghi cảnh báo kèm mức độ nghiêm trọng và khuyến nghị hành động cụ thể.
+				\end{enumerate}
+				\vspace{2pt}
+			\end{minipage} \\
+			\hline
+			Dòng sự kiện phụ & Nếu khu vực chưa được gán hồ sơ cây trồng, bước đánh giá ngưỡng bị bỏ qua. Nếu đã có cảnh báo chưa đọc cùng loại trong vòng 1 giờ, hệ thống bỏ qua để tránh spam cảnh báo. \\
+			\hline
+			Điều kiện tiên quyết & Hệ thống đang hoạt động; có ít nhất một khu vực đang hoạt động trong cơ sở dữ liệu. \\
+			\hline
+			Điều kiện sau & Số liệu cảm biến mới được lưu vào \texttt{sensor\_readings}; các cảnh báo vi phạm ngưỡng được tạo trong \texttt{alerts} với mức độ và khuyến nghị hành động tương ứng. \\
+			\hline
+		\end{tabular}
+	\end{center}
+
+	\paragraph{Biểu đồ hoạt động}
+	\noindent
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{images/activity_uc08}
+		\caption{Biểu đồ hoạt động thu thập và sinh cảnh báo tự động}
+		\label{fig:activity_uc08}
+	\end{figure}
+	Background Task kích hoạt mỗi 60 giây, lấy danh sách khu vực hoạt động; với mỗi khu vực, mô phỏng và lưu 7 số liệu cảm biến; nếu có hồ sơ cây trồng thì đánh giá 7 ngưỡng đơn và 4 điều kiện tổ hợp, nếu phát hiện vi phạm và chưa có cảnh báo trong 1 giờ thì tạo cảnh báo kèm khuyến nghị hành động.
+
+	\paragraph{Biểu đồ tuần tự}
+	\noindent
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{images/sequence_uc08}
+		\caption{Biểu đồ tuần tự thu thập và sinh cảnh báo tự động}
+		\label{fig:sequence_uc08}
+	\end{figure}
+	Scheduler kích hoạt Background Task mỗi 60 giây; Task truy vấn Database lấy danh sách khu vực hoạt động; với mỗi khu vực, Task thực hiện \texttt{INSERT sensor\_readings} cho 7 loại cảm biến, lấy ngưỡng hồ sơ cây trồng, đánh giá quy tắc đơn và tổ hợp, kiểm tra cảnh báo tương tự trong 1 giờ và nếu chưa có thì thực hiện \texttt{INSERT INTO alerts} với mức độ nghiêm trọng và khuyến nghị hành động phù hợp.
+
+
+
 	\subsection*{3. Mô hình hóa dữ liệu}
 	\addcontentsline{toc}{subsection}{3. Mô hình hóa dữ liệu}
 	
@@ -1383,12 +1453,60 @@
 
     \subsection*{1. Kiến trúc hệ thống}
     \addcontentsline{toc}{subsection}{1. Kiến trúc hệ thống}
-    
-    \subsection*{3.2. Công nghệ sử dụng}
-	\addcontentsline{toc}{subsection}{3.2. Công nghệ sử dụng}
+
+    AgriSmart được xây dựng theo mô hình kiến trúc \textbf{client--server ba tầng}, trong đó mỗi tầng có trách nhiệm riêng biệt và giao tiếp với nhau qua giao thức được định nghĩa rõ ràng, tạo nền tảng để mở rộng và bảo trì độc lập từng thành phần.
+
+    \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        every node/.style={font=\small},
+        tbox/.style={draw=myblue, fill=lightblue, rounded corners=6pt,
+                     minimum width=3.8cm, minimum height=1cm, align=center,
+                     text=black},
+        arrow/.style={-{Stealth[length=6pt]}, myblue, thick},
+        darrow/.style={-{Stealth[length=6pt]}, myblue, thick, dashed}
+    ]
+        % Ba hộp chính
+        \node[tbox] (client) at (0,0)    {\textbf{Client}\\(Trình duyệt)};
+        \node[tbox] (server) at (5.5,0)  {\textbf{Server}\\(Backend)};
+        \node[tbox] (db)     at (11,0)   {\textbf{Cơ sở dữ liệu}\\(Persistence)};
+
+        % Mũi tên Client ↔ Server
+        \draw[arrow]  ([yshift= 3pt]client.east) -- node[above, font=\footnotesize]{Yêu cầu} ([yshift= 3pt]server.west);
+        \draw[arrow]  ([yshift=-3pt]server.west) -- node[below, font=\footnotesize]{Phản hồi}       ([yshift=-3pt]client.east);
+
+        % Mũi tên Server ↔ DB
+        \draw[arrow]  ([yshift= 3pt]server.east) -- node[above, font=\footnotesize]{Truy vấn}   ([yshift= 3pt]db.west);
+        \draw[arrow]  ([yshift=-3pt]db.west)     -- node[below, font=\footnotesize]{Kết quả dữ liệu}       ([yshift=-3pt]server.east);
+
+        % Background task tự vòng lại
+        \draw[darrow] (server.north) arc[start angle=0, end angle=180, radius=0.9cm]
+              node[above, pos=0.5, font=\footnotesize]{Background task (60s)};
+
+        % Nhãn tầng phía trên
+        \node[above=1.6cm of client, font=\bfseries\small, text=myblue] {TẦNG GIAO DIỆN};
+        \node[above=1.6cm of server, font=\bfseries\small, text=myblue] {TẦNG XỬ LÝ};
+        \node[above=1.6cm of db,     font=\bfseries\small, text=myblue] {TẦNG DỮ LIỆU};
+
+        % Đường kẻ ngăn cách tầng (nét đứt nhạt)
+        \draw[linegray, dashed, thin] (2.75, -0.9) -- (2.75, 1.0);
+        \draw[linegray, dashed, thin] (8.25, -0.9) -- (8.25, 1.0);
+    \end{tikzpicture}
+    \caption{Kiến trúc ba tầng của hệ thống AgriSmart}
+    \label{fig:kien-truc}
+    \end{figure}
+
+    Tầng \textbf{giao diện} (Client) là ứng dụng web chạy trên trình duyệt, nơi người dùng --- quản trị viên và nông dân --- thực hiện các thao tác nghiệp vụ như xem dữ liệu cảm biến, xử lý cảnh báo và điều khiển thiết bị. Mọi yêu cầu được gửi lên tầng xử lý qua giao thức HTTPS/REST và nhận lại dữ liệu dạng JSON để hiển thị.
+
+    Tầng \textbf{xử lý} (Server) tiếp nhận yêu cầu, xác thực danh tính, kiểm tra quyền truy cập theo vai trò, áp dụng logic nghiệp vụ và điều phối tương tác với cơ sở dữ liệu. Ngoài việc phục vụ các yêu cầu từ giao diện, tầng này còn chạy một tác vụ nền định kỳ mỗi 60 giây để thu thập dữ liệu cảm biến và đánh giá bộ quy tắc sinh cảnh báo một cách tự động.
+
+    Tầng \textbf{dữ liệu} (Persistence) lưu trữ toàn bộ thông tin vận hành của hệ thống: tài khoản người dùng, khu vực trồng trọt, hồ sơ cây trồng, chuỗi số liệu cảm biến, lịch sử lệnh điều khiển và cảnh báo môi trường. Tầng này chỉ được truy cập bởi tầng xử lý, không bao giờ bị truy cập trực tiếp từ giao diện.
+
+    \subsection*{2. Công nghệ sử dụng}
+	\addcontentsline{toc}{subsection}{2. Công nghệ sử dụng}
 	
-	\subsubsection*{3.2.1. Python và FastAPI}
-	\addcontentsline{toc}{subsubsection}{3.2.1. Python và FastAPI}
+	\subsubsection*{2.1. Python và FastAPI}
+	\addcontentsline{toc}{subsubsection}{2.1. Python và FastAPI}
 	
 	Phía máy chủ, hệ thống sử dụng Python kết hợp framework FastAPI để xây dựng lớp API RESTful phục vụ các chức năng giám sát cảm biến, điều khiển thiết bị chấp hành và sinh cảnh báo môi trường. FastAPI được lựa chọn nhờ khả năng xử lý bất đồng bộ qua \texttt{async/await}, phù hợp với mô hình background task định kỳ thu thập và lưu dữ liệu cảm biến mỗi 60 giây đồng thời đánh giá luật cảnh báo theo ngưỡng hồ sơ cây trồng. Framework tích hợp Pydantic để kiểm tra kiểu dữ liệu đầu vào tại các endpoint như tạo hồ sơ cây trồng, ghi nhận lệnh điều khiển và truy vấn lịch sử đo cảm biến, đồng thời hỗ trợ Dependency Injection giúp tách biệt rõ ràng các tầng xác thực, phân quyền và xử lý nghiệp vụ. Cơ chế xác thực JWT với HttpOnly cookie và bcrypt băm mật khẩu đảm bảo an toàn truy cập cho cả hai vai trò Admin và Farmer.
 	
@@ -1399,8 +1517,8 @@
 		\label{fig:fastapi}
 	\end{figure}
 	
-	\subsubsection*{3.2.2. PostgreSQL}
-	\addcontentsline{toc}{subsubsection}{3.2.2. PostgreSQL}
+	\subsubsection*{2.2. PostgreSQL}
+	\addcontentsline{toc}{subsubsection}{2.2. PostgreSQL}
 	
 	PostgreSQL được chọn làm hệ quản trị cơ sở dữ liệu quan hệ nhờ hỗ trợ đầy đủ các kiểu dữ liệu UUID, ENUM, TIMESTAMPTZ và khả năng xử lý giao dịch nguyên tử -- điều quan trọng khi ghi đồng thời bản ghi \texttt{sensor\_readings} và sinh cảnh báo trong cùng một chu kỳ nền. Toàn bộ tương tác được thực hiện qua SQLAlchemy 2.0 ở chế độ bất đồng bộ hoàn toàn với driver \texttt{asyncpg}; các thực thể nghiệp vụ như \texttt{GrowingZone}, \texttt{PlantProfile}, \texttt{Sensor}, \texttt{Actuator} và \texttt{Alert} được định nghĩa dưới dạng ORM model, giúp lớp repository dễ bảo trì và kiểm thử độc lập. Alembic quản lý lịch sử thay đổi lược đồ qua các file migration đánh số phiên bản -- từ thiết kế ban đầu đến tái cấu trúc quan hệ phân công nông dân-khu vực và bổ sung loại cảnh báo tổ hợp (compound condition).
 	
@@ -1411,8 +1529,8 @@
 		\label{fig:tech-postgresql}
 	\end{figure}
 	
-	\subsubsection*{3.2.3. React, TypeScript và Vite}
-	\addcontentsline{toc}{subsubsection}{3.2.3. React, TypeScript và Vite}
+	\subsubsection*{2.3. React, TypeScript và Vite}
+	\addcontentsline{toc}{subsubsection}{2.3. React, TypeScript và Vite}
 	
 	Giao diện người dùng được xây dựng dưới dạng ứng dụng đơn trang (SPA) sử dụng React 19 kết hợp TypeScript. React cho phép tổ chức màn hình theo hướng component -- từ thẻ tóm tắt trạng thái khu vực, biểu đồ xu hướng cảm biến theo chuỗi thời gian, bảng cảnh báo phân loại theo mức độ nghiêm trọng đến bảng điều khiển thiết bị chấp hành -- đều là component độc lập, tái sử dụng được trên nhiều khu vực trồng. TypeScript bổ sung hệ thống kiểu tĩnh, giúp phát hiện sớm sai lệch kiểu dữ liệu khi tương tác với các cấu trúc API như \texttt{SensorReading}, \texttt{Alert} hay \texttt{ActuatorCommand}. Vite cung cấp môi trường phát triển với hot-reload tức thì, rút ngắn chu kỳ kiểm tra giao diện trong quá trình phát triển tính năng mới.
 	
@@ -1423,13 +1541,13 @@
 		\label{fig:react-vite}
 	\end{figure}
 	
-	\subsubsection*{3.2.4. TanStack Router, TanStack Query và Zustand}
-	\addcontentsline{toc}{subsubsection}{3.2.4. TanStack Router, TanStack Query và Zustand}
+	\subsubsection*{2.4. TanStack Router, TanStack Query và Zustand}
+	\addcontentsline{toc}{subsubsection}{2.4. TanStack Router, TanStack Query và Zustand}
 	
 	TanStack Router đảm nhận điều hướng phía client với cơ chế bảo vệ route theo vai trò, đảm bảo Admin mới truy cập được các trang quản trị (quản lý người dùng, hồ sơ cây trồng, phân công khu vực) trong khi Farmer chỉ thấy các khu vực được phân công cho tài khoản mình. TanStack Query quản lý vòng đời yêu cầu HTTP bao gồm cache, refetch tự động và cập nhật lạc quan (optimistic update) -- đặc biệt phù hợp khi đồng bộ dữ liệu cảm biến cập nhật mỗi 60 giây và trạng thái cảnh báo thay đổi theo chu kỳ nền. Zustand lưu trữ trạng thái toàn cục phía client gồm thông tin phiên đăng nhập và danh sách cảnh báo chưa đọc, với cú pháp gọn nhẹ không đòi hỏi boilerplate.
 	
-	\subsubsection*{3.2.5. Shadcn/UI, Tailwind CSS và Recharts}
-	\addcontentsline{toc}{subsubsection}{3.2.5. Shadcn/UI, Tailwind CSS và Recharts}
+	\subsubsection*{2.5. Shadcn/UI, Tailwind CSS và Recharts}
+	\addcontentsline{toc}{subsubsection}{2.5. Shadcn/UI, Tailwind CSS và Recharts}
 	
 	Shadcn/UI cung cấp bộ component sẵn có (dialog, dropdown, badge, bảng dữ liệu, form, toast) được tổ chức trên nền Radix UI với khả năng tiếp cận tích hợp, phục vụ các giao diện như form tạo khu vực trồng, bảng cảnh báo phân loại theo mức HIGH/MEDIUM/LOW và nút bật/tắt thiết bị chấp hành. Tailwind CSS định dạng toàn bộ giao diện theo hướng utility-first, đảm bảo nhất quán về màu sắc phân loại cảnh báo (đỏ-cam-vàng) và trạng thái thiết bị (xanh-xám) trên mọi màn hình mà không cần file CSS riêng. Recharts hiển thị biểu đồ xu hướng các thông số cảm biến (nhiệt độ, độ ẩm, ánh sáng, pH, EC, CO\textsubscript{2}) theo chuỗi thời gian, giúp người vận hành dễ dàng nhận ra xu hướng bất thường trong ngày canh tác.
 	
@@ -1440,8 +1558,8 @@
 		\label{fig:tailwind-css}
 	\end{figure}
 	
-	\subsubsection*{3.2.6. Docker}
-	\addcontentsline{toc}{subsubsection}{3.2.6. Docker}
+	\subsubsection*{2.6. Docker}
+	\addcontentsline{toc}{subsubsection}{2.6. Docker}
 	
 	Toàn bộ hệ thống được đóng gói và vận hành bằng Docker Compose với năm dịch vụ: \textbf{backend} (FastAPI kèm background task mô phỏng cảm biến), \textbf{frontend} (React/Nginx), \textbf{db} (PostgreSQL 16 Alpine), \textbf{redis} (Redis 7 Alpine phục vụ cache) và \textbf{mailhog} (giả lập SMTP để kiểm thử email đặt lại mật khẩu trong môi trường phát triển). Mỗi dịch vụ chạy trong container riêng với biến môi trường được quản lý qua file \texttt{.env}, đảm bảo mọi môi trường phát triển và triển khai đều hoạt động trên cùng cấu hình. Cách tiếp cận này cho phép khởi chạy toàn bộ hệ thống với một lệnh duy nhất và tạo nền thuận lợi để tích hợp thêm dịch vụ IoT gateway khi mở rộng sang phần cứng thực địa.
 	
