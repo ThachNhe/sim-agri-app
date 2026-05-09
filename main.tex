@@ -309,210 +309,235 @@
 	\fancyhead[L]{Đồ án tốt nghiệp}
 	\fancyhead[R]{\thepage}
 	\renewcommand{\headrulewidth}{0.4pt}
-	
-	% ============================================================
-	% MỞ ĐẦU
-	% ============================================================
 
-	\section*{MỞ ĐẦU}
-	\addcontentsline{toc}{section}{MỞ ĐẦU}
-
-	% -----------------------------------------------------------
-	\subsection*{1. Lý do chọn đề tài}
-	\addcontentsline{toc}{subsection}{1. Lý do chọn đề tài}
-
-	Vùng Tây Bắc Việt Nam, đặc biệt là tỉnh Sơn La với cao nguyên Mộc Châu và các vùng chuyên canh Mai Sơn, Yên Châu, đang từng bước trở thành vùng nông nghiệp ứng dụng công nghệ cao của khu vực. Năm 2025, tỉnh Sơn La có hơn 115 ha nhà lưới, nhà kính, hệ thống tưới nhỏ giọt trên 3.200 ha và hơn 5.500 ha đạt chứng nhận VietGAP \cite{boKhoaHoc2025a}. Tuy nhiên, phần lớn nông hộ tại đây vẫn theo dõi môi trường canh tác theo phương thức thủ công --- dữ liệu rời rạc, phản ứng chậm khi có sự cố và lịch sử can thiệp thiết bị không được lưu vết --- dẫn đến khó khăn trong tối ưu hóa điều kiện sinh trưởng và quản lý hiệu quả vùng trồng.
-
-	Trên bình diện quốc tế, các nghiên cứu về nông nghiệp chính xác đã chứng minh rằng theo dõi liên tục các thông số môi trường (nhiệt độ, độ ẩm, ánh sáng, pH, EC, CO$_2$) kết hợp cơ chế cảnh báo thông minh có thể tăng năng suất từ 20 đến 30\% đồng thời giảm lãng phí tài nguyên đáng kể \cite{soussi2024}. Các giải pháp thương mại hiện có lại được thiết kế cho nông trại quy mô lớn tại các nước phát triển với chi phí ngoài tầm với của nông hộ vừa và nhỏ; trong khi các prototype sinh viên trong nước thiếu bộ quy tắc cảnh báo có căn cứ khoa học và kiến trúc phần mềm đủ chặt chẽ để bảo trì và mở rộng.
-
-	Xuất phát từ khoảng trống đó, đề tài \textbf{AgriSmart} được lựa chọn nhằm xây dựng một nền tảng phần mềm web mã nguồn mở, kiến trúc nhiều lớp, trong đó bộ quy tắc sinh cảnh báo được xây dựng trực tiếp dựa trên ngưỡng tham chiếu khoa học theo từng loại cây trồng \cite{soussi2024}, có đầy đủ lịch sử lệnh điều khiển thiết bị, phù hợp với đặc thù vận hành của nông hộ quy mô vừa và nhỏ tại vùng Tây Bắc Việt Nam.
-
-	% -----------------------------------------------------------
-	\subsection*{2. Mục tiêu nghiên cứu}
-	\addcontentsline{toc}{subsection}{2. Mục tiêu nghiên cứu}
-
-	Mục tiêu tổng quát của đề tài là xây dựng một nền tảng phần mềm web hỗ trợ người quản lý nông trại và nông hộ theo dõi tình trạng môi trường canh tác theo thời gian gần thực, đồng thời cho phép đưa ra hành động điều khiển có kiểm soát đối với các thiết bị như hệ thống tưới, bơm phân, đèn trồng cây, quạt thông gió và máy sưởi.
-
-	Các mục tiêu cụ thể của đề tài bao gồm:
-
-	\begin{itemize}[leftmargin=1.5cm]
-		\item Thiết kế mô hình dữ liệu biểu diễn đầy đủ quan hệ giữa người dùng, khu vực trồng, hồ sơ cây trồng, cảm biến, số đo, thiết bị điều khiển, lệnh tác động và cảnh báo.
-		\item Xây dựng backend theo kiến trúc nhiều lớp (API -- Service -- Repository -- ORM), tách biệt rõ tầng xử lý, phù hợp với định hướng kiến trúc FMIS dựa trên IoT \cite{koksal2019}.
-		\item Xây dựng giao diện trực quan cho hai vai trò Admin và Farmer, với dashboard và phạm vi thao tác tương ứng.
-		\item Hiện thực bộ quy tắc sinh cảnh báo theo ngưỡng đơn và ngưỡng tổ hợp, phân mức độ nghiêm trọng và kèm khuyến nghị hành động, dựa trên phương pháp luận của Soussi và cộng sự (2024) \cite{soussi2024}.
-		\item Xây dựng cơ chế mô phỏng dữ liệu cảm biến tự động theo chu kỳ để kiểm chứng toàn bộ kiến trúc và bộ quy tắc cảnh báo.
-		\item Đóng gói môi trường triển khai bằng Docker Compose, đảm bảo nhất quán giữa các môi trường phát triển và sẵn sàng triển khai thực tế.
-	\end{itemize}
-
-	% -----------------------------------------------------------
-	\subsection*{3. Đối tượng và phạm vi nghiên cứu}
-	\addcontentsline{toc}{subsection}{3. Đối tượng và phạm vi nghiên cứu}
-
-	\textbf{Đối tượng nghiên cứu} là bài toán xây dựng hệ thống giám sát nông nghiệp thông minh trên nền tảng web, tập trung vào tổ chức dữ liệu môi trường, chuyển hóa ngưỡng sinh trưởng cây trồng thành logic cảnh báo có căn cứ khoa học và thiết kế giao diện quản trị phù hợp với người dùng nông nghiệp.
-
-	\textbf{Phạm vi chức năng:} Xác thực người dùng; quản lý tài khoản nông dân; quản lý hồ sơ cây trồng và khu vực trồng trọt; quản lý cảm biến và chuỗi số liệu; quản lý thiết bị điều khiển và lịch sử lệnh; sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp; dashboard tổng hợp.
-
-	\textbf{Phạm vi công nghệ:} Backend: FastAPI, SQLAlchemy, Alembic, PostgreSQL; Frontend: React, TypeScript, TanStack Router/Query, Zustand; Triển khai: Docker Compose, MailHog. Giới hạn: chưa tích hợp gateway IoT thực địa, chưa có điều khiển khép kín tự động, chưa mở rộng sang học máy dự báo năng suất.
-
-	% -----------------------------------------------------------
-	\subsection*{4. Phương pháp nghiên cứu}
-	\addcontentsline{toc}{subsection}{4. Phương pháp nghiên cứu}
-
-	Đề tài kết hợp bốn phương pháp nghiên cứu chính. \textbf{Phương pháp khảo sát và phân tích nghiệp vụ} từ góc nhìn vận hành nông trại để xác định các tác nhân, thực thể dữ liệu và quy trình có thể kiểm soát. \textbf{Phương pháp phân tích tài liệu khoa học} dựa trên các nghiên cứu tổng quan về nông nghiệp chính xác \cite{soussi2024,ojha2015,wolfert2017,goap2018,koksal2019} để định hướng bộ quy tắc cảnh báo và cấu trúc dữ liệu. \textbf{Phương pháp thiết kế phần mềm} theo kiến trúc nhiều lớp kết hợp UML để đặc tả ca sử dụng, luồng hoạt động và tuần tự tương tác. \textbf{Phương pháp kiểm chứng qua mô phỏng}: dữ liệu cảm biến được mô phỏng tự động theo chu kỳ với biên độ dao động thực tế để kiểm chứng kiến trúc và bộ quy tắc trước khi tích hợp phần cứng thực địa.
-
-	% -----------------------------------------------------------
-	\subsection*{5. Cấu trúc báo cáo}
-	\addcontentsline{toc}{subsection}{5. Cấu trúc báo cáo}
-
-	Ngoài phần Mở đầu và Kết luận, báo cáo được tổ chức thành ba chương chính:
-
-	\textbf{Chương I -- Khảo sát và Đặc tả Hệ thống} trình bày bối cảnh và tổng quan nghiên cứu về nông nghiệp chính xác, kết quả khảo sát nhu cầu giám sát môi trường canh tác tại vùng Tây Bắc, cùng đặc tả hệ thống gồm tác nhân, yêu cầu chức năng, phi chức năng và ràng buộc nghiệp vụ.
-
-	\textbf{Chương II -- Phân tích và Thiết kế Hệ thống} trình bày các ca sử dụng chi tiết với biểu đồ hoạt động và tuần tự tương tác, cùng thiết kế cơ sở dữ liệu của hệ thống.
-
-	\textbf{Chương III -- Xây dựng Chương trình} trình bày kiến trúc chi tiết backend và frontend, công nghệ sử dụng, cơ chế mô phỏng dữ liệu và bộ quy tắc sinh cảnh báo, phương án triển khai Docker Compose và giao diện hệ thống.
-
-	% ============================================================
-	% CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG
-	% ============================================================
-
-	\newpage
-	\section*{CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
-	\addcontentsline{toc}{section}{CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
-
-	% -----------------------------------------------------------
-	\subsection*{1. Bối cảnh và lý do chọn đề tài}
-	\addcontentsline{toc}{subsection}{1. Bối cảnh và lý do chọn đề tài}
-
-	\subsubsection*{1.1. Bối cảnh nông nghiệp vùng Tây Bắc và nhu cầu chuyển đổi số}
-	\addcontentsline{toc}{subsubsection}{1.1. Bối cảnh nông nghiệp vùng Tây Bắc và nhu cầu chuyển đổi số}
-
-	Vùng Tây Bắc Việt Nam, bao gồm các tỉnh Sơn La, Điện Biên, Lai Châu và Hòa Bình, sở hữu lợi thế địa lý và khí hậu đặc thù với nhiều tiểu vùng khí hậu đan xen, tạo điều kiện thuận lợi cho việc canh tác đa dạng loài cây từ nhiệt đới đến ôn đới. Riêng tỉnh Sơn La, đặc biệt là cao nguyên Mộc Châu và vùng Mai Sơn, Yên Châu, đã hình thành nhiều vùng sản xuất nông nghiệp hàng hóa tập trung với các sản phẩm đặc trưng như mận hậu, nhãn, xoài, cà phê, chè Shan tuyết và các loại rau ôn đới \cite{cucThuongMai2018}. Năm 2025, tỉnh Sơn La đã xây dựng hơn 115 ha nhà lưới, nhà kính, lắp đặt hệ thống tưới nhỏ giọt trên khoảng 3.200 ha cây trồng và hơn 5.500 ha được chứng nhận VietGAP \cite{boKhoaHoc2025a}, từng bước khẳng định định hướng trở thành vùng nông nghiệp ứng dụng công nghệ cao của khu vực Tây Bắc.
-
-	Tuy nhiên, trong thực tế, phần lớn các nông hộ tại khu vực này vẫn đang ghi nhận thông tin canh tác theo phương thức thủ công, quan sát trạng thái khu vực trồng trọt theo định kỳ rồi mới đưa ra các quyết định tưới nước, bón phân, thông gió hay bổ sung ánh sáng. Cách làm này gặp ba hạn chế lớn có tính hệ thống. Thứ nhất, dữ liệu môi trường rời rạc và khó tổng hợp, dẫn đến khó phát hiện sớm các xu hướng biến động bất thường. Thứ hai, phản ứng với sự cố thường chậm do người vận hành không được cảnh báo kịp thời. Thứ ba, các quyết định điều khiển thiết bị không được lưu vết, gây khó khăn khi đánh giá hiệu quả can thiệp hoặc truy nguyên nguyên nhân của sai lệch trong quá trình canh tác.
-
-	Theo khảo sát về thực trạng chuyển đổi số nông nghiệp tại các tỉnh miền núi phía Bắc, một trong những rào cản lớn nhất là quy mô sản xuất còn nhỏ lẻ, manh mún, địa hình chia cắt và trình độ tiếp cận công nghệ chưa đồng đều \cite{boKhoaHoc2025b}. Điều này cho thấy nhu cầu về một giải pháp phần mềm có tính thiết thực, dễ triển khai và phù hợp với đặc thù vận hành của các mô hình canh tác quy mô vừa và nhỏ tại vùng Tây Bắc là hoàn toàn có căn cứ thực tiễn. Đặc biệt trong bối cảnh Nhà nước đang triển khai các chương trình ứng dụng IoT, tự động hóa và quản trị dữ liệu vào sản xuất nông nghiệp theo định hướng Nghị quyết 57 \cite{boKhoaHoc2025a}, nhu cầu về một nền tảng phần mềm hỗ trợ giám sát và điều khiển môi trường canh tác ngày càng trở nên cấp thiết.
-
-	\subsubsection*{1.2. Tổng quan nghiên cứu về nông nghiệp chính xác và hệ thống giám sát thông minh}
-	\addcontentsline{toc}{subsubsection}{1.2. Tổng quan nghiên cứu về nông nghiệp chính xác và hệ thống giám sát thông minh}
-
-	Trên bình diện quốc tế, nông nghiệp chính xác (Precision Agriculture --- PA) đang được thúc đẩy mạnh mẽ bởi sự hội tụ của cảm biến thông minh, phân tích dữ liệu lớn và nền tảng IoT. Nghiên cứu tổng quan của Soussi và cộng sự (2024) chỉ ra rằng mục tiêu cốt lõi của PA là tối ưu hóa thực hành canh tác, nâng cao hiệu quả sử dụng tài nguyên và giảm tác động môi trường thông qua tích hợp cảm biến thông minh với IoT, phân tích dữ liệu lớn và trí tuệ nhân tạo \cite{soussi2024}. Các hệ thống giám sát môi trường vận hành trên nền Mạng Cảm biến Không dây (WSN) cung cấp dịch vụ theo dõi liên tục nhằm duy trì điều kiện tăng trưởng tối ưu và phát hiện sớm các yếu tố có thể gây bệnh hại lan rộng.
-
-	Đặc biệt, Soussi và cộng sự (2024) nhấn mạnh vai trò của các thông số môi trường được đo liên tục --- bao gồm nhiệt độ không khí, độ ẩm tương đối, độ ẩm đất, cường độ ánh sáng, nồng độ CO$_2$, độ pH và độ dẫn điện EC --- trong việc quản lý sức khỏe cây trồng và hiệu quả sử dụng tài nguyên. Nghiên cứu này cũng đề xuất các ngưỡng tham chiếu cho từng thông số theo từng loại cây trồng và điều kiện nhà kính cụ thể --- đây chính là cơ sở khoa học trực tiếp được đề tài AgriSmart sử dụng để xây dựng bộ quy tắc cảnh báo vượt ngưỡng (được trình bày chi tiết tại Chương III).
-
-	Ngoài ra, Wolfert và cộng sự (2017) trong nghiên cứu tổng quan về dữ liệu lớn trong nông nghiệp thông minh cho thấy nông nghiệp hiện đại ngày càng dựa mạnh vào khả năng liên thông dữ liệu và các cơ chế hỗ trợ quyết định theo thời gian gần thực \cite{wolfert2017}. Ojha và cộng sự (2015) chứng minh rằng giá trị thực sự của WSN trong nông nghiệp không chỉ nằm ở khâu đo lường mà ở khả năng kết nối dữ liệu với hành động điều khiển và hỗ trợ ra quyết định \cite{ojha2015}. Ahmed và cộng sự (2018) cũng khẳng định rằng IoT trong nông nghiệp chính xác chỉ phát huy hiệu quả tối đa khi nền tảng phần mềm đủ trưởng thành để chuyển hóa dữ liệu cảm biến thô thành tín hiệu hành động cụ thể \cite{ahmed2018}.
-
-	Các công trình trên đặt nền tảng lý thuyết vững chắc cho cách tiếp cận của đề tài AgriSmart: xây dựng một hệ thống phần mềm lõi có khả năng quản lý dữ liệu môi trường, chuyển hóa ngưỡng sinh trưởng của cây trồng thành logic cảnh báo có mức độ nghiêm trọng và khuyến nghị hành động rõ ràng.
-
-	\subsubsection*{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
-	\addcontentsline{toc}{subsubsection}{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
-
-	Hiện nay trên thị trường đã tồn tại một số nền tảng thương mại phục vụ giám sát và tự động hóa nông nghiệp thông minh. Growlink là hệ thống phần cứng và phần mềm tích hợp của Mỹ, cho phép giám sát và điều khiển từ xa khí hậu, tưới tiêu, bổ sung dinh dưỡng và chiếu sáng trong nhà kính quy mô thương mại lớn \cite{growlink2024}. Farmapp và các nền tảng tương tự trong hệ sinh thái IoT nông nghiệp toàn cầu cung cấp khả năng theo dõi dữ liệu cảm biến thời gian thực kết hợp phân tích học máy để dự báo sản lượng \cite{farmapp2024}. Trong nước, một số đề tài nghiên cứu sinh viên và dự án thí điểm cũng đã xây dựng các prototype giám sát nhà kính dựa trên Arduino/Raspberry Pi kết hợp dashboard web đơn giản.
-
-	Tuy nhiên, các hệ thống thương mại kể trên có hai hạn chế rõ rệt khi xem xét trong bối cảnh vùng Tây Bắc Việt Nam. Thứ nhất, chúng được thiết kế cho quy mô nông trại thương mại lớn tại các nước phát triển, với chi phí triển khai và vận hành nằm ngoài khả năng của hầu hết nông hộ quy mô vừa và nhỏ tại miền núi. Thứ hai, bộ quy tắc cảnh báo và logic nghiệp vụ trong các hệ thống này bị đóng gói hoàn toàn bên trong phần cứng độc quyền, không cho phép người dùng tùy chỉnh ngưỡng theo đặc thù từng loại cây trồng địa phương. Đối với các prototype sinh viên trong nước, vấn đề ngược lại: dữ liệu cảm biến được thu thập nhưng chưa có bộ quy tắc sinh cảnh báo dựa trên căn cứ khoa học, lịch sử lệnh điều khiển chưa được lưu vết có hệ thống và kiến trúc phần mềm thường còn đơn lớp, khó bảo trì và mở rộng.
-
-	Khoảng trống nghiên cứu mà đề tài AgriSmart hướng đến lấp đầy là: một nền tảng phần mềm web mã nguồn mở, kiến trúc nhiều lớp, chi phí triển khai thấp, trong đó bộ quy tắc sinh cảnh báo được xây dựng trực tiếp trên các ngưỡng tham chiếu khoa học theo từng loại cây trồng, có đầy đủ lịch sử lệnh điều khiển, và phù hợp với quy trình vận hành của nông hộ quy mô vừa và nhỏ tại vùng Tây Bắc Việt Nam.
-
-	\subsubsection*{1.4. Lý do chọn đề tài}
-	\addcontentsline{toc}{subsubsection}{1.4. Lý do chọn đề tài}
-
-	Xuất phát từ bối cảnh thực tiễn tại vùng Tây Bắc và nền tảng lý luận từ các nghiên cứu quốc tế về nông nghiệp chính xác, đề tài AgriSmart được lựa chọn và xây dựng như một nền tảng web hỗ trợ giám sát và điều khiển môi trường canh tác thông minh. Đề tài mang ba ý nghĩa chính:
-
-	\begin{itemize}[leftmargin=1.5cm]
-		\item \textbf{Ý nghĩa học thuật:} Đề tài vận dụng tổng hợp các kiến thức về phân tích yêu cầu, thiết kế kiến trúc hệ thống nhiều lớp, xây dựng API RESTful, phát triển giao diện người dùng và tổ chức môi trường triển khai container. Bộ quy tắc sinh cảnh báo được xây dựng dựa trực tiếp trên các ngưỡng tham chiếu và phương pháp luận của nghiên cứu Soussi và cộng sự (2024) \cite{soussi2024}, đảm bảo tính có căn cứ khoa học cho phần logic trọng tâm nhất của hệ thống.
-		\item \textbf{Ý nghĩa thực tiễn:} Hệ thống tạo ra nền tảng số hóa quy trình giám sát và can thiệp trong canh tác nhà kính và khu vực trồng trọt tại miền núi, phù hợp với xu hướng ứng dụng công nghệ cao đang được Sơn La và các tỉnh Tây Bắc đẩy mạnh theo định hướng Nghị quyết 57.
-		\item \textbf{Ý nghĩa kỹ thuật:} Đề tài chứng minh khả năng kiểm chứng một kiến trúc phần mềm IoT-based theo từng lớp độc lập, trong đó phần lõi phần mềm được ổn định hóa trước khi mở rộng tích hợp thiết bị phần cứng thực tế --- phù hợp với định hướng kiến trúc cho hệ thống quản lý trang trại dựa trên IoT được đề xuất bởi Koksal và Tekinerdogan (2019) \cite{koksal2019}.
-	\end{itemize}
-
-	% -----------------------------------------------------------
-	\subsection*{2. Khảo sát thực tế}
-	\addcontentsline{toc}{subsection}{2. Khảo sát thực tế}
-
-	\subsubsection*{2.1. Kết quả khảo sát}
-	\addcontentsline{toc}{subsubsection}{2.1. Kết quả khảo sát}
-
-	Khảo sát nhu cầu giám sát môi trường canh tác tại các mô hình nhà kính và nhà lưới ứng dụng công nghệ cao ở vùng Tây Bắc, đặc biệt tại Sơn La, cho thấy hoạt động vận hành xoay quanh bốn nhóm nghiệp vụ chính.
-
-	\textbf{Giám sát môi trường liên tục:} Người vận hành cần theo dõi liên tục các thông số như nhiệt độ không khí, độ ẩm tương đối, độ ẩm đất, cường độ ánh sáng, độ pH đất, độ dẫn điện (EC) và nồng độ CO$_2$ --- đây là bộ bảy thông số cốt lõi được xác định trong nghiên cứu của Soussi và cộng sự (2024) \cite{soussi2024}. Mỗi loại cây trồng có dải ngưỡng tối ưu riêng biệt; khi thông số vượt ngưỡng, cây có nguy cơ bị stress sinh lý, sâu bệnh hoặc giảm năng suất nghiêm trọng. Việc theo dõi thủ công không đủ tần suất để phát hiện biến động bất thường trong ngày.
-
-	\textbf{Quản lý hồ sơ cây trồng và khu vực trồng:} Một nông trại thường có nhiều khu vực trồng khác nhau (nhà kính, nhà lưới, khu ngoài trời), mỗi khu có thể đang canh tác loại cây khác nhau ở các giai đoạn sinh trưởng khác nhau. Người quản lý cần biết khu vực nào đang áp dụng hồ sơ cây trồng nào, ngưỡng tham chiếu nào đang được sử dụng và trạng thái hoạt động của từng khu vực.
-
-	\textbf{Điều khiển thiết bị chấp hành có kiểm soát:} Khi phát hiện thông số bất thường, người vận hành cần kích hoạt hệ thống tưới (điều chỉnh độ ẩm đất), quạt thông gió (điều chỉnh nhiệt độ và CO$_2$), đèn trồng (bổ sung ánh sáng), bơm phân (điều chỉnh EC) hoặc máy sưởi (tăng nhiệt độ khi quá thấp). Mỗi lệnh điều khiển cần được lưu vết kèm người thực hiện, thời gian và lý do để phục vụ đánh giá hiệu quả can thiệp.
-
-	\textbf{Quản lý cảnh báo và phân công người vận hành:} Một nông trại có thể có nhiều nông dân phụ trách các khu vực khác nhau. Cần có cơ chế phân quyền để mỗi nông dân chỉ nhận cảnh báo và thao tác trên khu vực của mình, trong khi quản trị viên giám sát toàn hệ thống.
-
-	Hiện tại, toàn bộ các hoạt động trên chủ yếu được thực hiện thủ công hoặc dựa vào kinh nghiệm cá nhân của người vận hành, chưa có phần mềm hỗ trợ thu thập dữ liệu liên tục, sinh cảnh báo theo ngưỡng và lưu trữ lịch sử điều khiển một cách có hệ thống.
-
-	\subsubsection*{2.2. Phân tích kết quả khảo sát}
-	\addcontentsline{toc}{subsubsection}{2.2. Phân tích kết quả khảo sát}
-
-	Từ kết quả khảo sát, có thể nhận thấy bài toán giám sát nông nghiệp ẩn chứa sự phức tạp đáng kể khi nhìn từ góc độ luồng dữ liệu và trạng thái nghiệp vụ. Một cảnh báo tưởng chừng đơn giản --- chẳng hạn ``nhiệt độ quá cao'' --- thực tế đòi hỏi hệ thống phải biết: cây trồng nào đang được giám sát, ngưỡng tối ưu của loại cây đó là bao nhiêu, mức độ vượt ngưỡng là bao nhiêu phần trăm (để phân loại LOW/MEDIUM/HIGH), và đã có cảnh báo tương tự chưa được xử lý chưa (để tránh spam cảnh báo).
-
-	Bên cạnh đó, sự phức tạp còn đến từ yêu cầu phát hiện các \textit{điều kiện tổ hợp} --- ví dụ, nhiệt độ cao đồng thời với độ ẩm cao là dấu hiệu nguy cơ bệnh nấm, trong khi nhiệt độ cao kết hợp độ ẩm thấp lại gây stress VPD (Vapour Pressure Deficit). Đây là các tình huống không thể phát hiện bằng cách chỉ theo dõi từng thông số độc lập, dẫn đến yêu cầu thiết kế trọng tâm: hệ thống cần một \textit{rule engine} có khả năng đánh giá cả ngưỡng đơn lẫn điều kiện tổ hợp đa thông số.
-
-	Phân tích cũng cho thấy sự cần thiết của mô hình phân quyền linh hoạt: một khu vực có thể được phân công cho nhiều nông dân, một nông dân có thể quản lý nhiều khu vực, nhưng quyền truy cập phải được kiểm soát chặt chẽ để bảo đảm mỗi người chỉ thao tác trên phạm vi được phân công. Đây là điểm khác biệt quan trọng so với mô hình owner-based đơn giản thường gặp trong các prototype sinh viên.
-
-	% -----------------------------------------------------------
-	\subsection*{3. Đặc tả hệ thống}
-	\addcontentsline{toc}{subsection}{3. Đặc tả hệ thống}
-
-	\subsubsection*{3.1. Tổng quan kiến trúc}
-	\addcontentsline{toc}{subsubsection}{3.1. Tổng quan kiến trúc}
-
-	Hệ thống AgriSmart được đặc tả như một ứng dụng web nhiều người dùng, hoạt động theo mô hình client-server. Phía client, quản trị viên và nông dân thao tác thông qua giao diện đơn trang (SPA) được xây dựng bằng React và TypeScript. Phía server, backend tiếp nhận yêu cầu thông qua API RESTful, thực hiện xác thực danh tính bằng JWT lưu trong HttpOnly cookie, kiểm tra quyền truy cập theo mô hình RBAC, áp dụng logic nghiệp vụ và truy xuất dữ liệu từ cơ sở dữ liệu quan hệ PostgreSQL.
-
-	Ngoài các API phục vụ giao diện, hệ thống còn có một tác vụ nền bất đồng bộ (background task) chạy định kỳ mỗi 60 giây: mô phỏng số liệu đo từ cảm biến, lưu vào bảng \texttt{sensor\_readings}, sau đó đánh giá bộ quy tắc cảnh báo trên dữ liệu vừa thu thập và sinh bản ghi \texttt{alerts} khi phát hiện vi phạm ngưỡng. Toàn bộ hệ thống được đóng gói bằng Docker Compose với năm dịch vụ: backend, frontend, PostgreSQL, Redis và MailHog.
-
-	\subsubsection*{3.2. Các tác nhân và vai trò}
-	\addcontentsline{toc}{subsubsection}{3.2. Các tác nhân và vai trò}
-
-	Hệ thống xác định hai nhóm tác nhân người dùng và một tác nhân hệ thống:
-
-	\begin{itemize}[leftmargin=1.5cm]
-		\item \textbf{Quản trị viên (Admin):} Tạo và quản lý tài khoản nông dân; định nghĩa hồ sơ cây trồng với ngưỡng tối ưu; tạo và quản lý khu vực trồng trọt; phân công nông dân vào khu vực (nhiều-nhiều); theo dõi tổng quan toàn hệ thống.
-		\item \textbf{Nông dân (Farmer):} Xem dashboard và số liệu cảm biến của các khu vực được phân công; xem và đánh dấu cảnh báo; điều khiển thiết bị chấp hành trong khu vực được phân công; xem lịch sử lệnh điều khiển.
-		\item \textbf{Hệ thống nền (Background Task):} Tác nhân tự động chạy mỗi 60 giây; mô phỏng và lưu số liệu cảm biến; đánh giá bộ quy tắc cảnh báo theo ngưỡng hồ sơ cây trồng của từng khu vực; sinh bản ghi cảnh báo với cơ chế chống trùng lặp 1 giờ.
-	\end{itemize}
-
-	\subsubsection*{3.3. Yêu cầu chức năng}
-	\addcontentsline{toc}{subsubsection}{3.3. Yêu cầu chức năng}
-
-	Hệ thống bao gồm các nhóm chức năng chính sau:
-
-	\begin{itemize}[leftmargin=1.5cm]
-		\item \textbf{Xác thực và phân quyền:} Đăng nhập bằng email/mật khẩu; JWT lưu trong HttpOnly cookie; RBAC với hai vai trò Admin và Farmer; đổi mật khẩu; đặt lại mật khẩu qua email.
-		\item \textbf{Quản lý hồ sơ cây trồng:} Admin tạo/sửa/xóa hồ sơ với 7 nhóm ngưỡng môi trường (nhiệt độ, độ ẩm không khí, độ ẩm đất, ánh sáng, pH, EC, thời gian sinh trưởng); tên hồ sơ phải duy nhất trong hệ thống.
-		\item \textbf{Quản lý khu vực trồng trọt:} Admin tạo/sửa/xóa khu vực; gán hồ sơ cây trồng cho khu vực; phân công nông dân vào khu vực qua bảng \texttt{farmer\_zone\_assignments}.
-		\item \textbf{Quản lý cảm biến và số đo:} Thêm/sửa/xóa cảm biến trong khu vực; hệ thống lưu chuỗi số liệu theo thời gian; API truy vấn lịch sử đo theo khoảng thời gian và theo cảm biến.
-		\item \textbf{Quản lý thiết bị và lệnh điều khiển:} Farmer bật/tắt thiết bị trong khu vực được phân công; hệ thống lưu bản ghi \texttt{actuator\_commands} kèm người thực hiện, thời gian thực thi, thời lượng dự kiến và lý do.
-		\item \textbf{Quản lý cảnh báo:} Hệ thống sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp; phân mức LOW/MEDIUM/HIGH theo độ lệch; Farmer xem và đánh dấu đã đọc cảnh báo thuộc khu vực được phân công; Admin xem toàn bộ cảnh báo hệ thống.
-		\item \textbf{Dashboard tổng hợp:} Thẻ tóm tắt số lượng khu vực, cảm biến, thiết bị, cảnh báo chưa đọc; số liệu cảm biến mới nhất theo khu vực; biểu đồ xu hướng theo chuỗi thời gian.
-	\end{itemize}
-
-	\subsubsection*{3.4. Yêu cầu phi chức năng}
-	\addcontentsline{toc}{subsubsection}{3.4. Yêu cầu phi chức năng}
-
-	\begin{itemize}[leftmargin=1.5cm]
-		\item \textbf{Bảo mật:} Mật khẩu được băm bằng bcrypt; JWT có thời hạn 7 ngày lưu trong HttpOnly cookie; mọi endpoint kiểm tra xác thực và quyền trước khi xử lý; Farmer chỉ truy cập khu vực được phân công, yêu cầu vượt phạm vi bị từ chối với mã 403.
-		\item \textbf{Tính nhất quán dữ liệu:} Các thao tác liên quan đến trạng thái (cập nhật thiết bị kèm ghi lịch sử lệnh; sinh cảnh báo với kiểm tra trùng lặp) được thực hiện trong giao dịch cơ sở dữ liệu để đảm bảo toàn vẹn dữ liệu.
-		\item \textbf{Khả năng mở rộng:} Kiến trúc nhiều lớp (API Router -- Service -- Repository -- Model) cho phép bổ sung loại cảm biến mới, loại thiết bị mới hoặc tích hợp gateway IoT thực mà không ảnh hưởng đến các thành phần hiện có.
-		\item \textbf{Khả năng triển khai:} Hệ thống được đóng gói bằng Docker Compose, có thể khởi chạy nhất quán trên mọi môi trường với một lệnh duy nhất, không cần cấu hình thủ công từng thành phần.
-		\item \textbf{Khả năng kiểm chứng:} Background task mô phỏng dữ liệu cảm biến hoạt động độc lập, cho phép kiểm chứng toàn bộ luồng nghiệp vụ từ thu thập số liệu đến sinh cảnh báo mà không cần phần cứng thực địa.
-	\end{itemize}
-
-	\subsubsection*{3.5. Ràng buộc nghiệp vụ}
-	\addcontentsline{toc}{subsubsection}{3.5. Ràng buộc nghiệp vụ}
-
-	Một số ràng buộc nghiệp vụ trọng tâm được đặc tả như sau:
-
-	\begin{itemize}[leftmargin=1.5cm]
-		\item Farmer chỉ được thao tác trên các khu vực được Admin phân công; yêu cầu truy cập khu vực ngoài phạm vi bị từ chối với mã lỗi 403.
-		\item Một khu vực trồng trọt chỉ được gán một hồ sơ cây trồng tại một thời điểm; khi thay đổi hồ sơ, bộ quy tắc cảnh báo tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
-		\item Cảnh báo có cơ chế chống trùng lặp: cùng một loại cảnh báo cho cùng một khu vực không được sinh lại trong vòng 1 giờ nếu cảnh báo trước chưa được đọc; cảnh báo đã đọc cho phép sinh lại.
-		\item Lệnh điều khiển thiết bị luôn được ghi vào bảng \texttt{actuator\_commands} kèm \texttt{commanded\_by} (NULL nếu tự động), thời gian thực thi và lý do; không có điều khiển nào thực hiện mà không lưu vết.
-		\item Bộ quy tắc cảnh báo đánh giá bảy ngưỡng đơn và bốn điều kiện tổ hợp: (i) nhiệt độ cao + độ ẩm cao $\to$ nguy cơ nấm; (ii) nhiệt độ cao + độ ẩm thấp $\to$ stress VPD; (iii) độ ẩm đất cao + pH thấp $\to$ nguy cơ thối rễ; (iv) CO$_2$ thấp + ánh sáng cao $\to$ lãng phí ánh sáng.
-		\item Phân loại mức độ nghiêm trọng dựa trên độ lệch tương đối so với ngưỡng: dưới 10\% --- LOW; từ 10 đến 25\% --- MEDIUM; trên 25\% --- HIGH.
-	\end{itemize}
+    % ============================================================
+    % MỞ ĐẦU
+    % ============================================================
+    \section*{MỞ ĐẦU}
+    \addcontentsline{toc}{section}{MỞ ĐẦU}
+    
+    % -----------------------------------------------------------
+    \subsection*{1. Lý do chọn đề tài}
+    \addcontentsline{toc}{subsection}{1. Lý do chọn đề tài}
+    
+    Nông nghiệp ứng dụng công nghệ cao đang trở thành định hướng chiến lược tại nhiều địa phương vùng Tây Bắc Việt Nam. Riêng tỉnh Sơn La, đến năm 2025 đã có hơn 115 ha nhà lưới, nhà kính, hệ thống tưới nhỏ giọt trên hơn 3.200 ha và hơn 5.500 ha đạt chứng nhận VietGAP \cite{boKhoaHoc2025a}. Tuy nhiên, phần lớn nông hộ tại đây vẫn theo dõi môi trường canh tác theo phương thức thủ công: dữ liệu rời rạc, phản ứng chậm khi có sự cố và các lệnh điều khiển thiết bị không được lưu vết, dẫn đến khó khăn trong tối ưu hóa điều kiện sinh trưởng và quản lý hiệu quả vùng trồng.
+    
+    Trên bình diện quốc tế, các nghiên cứu về nông nghiệp chính xác đã chứng minh rằng việc theo dõi liên tục các thông số môi trường kết hợp cơ chế cảnh báo thông minh có thể tăng năng suất từ 20 đến 30\% đồng thời giảm đáng kể lãng phí tài nguyên \cite{soussi2024}. Các giải pháp thương mại hiện có lại được thiết kế cho nông trại quy mô lớn với chi phí nằm ngoài tầm với của nông hộ vừa và nhỏ; trong khi các prototype sinh viên trong nước thường thiếu bộ quy tắc cảnh báo có căn cứ khoa học và kiến trúc phần mềm đủ chặt chẽ để bảo trì, mở rộng.
+    
+    Xuất phát từ khoảng trống đó, đề tài \textbf{thiết kế và xây dựng hệ thống giám sát nông nghiệp thông minh } được lựa chọn nhằm xây dựng một nền tảng phần mềm web mã nguồn mở, kiến trúc nhiều lớp, trong đó bộ quy tắc sinh cảnh báo được xây dựng trực tiếp dựa trên ngưỡng tham chiếu khoa học theo từng loại cây trồng \cite{soussi2024}, có đầy đủ lịch sử lệnh điều khiển thiết bị và phù hợp với đặc thù vận hành của nông hộ quy mô vừa và nhỏ tại vùng Tây Bắc Việt Nam.
+    
+    % -----------------------------------------------------------
+    \subsection*{2. Mục tiêu nghiên cứu}
+    \addcontentsline{toc}{subsection}{2. Mục tiêu nghiên cứu}
+    
+    Mục tiêu tổng quát của đề tài là xây dựng một nền tảng phần mềm web hỗ trợ người quản lý nông trại và nông hộ theo dõi tình trạng môi trường canh tác theo thời gian gần thực, đồng thời cho phép đưa ra các hành động điều khiển có kiểm soát đối với thiết bị như hệ thống tưới, bơm phân, đèn trồng cây, quạt thông gió và máy sưởi để cải thiện chất lượng của cây trồng.
+    
+    Các mục tiêu cụ thể bao gồm:
+    
+    \begin{itemize}[leftmargin=1.5cm]
+        \item Thiết kế mô hình dữ liệu biểu diễn đầy đủ quan hệ giữa người dùng, khu vực trồng, hồ sơ cây trồng, cảm biến, số đo, thiết bị điều khiển, lệnh tác động và cảnh báo.
+        \item Xây dựng backend theo kiến trúc nhiều lớp (API -- Service -- Repository -- ORM), tách biệt rõ tầng xử lý, phù hợp với định hướng kiến trúc FMIS dựa trên IoT \cite{koksal2019}.
+        \item Xây dựng giao diện trực quan cho hai vai trò quản trị viên (Admin) và nông dân (Farmer) với trang tổng hợp và phạm vi thao tác tương ứng.
+        \item Hiện thực bộ quy tắc sinh cảnh báo theo ngưỡng đơn và ngưỡng tổ hợp, phân mức độ nghiêm trọng và kèm khuyến nghị hành động, dựa trên phương pháp luận của Soussi và cộng sự (2024) \cite{soussi2024}.
+        \item Xây dựng cơ chế mô phỏng dữ liệu cảm biến tự động theo chu kỳ để kiểm chứng toàn bộ kiến trúc và bộ quy tắc cảnh báo mà không cần phần cứng thực địa.
+        \item Đóng gói môi trường triển khai bằng Docker, đảm bảo nhất quán giữa các môi trường và sẵn sàng triển khai thực tế.
+    \end{itemize}
+    
+    % -----------------------------------------------------------
+    \subsection*{3. Đối tượng và phạm vi nghiên cứu}
+    \addcontentsline{toc}{subsection}{3. Đối tượng và phạm vi nghiên cứu}
+    
+    \textbf{Đối tượng nghiên cứu} là bài toán xây dựng hệ thống giám sát nông nghiệp thông minh trên nền tảng web, tập trung vào tổ chức dữ liệu môi trường, chuyển hóa ngưỡng sinh trưởng cây trồng thành logic cảnh báo có căn cứ khoa học và thiết kế giao diện quản trị phù hợp với người dùng nông nghiệp.
+    
+    \textbf{Phạm vi chức năng:} Xác thực người dùng; quản lý tài khoản nông dân; quản lý hồ sơ cây trồng và khu vực trồng trọt; quản lý cảm biến và chuỗi số liệu; quản lý thiết bị điều khiển và lịch sử lệnh; sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp; trang điều khiển tổng hợp.
+    
+    \textbf{Phạm vi công nghệ:} Backend: FastAPI, SQLAlchemy, Alembic, PostgreSQL; Frontend: React, TypeScript, TanStack Router/Query, Zustand; Triển khai: Docker Compose.
+    
+    \textbf{Giới hạn:} Đề tài chưa tích hợp gateway IoT thực địa, chưa có điều khiển khép kín tự động và chưa mở rộng sang học máy dự báo năng suất. Đây là các hướng phát triển tiếp theo được đề xuất sau khi phần lõi phần mềm được ổn định hóa.
+    
+    % -----------------------------------------------------------
+    \subsection*{4. Phương pháp nghiên cứu}
+    \addcontentsline{toc}{subsection}{4. Phương pháp nghiên cứu}
+    
+    Đề tài kết hợp bốn phương pháp nghiên cứu chính.
+    
+    \textbf{Phương pháp khảo sát và phân tích nghiệp vụ:} Khảo sát quy trình vận hành thực tế tại các mô hình nhà kính và nhà lưới ứng dụng công nghệ cao ở vùng Tây Bắc, từ đó xác định các tác nhân, thực thể dữ liệu và quy trình cần kiểm soát.
+    
+    \textbf{Phương pháp phân tích tài liệu khoa học:} Nghiên cứu các công trình tổng quan về nông nghiệp chính xác \cite{soussi2024,ojha2015,wolfert2017,goap2018,koksal2019} để định hướng bộ quy tắc cảnh báo và cấu trúc dữ liệu, đảm bảo tính có căn cứ khoa học cho phần logic trọng tâm của hệ thống.
+    
+    \textbf{Phương pháp thiết kế phần mềm:} Vận dụng kiến trúc nhiều lớp kết hợp UML để đặc tả ca sử dụng, luồng hoạt động và tuần tự tương tác, làm cơ sở triển khai cài đặt.
+    
+    \textbf{Phương pháp kiểm chứng qua mô phỏng:} Dữ liệu cảm biến được mô phỏng tự động theo chu kỳ với biên độ dao động thực tế để kiểm chứng kiến trúc và bộ quy tắc trước khi tích hợp phần cứng thực địa.
+    
+    % -----------------------------------------------------------
+    \subsection*{5. Cấu trúc báo cáo}
+    \addcontentsline{toc}{subsection}{5. Cấu trúc báo cáo}
+    
+    Ngoài phần Mở đầu và Kết luận, báo cáo được tổ chức thành ba chương chính:
+    
+    \textbf{Chương I -- Khảo sát và Đặc tả Hệ thống} trình bày tổng quan nghiên cứu về nông nghiệp chính xác, kết quả khảo sát nhu cầu tại vùng Tây Bắc, phân tích các hệ thống liên quan và khoảng trống nghiên cứu, cùng đặc tả đầy đủ tác nhân, yêu cầu chức năng, phi chức năng và ràng buộc nghiệp vụ.
+    
+    \textbf{Chương II -- Phân tích và Thiết kế Hệ thống} trình bày các ca sử dụng chi tiết kèm biểu đồ hoạt động và tuần tự tương tác, cùng thiết kế cơ sở dữ liệu của hệ thống.
+    
+    \textbf{Chương III -- Xây dựng Chương trình} trình bày kiến trúc chi tiết backend và frontend, cơ chế mô phỏng dữ liệu, bộ quy tắc sinh cảnh báo, phương án triển khai Docker Compose và minh họa giao diện hệ thống.
+    
+    % ============================================================
+    % CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG
+    % ============================================================
+    
+    \newpage
+    \section*{CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
+    \addcontentsline{toc}{section}{CHƯƠNG I: KHẢO SÁT VÀ ĐẶC TẢ HỆ THỐNG}
+    
+    % -----------------------------------------------------------
+    \subsection*{1. Tổng quan nghiên cứu}
+    \addcontentsline{toc}{subsection}{1. Tổng quan nghiên cứu}
+    
+    \subsubsection*{1.1. Bối cảnh nông nghiệp vùng Tây Bắc và nhu cầu chuyển đổi số}
+    \addcontentsline{toc}{subsubsection}{1.1. Bối cảnh nông nghiệp vùng Tây Bắc và nhu cầu chuyển đổi số}
+    
+    Vùng Tây Bắc Việt Nam, bao gồm các tỉnh Sơn La, Điện Biên, Lai Châu và Hòa Bình, sở hữu lợi thế địa lý và khí hậu đặc thù với nhiều tiểu vùng khí hậu đan xen, tạo điều kiện thuận lợi cho canh tác đa dạng loài cây từ nhiệt đới đến ôn đới. Riêng tỉnh Sơn La, đặc biệt là cao nguyên Mộc Châu và vùng Mai Sơn, Yên Châu, đã hình thành nhiều vùng sản xuất nông nghiệp hàng hóa tập trung với các sản phẩm đặc trưng như mận hậu, nhãn, xoài, cà phê, chè Shan tuyết và các loại rau ôn đới \cite{cucThuongMai2018}. Đến năm 2025, tỉnh Sơn La đã xây dựng hơn 115 ha nhà lưới, nhà kính, lắp đặt hệ thống tưới nhỏ giọt trên khoảng 3.200 ha cây trồng và hơn 5.500 ha được chứng nhận VietGAP \cite{boKhoaHoc2025a}, từng bước khẳng định định hướng trở thành vùng nông nghiệp ứng dụng công nghệ cao của khu vực.
+    
+    Tuy nhiên, trong thực tế vận hành, phần lớn các nông hộ tại khu vực này vẫn ghi nhận thông tin canh tác theo phương thức thủ công và quan sát trạng thái khu vực trồng trọt theo định kỳ trước khi đưa ra quyết định tưới nước, bón phân, thông gió hay bổ sung ánh sáng. Cách làm này gặp ba hạn chế lớn có tính hệ thống. Thứ nhất, dữ liệu môi trường rời rạc và khó tổng hợp, dẫn đến khó phát hiện sớm các xu hướng biến động bất thường. Thứ hai, phản ứng với sự cố thường chậm do người vận hành không được cảnh báo kịp thời. Thứ ba, các quyết định điều khiển thiết bị không được lưu vết, gây khó khăn khi đánh giá hiệu quả can thiệp hoặc truy nguyên nguyên nhân sai lệch trong quá trình canh tác.
+    
+    Theo khảo sát về thực trạng chuyển đổi số nông nghiệp tại các tỉnh miền núi phía Bắc, một trong những rào cản lớn nhất là quy mô sản xuất còn nhỏ lẻ, manh mún, địa hình chia cắt và trình độ tiếp cận công nghệ chưa đồng đều \cite{boKhoaHoc2025b}. Đặc biệt trong bối cảnh Nhà nước đang triển khai các chương trình ứng dụng IoT, tự động hóa và quản trị dữ liệu vào sản xuất nông nghiệp theo định hướng Nghị quyết 57 \cite{boKhoaHoc2025a}, nhu cầu về một nền tảng phần mềm hỗ trợ giám sát và điều khiển môi trường canh tác phù hợp với đặc thù vùng Tây Bắc ngày càng trở nên cấp thiết.
+    
+    \subsubsection*{1.2. Tổng quan nghiên cứu về nông nghiệp chính xác và hệ thống giám sát thông minh}
+    \addcontentsline{toc}{subsubsection}{1.2. Tổng quan nghiên cứu về nông nghiệp chính xác và hệ thống giám sát thông minh}
+    
+    Nông nghiệp chính xác (Precision Agriculture --- PA) đang được thúc đẩy mạnh mẽ bởi sự hội tụ của cảm biến thông minh, phân tích dữ liệu lớn và nền tảng IoT. Nghiên cứu tổng quan của Soussi và cộng sự (2024) chỉ ra rằng mục tiêu cốt lõi của PA là tối ưu hóa thực hành canh tác, nâng cao hiệu quả sử dụng tài nguyên và giảm tác động môi trường thông qua tích hợp cảm biến thông minh với IoT, phân tích dữ liệu lớn và trí tuệ nhân tạo \cite{soussi2024}. Các hệ thống giám sát môi trường vận hành trên nền Mạng Cảm biến Không dây (WSN) cung cấp dịch vụ theo dõi liên tục nhằm duy trì điều kiện tăng trưởng tối ưu và phát hiện sớm các yếu tố có thể gây bệnh hại lan rộng.
+    
+    Đặc biệt, Soussi và cộng sự (2024) nhấn mạnh vai trò của bảy thông số môi trường đo liên tục --- nhiệt độ không khí, độ ẩm tương đối, độ ẩm đất, cường độ ánh sáng, nồng độ CO$_2$, độ pH và độ dẫn điện EC --- trong việc quản lý sức khỏe cây trồng và hiệu quả sử dụng tài nguyên. Quan trọng hơn, nghiên cứu này đề xuất các ngưỡng tham chiếu cụ thể cho từng thông số theo từng loại cây trồng và điều kiện nhà kính --- đây chính là cơ sở khoa học trực tiếp được đề tài AgriSmart sử dụng để xây dựng bộ quy tắc cảnh báo vượt ngưỡng (được trình bày chi tiết tại Chương III).
+    
+    Wolfert và cộng sự (2017) trong nghiên cứu tổng quan về dữ liệu lớn trong nông nghiệp thông minh chỉ ra rằng nông nghiệp hiện đại ngày càng dựa mạnh vào khả năng liên thông dữ liệu và các cơ chế hỗ trợ quyết định theo thời gian gần thực \cite{wolfert2017}. Kết quả phân tích của nhóm tác giả cho thấy giá trị thực sự không nằm ở khối lượng dữ liệu thu thập được, mà ở khả năng chuyển hóa dữ liệu thô thành thông tin hành động cụ thể trong thời gian đủ ngắn để can thiệp kịp thời.
+    
+    Ojha và cộng sự (2015) chứng minh rằng giá trị thực sự của WSN trong nông nghiệp không chỉ nằm ở khâu đo lường mà ở khả năng kết nối dữ liệu cảm biến với hành động điều khiển và hỗ trợ ra quyết định \cite{ojha2015}. Nghiên cứu này cũng phân tích các ràng buộc kỹ thuật đặc thù của môi trường canh tác --- năng lượng hạn chế, địa hình phức tạp, yêu cầu thời gian thực --- và kết luận rằng thiết kế phần mềm phải đủ linh hoạt để trừu tượng hóa các ràng buộc này khỏi tầng nghiệp vụ.
+    
+    Ahmed và cộng sự (2018) khẳng định rằng IoT trong nông nghiệp chính xác chỉ phát huy hiệu quả tối đa khi nền tảng phần mềm đủ trưởng thành để chuyển hóa dữ liệu cảm biến thô thành tín hiệu hành động cụ thể \cite{ahmed2018}. Koksal và Tekinerdogan (2019) bổ sung góc nhìn kiến trúc hệ thống: một FMIS (Farm Management Information System) dựa trên IoT cần được tổ chức thành các lớp độc lập --- cảm biến, thu thập, xử lý, trình bày --- để có thể mở rộng và tích hợp phần cứng mới mà không ảnh hưởng đến tầng nghiệp vụ \cite{koksal2019}. Định hướng kiến trúc này được áp dụng trực tiếp trong thiết kế backend của AgriSmart.
+    
+    \subsubsection*{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
+    \addcontentsline{toc}{subsubsection}{1.3. Các hệ thống liên quan và khoảng trống nghiên cứu}
+    
+    Hiện nay trên thị trường đã tồn tại một số nền tảng thương mại phục vụ giám sát và tự động hóa nông nghiệp thông minh. Growlink là hệ thống phần cứng và phần mềm tích hợp của Mỹ, cho phép giám sát và điều khiển từ xa khí hậu, tưới tiêu, bổ sung dinh dưỡng và chiếu sáng trong nhà kính quy mô thương mại lớn \cite{growlink2024}. Farmapp và các nền tảng tương tự trong hệ sinh thái IoT nông nghiệp toàn cầu cung cấp khả năng theo dõi dữ liệu cảm biến thời gian thực kết hợp phân tích học máy để dự báo sản lượng \cite{farmapp2024}. Trong nước, một số đề tài nghiên cứu sinh viên và dự án thí điểm cũng đã xây dựng các bản giám sát nhà kính dựa trên Arduino hoặc Raspberry Pi kết hợp trong tổng quan đơn giản.
+    
+    Tuy nhiên, khi xem xét trong bối cảnh vùng Tây Bắc Việt Nam, các hệ thống thương mại kể trên bộc lộ hai hạn chế rõ rệt. Thứ nhất, chúng được thiết kế cho quy mô nông trại thương mại lớn tại các nước phát triển, với chi phí triển khai và vận hành nằm ngoài khả năng của hầu hết nông hộ vừa và nhỏ tại miền núi. Thứ hai, bộ quy tắc cảnh báo và logic nghiệp vụ bị đóng gói hoàn toàn bên trong phần cứng độc quyền, không cho phép người dùng tùy chỉnh ngưỡng theo đặc thù từng loại cây trồng địa phương. Đối với các bản mẫu sinh viên trong nước, vấn đề ngược lại: dữ liệu cảm biến được thu thập nhưng chưa có bộ quy tắc sinh cảnh báo dựa trên căn cứ khoa học, lịch sử lệnh điều khiển chưa được lưu vết có hệ thống và kiến trúc phần mềm thường còn đơn lớp, khó bảo trì và mở rộng.
+    
+    Có thể tóm tắt khoảng trống nghiên cứu qua bảng so sánh sau:
+    
+    \begin{table}[H]
+    \centering
+    \caption{So sánh các hệ thống liên quan và định vị AgriSmart}
+    \label{tab:related-systems}
+    \begin{tabular}{|p{3.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
+    \hline
+    \textbf{Tiêu chí} & \textbf{Growlink / Farmapp} & \textbf{Bản mẫu sinh viên trong nước} & \textbf{AgriSmart} \\
+    \hline
+    Chi phí triển khai & Cao & Thấp & Thấp \\
+    \hline
+    Bộ quy tắc cảnh báo có căn cứ khoa học & Có (đóng gói) & Không & Có \\
+    \hline
+    Lịch sử lệnh điều khiển & Có & Không/sơ sài & Có, đầy đủ \\
+    \hline
+    Kiến trúc nhiều lớp, dễ mở rộng & Có & Không & Có \\
+    \hline
+    Phù hợp nông hộ vừa và nhỏ & Không & Có & Có \\
+    \hline
+    \end{tabular}
+    \end{table}
+    
+    Khoảng trống mà đề tài này hướng đến lấp đầy là: một nền tảng phần mềm web mã nguồn mở, kiến trúc nhiều lớp, chi phí triển khai thấp, trong đó bộ quy tắc sinh cảnh báo được xây dựng trực tiếp trên các ngưỡng tham chiếu khoa học theo từng loại cây trồng, có đầy đủ lịch sử lệnh điều khiển và phù hợp với quy trình vận hành của nông hộ quy mô vừa và nhỏ tại vùng Tây Bắc Việt Nam.
+    
+    % -----------------------------------------------------------
+    \subsection*{2. Khảo sát thực tế}
+    \addcontentsline{toc}{subsection}{2. Khảo sát thực tế}
+    
+    \subsubsection*{2.1. Kết quả khảo sát}
+    \addcontentsline{toc}{subsubsection}{2.1. Kết quả khảo sát}
+    
+    Khảo sát nhu cầu giám sát môi trường canh tác tại các mô hình nhà kính và nhà lưới ứng dụng công nghệ cao ở vùng Tây Bắc, đặc biệt tại Sơn La, cho thấy hoạt động vận hành xoay quanh bốn nhóm nghiệp vụ chính.
+    
+    \textbf{Giám sát môi trường liên tục:} Người vận hành cần theo dõi liên tục bảy thông số cốt lõi: nhiệt độ không khí, độ ẩm tương đối, độ ẩm đất, cường độ ánh sáng, độ pH đất, độ dẫn điện (EC) và nồng độ CO$_2$ \cite{soussi2024}. Mỗi loại cây trồng có dải ngưỡng tối ưu riêng biệt; khi thông số vượt ngưỡng, cây có nguy cơ bị căng thẳng sinh lý, sâu bệnh hoặc giảm năng suất nghiêm trọng. Việc theo dõi thủ công không đủ tần suất để phát hiện biến động bất thường trong ngày, đặc biệt trong điều kiện khí hậu biến đổi mạnh theo giờ tại vùng miền núi.
+    
+    \textbf{Quản lý hồ sơ cây trồng và khu vực trồng:} Một nông trại thường có nhiều khu vực trồng khác nhau (nhà kính, nhà lưới, khu ngoài trời), mỗi khu có thể đang canh tác loại cây khác nhau ở các giai đoạn sinh trưởng khác nhau. Người quản lý cần biết khu vực nào đang áp dụng hồ sơ cây trồng nào, ngưỡng tham chiếu nào đang được sử dụng và trạng thái hoạt động của từng khu vực.
+    
+    \textbf{Điều khiển thiết bị chấp hành có kiểm soát:} Khi phát hiện thông số bất thường, người vận hành cần kích hoạt hệ thống tưới (điều chỉnh độ ẩm đất), quạt thông gió (điều chỉnh nhiệt độ và CO$_2$), đèn trồng (bổ sung ánh sáng), bơm phân (điều chỉnh EC) hoặc máy sưởi (tăng nhiệt độ khi quá thấp). Mỗi lệnh điều khiển cần được lưu vết kèm người thực hiện, thời gian và lý do để phục vụ đánh giá hiệu quả can thiệp về sau.
+    
+    \textbf{Quản lý cảnh báo và phân công người vận hành:} Một nông trại có thể có nhiều nông dân phụ trách các khu vực khác nhau. Cần có cơ chế phân quyền để mỗi nông dân chỉ nhận cảnh báo và thao tác trên khu vực của mình, trong khi quản trị viên giám sát toàn hệ thống. Mô hình phân quyền này khác biệt đáng kể so với mô hình owner-based đơn giản thường gặp trong các prototype sinh viên.
+    
+    Hiện tại, toàn bộ các hoạt động trên chủ yếu được thực hiện thủ công hoặc dựa vào kinh nghiệm cá nhân, chưa có phần mềm hỗ trợ thu thập dữ liệu liên tục, sinh cảnh báo theo ngưỡng và lưu trữ lịch sử điều khiển một cách có hệ thống.
+    
+    \subsubsection*{2.2. Phân tích kết quả khảo sát}
+    \addcontentsline{toc}{subsubsection}{2.2. Phân tích kết quả khảo sát}
+    
+    Từ kết quả khảo sát, bài toán giám sát nông nghiệp ẩn chứa sự phức tạp đáng kể khi nhìn từ góc độ luồng dữ liệu và trạng thái nghiệp vụ. Một cảnh báo tưởng chừng đơn giản --- chẳng hạn ``nhiệt độ quá cao'' --- thực tế đòi hỏi hệ thống phải biết: cây trồng nào đang được giám sát, ngưỡng tối ưu của loại cây đó là bao nhiêu, mức độ vượt ngưỡng là bao nhiêu phần trăm (để phân loại LOW/MEDIUM/HIGH) và đã có cảnh báo tương tự chưa được xử lý chưa (để tránh spam cảnh báo).
+    
+    Bên cạnh đó, sự phức tạp còn đến từ yêu cầu phát hiện các \textit{điều kiện tổ hợp}: nhiệt độ cao đồng thời với độ ẩm cao là dấu hiệu nguy cơ bệnh nấm, trong khi nhiệt độ cao kết hợp độ ẩm thấp lại gây stress VPD (Vapour Pressure Deficit). Đây là các tình huống không thể phát hiện bằng cách chỉ theo dõi từng thông số độc lập, dẫn đến yêu cầu thiết kế trọng tâm: hệ thống cần một \textit{rule engine} có khả năng đánh giá cả ngưỡng đơn lẫn điều kiện tổ hợp đa thông số.
+    
+    Phân tích cũng cho thấy sự cần thiết của mô hình phân quyền linh hoạt: một khu vực có thể được phân công cho nhiều nông dân, một nông dân có thể quản lý nhiều khu vực, nhưng quyền truy cập phải được kiểm soát chặt chẽ để đảm bảo mỗi người chỉ thao tác trên phạm vi được phân công. Từ góc độ thiết kế dữ liệu, quan hệ này được biểu diễn bằng bảng liên kết \texttt{farmer\_zone\_assignments} thay vì quan hệ sở hữu trực tiếp.
+    
+    Tổng hợp lại, khảo sát xác định ba yêu cầu thiết kế cốt lõi mà hệ thống phải đáp ứng: (1) thu thập và lưu trữ dữ liệu cảm biến liên tục theo chuỗi thời gian; (2) đánh giá bộ quy tắc cảnh báo theo ngưỡng đơn và tổ hợp một cách tự động và có căn cứ khoa học; (3) kiểm soát phân quyền truy cập ở mức khu vực, không chỉ ở mức tài khoản.
+    
+    % -----------------------------------------------------------
+    \subsection*{3. Đặc tả hệ thống}
+    \addcontentsline{toc}{subsection}{3. Đặc tả hệ thống}
+    
+    \subsubsection*{3.1. Tổng quan kiến trúc}
+    \addcontentsline{toc}{subsubsection}{3.1. Tổng quan kiến trúc}
+    
+    Hệ thống AgriSmart được đặc tả như một ứng dụng web nhiều người dùng, hoạt động theo mô hình client-server. Phía client, quản trị viên và nông dân thao tác thông qua giao diện đơn trang (SPA) được xây dựng bằng React và TypeScript. Phía server, backend tiếp nhận yêu cầu thông qua API RESTful, thực hiện xác thực danh tính bằng JWT lưu trong HttpOnly cookie, kiểm tra quyền truy cập theo mô hình RBAC, áp dụng logic nghiệp vụ và truy xuất dữ liệu từ cơ sở dữ liệu quan hệ PostgreSQL.
+    
+    Ngoài các API phục vụ giao diện, hệ thống còn có một tác vụ nền bất đồng bộ (background task) chạy định kỳ mỗi 60 giây: mô phỏng số liệu đo từ cảm biến, lưu vào cơ sở dữ liệu, sau đó đánh giá bộ quy tắc cảnh báo trên dữ liệu vừa thu thập và sinh ra các cảnh báo khi phát hiện vi phạm ngưỡng. Toàn bộ hệ thống được đóng gói bằng Docker với năm dịch vụ: backend, frontend, PostgreSQL, Redis.
+    
+    \subsubsection*{3.2. Các tác nhân và vai trò}
+    \addcontentsline{toc}{subsubsection}{3.2. Các tác nhân và vai trò}
+    
+    Hệ thống xác định hai nhóm tác nhân người dùng và một tác nhân hệ thống:
+    
+    \begin{itemize}[leftmargin=1.5cm]
+        \item \textbf{Quản trị viên (Admin):} Tạo và quản lý tài khoản nông dân; định nghĩa hồ sơ cây trồng với ngưỡng tối ưu cho từng loại; tạo và quản lý khu vực trồng trọt; phân công nông dân vào khu vực theo quan hệ nhiều-nhiều; theo dõi tổng quan toàn hệ thống bao gồm tất cả cảnh báo và lịch sử lệnh.
+        \item \textbf{Nông dân (Farmer):} Xem dashboard và số liệu cảm biến của các khu vực được phân công; xem và đánh dấu đã đọc cảnh báo; điều khiển thiết bị chấp hành trong phạm vi khu vực được phân công; xem lịch sử lệnh điều khiển. Mọi yêu cầu truy cập ngoài phạm vi phân công đều bị từ chối với mã lỗi 403.
+        \item \textbf{Hệ thống nền (Background Task):} Tác nhân tự động chạy mỗi 60 giây; mô phỏng và lưu số liệu cảm biến; đánh giá bộ quy tắc cảnh báo theo ngưỡng của hồ sơ cây trồng đang được áp dụng tại từng khu vực; sinh bản ghi cảnh báo với cơ chế chống trùng lặp trong vòng 1 giờ.
+    \end{itemize}
+    
+    \subsubsection*{3.3. Yêu cầu chức năng}
+    \addcontentsline{toc}{subsubsection}{3.3. Yêu cầu chức năng}
+    
+    Hệ thống bao gồm sáu nhóm chức năng chính, được liệt kê dưới đây theo thứ tự từ tầng xác thực đến tầng trình bày.
+    
+    \begin{itemize}[leftmargin=1.5cm]
+        \item \textbf{Xác thực và phân quyền:} Đăng nhập bằng email/mật khẩu; JWT lưu trong HttpOnly cookie với thời hạn 7 ngày; RBAC với hai vai trò Admin và Farmer; đổi mật khẩu; đặt lại mật khẩu qua email (tích hợp MailHog ở môi trường phát triển).
+        \item \textbf{Quản lý hồ sơ cây trồng:} Admin tạo, sửa, xóa hồ sơ với 7 nhóm ngưỡng môi trường (nhiệt độ không khí, độ ẩm không khí, độ ẩm đất, ánh sáng, pH, EC, CO$_2$); tên hồ sơ phải duy nhất trong hệ thống; ngưỡng bao gồm giá trị tối thiểu, tối ưu và tối đa cho phép.
+        \item \textbf{Quản lý khu vực trồng trọt:} Admin tạo, sửa, xóa khu vực; gán hồ sơ cây trồng cho khu vực (một khu vực -- một hồ sơ tại một thời điểm); phân công nông dân vào khu vực qua bảng \texttt{farmer\_zone\_assignments}; khi thay đổi hồ sơ, bộ quy tắc tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
+        \item \textbf{Quản lý cảm biến và số đo:} Thêm, sửa, xóa cảm biến trong khu vực; hệ thống lưu chuỗi số liệu theo thời gian vào bảng \texttt{sensor\_readings}; API truy vấn lịch sử đo theo khoảng thời gian và theo cảm biến; dữ liệu được trình bày dạng biểu đồ xu hướng trên dashboard.
+        \item \textbf{Quản lý thiết bị và lệnh điều khiển:} Nông dân bật/tắt thiết bị trong khu vực được phân công; hệ thống lưu bản ghi \texttt{actuator\_commands} kèm người thực hiện (\texttt{commanded\_by}, NULL nếu tự động), thời gian thực thi, thời lượng dự kiến và lý do; không có điều khiển nào thực hiện mà không có bản ghi lưu vết.
+        \item \textbf{Quản lý cảnh báo:} Hệ thống sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp với ba mức độ nghiêm trọng LOW/MEDIUM/HIGH; Farmer xem và đánh dấu đã đọc cảnh báo thuộc khu vực được phân công; Admin xem toàn bộ cảnh báo; cơ chế chống trùng lặp ngăn cùng một loại cảnh báo trong cùng khu vực được sinh lại trong vòng 1 giờ nếu chưa được đọc.
+        \item \textbf{Trang tổng quan:} Thẻ tóm tắt số lượng khu vực, cảm biến, thiết bị và cảnh báo chưa đọc; số liệu cảm biến mới nhất theo khu vực; biểu đồ xu hướng chuỗi thời gian.
+    \end{itemize}
+    
+    \subsubsection*{3.4. Yêu cầu phi chức năng}
+    \addcontentsline{toc}{subsubsection}{3.4. Yêu cầu phi chức năng}
+    
+    \begin{itemize}[leftmargin=1.5cm]
+        \item \textbf{Bảo mật:} Mật khẩu được băm bằng bcrypt; JWT có thời hạn 7 ngày lưu trong HttpOnly cookie chống XSS; mọi endpoint kiểm tra xác thực và quyền trước khi xử lý; yêu cầu nông dân vượt phạm vi khu vực được phân công bị từ chối với mã lỗi 403.
+        \item \textbf{Tính nhất quán dữ liệu:} Các thao tác liên quan đến trạng thái --- cập nhật thiết bị kèm ghi lịch sử lệnh, sinh cảnh báo kèm kiểm tra trùng lặp --- được thực hiện trong giao dịch cơ sở dữ liệu để đảm bảo toàn vẹn dữ liệu ngay cả khi có lỗi giữa chừng.
+        \item \textbf{Khả năng mở rộng:} Kiến trúc nhiều lớp (API Router -- Service -- Repository -- Model) cho phép bổ sung loại cảm biến mới, loại thiết bị mới hoặc tích hợp gateway IoT thực mà không ảnh hưởng đến các thành phần hiện có.
+        \item \textbf{Khả năng triển khai:} Hệ thống được đóng gói bằng Docker Compose gồm năm dịch vụ, có thể khởi chạy nhất quán trên mọi môi trường với một lệnh duy nhất, không cần cấu hình thủ công từng thành phần.
+        \item \textbf{Khả năng kiểm chứng:} Background task mô phỏng dữ liệu cảm biến hoạt động độc lập, cho phép kiểm chứng toàn bộ luồng nghiệp vụ từ thu thập số liệu đến sinh cảnh báo mà không cần phần cứng thực địa.
+    \end{itemize}
+    
+    \subsubsection*{3.5. Ràng buộc nghiệp vụ}
+    \addcontentsline{toc}{subsubsection}{3.5. Ràng buộc nghiệp vụ}
+    
+    Các ràng buộc nghiệp vụ trọng tâm được đặc tả như sau:
+    
+    \begin{itemize}[leftmargin=1.5cm]
+        \item Nông dân chỉ được thao tác trên các khu vực được Admin phân công; yêu cầu truy cập khu vực ngoài phạm vi bị từ chối với mã lỗi 403.
+        \item Một khu vực trồng trọt chỉ được gán một hồ sơ cây trồng tại một thời điểm; khi thay đổi hồ sơ, bộ quy tắc cảnh báo tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
+        \item Cảnh báo có cơ chế chống trùng lặp: cùng một loại cảnh báo cho cùng một khu vực không được sinh lại trong vòng 1 giờ nếu cảnh báo trước chưa được đọc; cảnh báo đã đọc cho phép sinh lại ngay khi điều kiện vi phạm tiếp tục tồn tại.
+        \item Lệnh điều khiển thiết bị luôn được ghi vào bảng \texttt{actuator\_commands} kèm \texttt{commanded\_by} (NULL nếu tự động), thời gian thực thi và lý do; không có điều khiển nào thực hiện mà không lưu vết.
+        \item Bộ quy tắc cảnh báo đánh giá bảy ngưỡng đơn (tương ứng bảy thông số môi trường) và bốn điều kiện tổ hợp: (i)~nhiệt độ cao + độ ẩm cao $\to$ nguy cơ nấm; (ii)~nhiệt độ cao + độ ẩm thấp $\to$ stress VPD; (iii)~độ ẩm đất cao + pH thấp $\to$ nguy cơ thối rễ; (iv)~CO$_2$ thấp + ánh sáng cao $\to$ lãng phí ánh sáng.
+        \item Phân loại mức độ nghiêm trọng dựa trên độ lệch tương đối so với ngưỡng tham chiếu: dưới 10\% --- LOW; từ 10 đến 25\% --- MEDIUM; trên 25\% --- HIGH.
+    \end{itemize}
 	
 	\newpage
 	\section*{CHƯƠNG II: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
