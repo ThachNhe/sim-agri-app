@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     # CORS
     ALLOWED_ORIGINS: str = "http://localhost:3000"
 
+    # License (OpenAI API key dùng để xác thực bản quyền)
+    LICENSE_KEY: str = ""
+
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod
     def parse_origins(cls, v: str) -> str:

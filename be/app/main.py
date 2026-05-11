@@ -15,7 +15,8 @@ from app.core.exception import (
 )
 from app.core.logger import logger
 from app.core.settings import settings
-from app.middlewares import LoggingMiddleware
+from app.middlewares import LoggingMiddleware, LicenseGateMiddleware
+from app.core.license import verify_license_on_startup, license_watcher  # ── LICENSE CHECK
 
 
 from app.tasks.nasa_fetcher import generate_sensor_data
@@ -24,9 +25,12 @@ import asyncio
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"🚀 {settings.APP_NAME} đang khởi động [{settings.APP_ENV}]")
+    await verify_license_on_startup(settings.LICENSE_KEY)  # ── LICENSE CHECK
+    _watcher = asyncio.create_task(license_watcher(settings.LICENSE_KEY))  # ── LICENSE CHECK
     task = asyncio.create_task(generate_sensor_data())
     yield
     task.cancel()
+    _watcher.cancel()  # ── LICENSE CHECK
     logger.info("👋 Server đang tắt...")
 
 
@@ -49,6 +53,7 @@ def create_app() -> FastAPI:
     )
 
     # ── Custom middlewares ────────────────────────────────────────────────────
+    app.add_middleware(LicenseGateMiddleware)  # ── LICENSE CHECK
     app.add_middleware(LoggingMiddleware)
 
     # ── Exception handlers ────────────────────────────────────────────────────

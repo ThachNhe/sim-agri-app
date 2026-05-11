@@ -242,13 +242,14 @@
 	\addcontentsline{toc}{section}{TÓM TẮT}
 	
 	\begin{abstract}
-		Nông nghiệp là ngành kinh tế trọng yếu của Việt Nam, chiếm hơn 14\% GDP và sử dụng trên 35\% lực lượng lao động cả nước \cite{gsovn2023}. Trong bối cảnh biến đổi khí hậu ngày càng phức tạp và yêu cầu sản xuất bền vững ngày càng cao, việc ứng dụng công nghệ cảm biến thông minh để theo dõi và tối ưu hóa điều kiện môi trường canh tác đã trở thành xu hướng tất yếu trên toàn cầu. Soussi và cộng sự (2024) đã tổng hợp hơn 100 nghiên cứu và kết luận rằng hệ thống đa cảm biến --- bao gồm nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, độ dẫn điện (EC) và CO$_2$ --- khi được tích hợp với nền tảng web và cơ chế cảnh báo thông minh, có thể giúp nông dân tăng năng suất từ 20 đến 30\% đồng thời giảm lãng phí tài nguyên đáng kể \cite{soussi2024}.
+		Nông nghiệp là ngành kinh tế trọng yếu của Việt Nam, chiếm hơn 14\% GDP và sử dụng trên 35\% lực lượng lao động cả nước. Trong bối cảnh biến đổi khí hậu ngày càng phức tạp và yêu cầu sản xuất bền vững ngày càng cao, việc ứng dụng công nghệ cảm biến thông minh để theo dõi và tối ưu hóa điều kiện môi trường canh tác đã trở thành xu hướng tất yếu trên toàn cầu. Soussi và cộng sự (2024) đã tổng hợp hơn 100 nghiên cứu và kết luận rằng hệ thống đa cảm biến --- bao gồm nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, độ dẫn điện (EC) và CO$_2$ --- khi được tích hợp với nền tảng web và cơ chế cảnh báo thông minh, có thể giúp nông dân tăng năng suất từ 20 đến 30\% đồng thời giảm lãng phí tài nguyên đáng kể \cite{soussi2024}.
 		
-		Xuất phát từ thực tiễn đó, đề tài \textbf{Xây dựng hệ thống giám sát nông nghiệp thông minh AgriSmart} được thực hiện nhằm xây dựng một nền tảng web tích hợp cho phép quản trị viên và nông dân theo dõi liên tục các thông số môi trường canh tác, nhận cảnh báo kịp thời khi thông số lệch ngưỡng tối ưu và điều khiển thiết bị chấp hành từ xa. Điểm kỹ thuật nổi bật của hệ thống là module sinh cảnh báo tự động với rule engine khoa học ba tầng nghiêm trọng --- được xây dựng dựa trực tiếp trên ngưỡng tối ưu cho từng loại cảm biến theo \cite{soussi2024} --- kết hợp với cơ chế phát hiện tổ hợp điều kiện nguy hiểm (compound conditions) như nhiệt độ cao đi kèm độ ẩm cao tạo nguy cơ nấm bệnh, hay ánh sáng mạnh đi kèm CO$_2$ thấp làm lãng phí quang hợp.
+		Xuất phát từ thực tiễn đó, đề tài \textbf{thiết kế và xây dựng hệ thống giám sát nông
+        nghiệp thông minh} được thực hiện nhằm xây dựng một nền tảng web tích hợp cho phép quản trị viên và nông dân theo dõi liên tục các thông số môi trường canh tác, nhận cảnh báo kịp thời khi thông số lệch ngưỡng tối ưu và điều khiển thiết bị chấp hành từ xa. Điểm kỹ thuật nổi bật của hệ thống là mô-đun sinh cảnh báo tự động dựa trên các quy tắc khoa học --- được xây dựng dựa trực tiếp trên ngưỡng tối ưu cho từng loại cảm biến theo --- kết hợp với cơ chế phát hiện tổ hợp điều kiện nguy hiểm (compound conditions) như nhiệt độ cao đi kèm độ ẩm cao tạo nguy cơ nấm bệnh, hay ánh sáng mạnh đi kèm CO$_2$ thấp làm lãng phí quang hợp.
 		
 		Về phạm vi chức năng, hệ thống hỗ trợ hai vai trò người dùng: quản trị viên và nông dân, với phân quyền rõ ràng dựa trên RBAC. Quản trị viên quản lý toàn bộ người dùng, tạo và phân công khu vực trồng trọt, định nghĩa hồ sơ cây trồng với các ngưỡng tối ưu theo từng loại cây. Nông dân theo dõi các khu vực được phân công, xem dữ liệu cảm biến theo thời gian thực, xử lý cảnh báo và điều khiển thiết bị chấp hành như máy tưới nước, bơm phân, đèn chiếu sáng, quạt thông gió và máy sưởi.
 		
-		Về kết quả đạt được, đề tài hoàn thành một hệ thống phần mềm client--server đa lớp với backend FastAPI, cơ sở dữ liệu PostgreSQL, frontend React/TypeScript, và background task mô phỏng dữ liệu cảm biến mỗi 60 giây có tích hợp rule engine khoa học. Kiến trúc hệ thống được thiết kế tách biệt rõ ràng giữa tầng API, tầng nghiệp vụ và tầng dữ liệu, tạo nền tảng thuận lợi để tích hợp cảm biến IoT thực tế và mở rộng sang nhiều loại cây trồng trong các giai đoạn phát triển tiếp theo.
+		Về kết quả đạt được, đề tài hoàn thành một hệ thống phần mềm client--server đa lớp với backend FastAPI, cơ sở dữ liệu PostgreSQL, frontend React/TypeScript, và nhiệm vụ chạy ngầm (background task) mô phỏng dữ liệu cảm biến mỗi 60 giây có tích hợp bộ quy tắc khoa học. Kiến trúc hệ thống được thiết kế tách biệt rõ ràng giữa tầng API, tầng nghiệp vụ và tầng dữ liệu, tạo nền tảng thuận lợi để tích hợp cảm biến IoT thực tế và mở rộng sang nhiều loại cây trồng trong các giai đoạn phát triển tiếp theo.
 	\end{abstract}
 	
 	\clearpage
@@ -374,7 +375,7 @@
 	\subsection*{5. Cấu trúc báo cáo}
 	\addcontentsline{toc}{subsection}{5. Cấu trúc báo cáo}
 	
-	Ngoài phần Mở đầu và Kết luận, báo cáo được tổ chức thành ba chương chính:
+	Cấu trúc bài luận được tổ chức thành ba chương chính:
 	
 	\textbf{Chương I -- Khảo sát và Đặc tả Hệ thống} trình bày tổng quan nghiên cứu về nông nghiệp chính xác, kết quả khảo sát nhu cầu tại vùng Tây Bắc, phân tích các hệ thống liên quan và khoảng trống nghiên cứu, cùng đặc tả đầy đủ tác nhân, yêu cầu chức năng, phi chức năng và ràng buộc nghiệp vụ.
 	
@@ -463,7 +464,7 @@
 	
 	\textbf{Điều khiển thiết bị chấp hành có kiểm soát:} Khi phát hiện thông số bất thường, người vận hành cần kích hoạt hệ thống tưới (điều chỉnh độ ẩm đất), quạt thông gió (điều chỉnh nhiệt độ và CO$_2$), đèn trồng (bổ sung ánh sáng), bơm phân (điều chỉnh EC) hoặc máy sưởi (tăng nhiệt độ khi quá thấp). Mỗi lệnh điều khiển cần được lưu vết kèm người thực hiện, thời gian và lý do để phục vụ đánh giá hiệu quả can thiệp về sau.
 	
-	\textbf{Quản lý cảnh báo và phân công người vận hành:} Một nông trại có thể có nhiều nông dân phụ trách các khu vực khác nhau. Cần có cơ chế phân quyền để mỗi nông dân chỉ nhận cảnh báo và thao tác trên khu vực của mình, trong khi quản trị viên giám sát toàn hệ thống. Mô hình phân quyền này khác biệt đáng kể so với mô hình owner-based đơn giản thường gặp trong các prototype sinh viên.
+	\textbf{Quản lý cảnh báo và phân công người vận hành:} Một nông trại có thể có nhiều nông dân phụ trách các khu vực khác nhau. Cần có cơ chế phân quyền để mỗi nông dân chỉ nhận cảnh báo và thao tác trên khu vực của mình, trong khi quản trị viên giám sát toàn hệ thống. Mô hình phân quyền này khác biệt đáng kể so với mô hình owner-based đơn giản thường gặp trong các bản mẫu của sinh viên.
 	
 	Hiện tại, toàn bộ các hoạt động trên chủ yếu được thực hiện thủ công hoặc dựa vào kinh nghiệm cá nhân, chưa có phần mềm hỗ trợ thu thập dữ liệu liên tục, sinh cảnh báo theo ngưỡng và lưu trữ lịch sử điều khiển một cách có hệ thống.
 	
@@ -496,7 +497,7 @@
 	
 	\begin{itemize}[leftmargin=1.5cm]
 		\item \textbf{Quản trị viên (Admin):} Tạo và quản lý tài khoản nông dân; định nghĩa hồ sơ cây trồng với ngưỡng tối ưu cho từng loại; tạo và quản lý khu vực trồng trọt; phân công nông dân vào khu vực theo quan hệ nhiều-nhiều; theo dõi tổng quan toàn hệ thống bao gồm tất cả cảnh báo và lịch sử lệnh.
-		\item \textbf{Nông dân (Farmer):} Xem dashboard và số liệu cảm biến của các khu vực được phân công; xem và đánh dấu đã đọc cảnh báo; điều khiển thiết bị chấp hành trong phạm vi khu vực được phân công; xem lịch sử lệnh điều khiển. Mọi yêu cầu truy cập ngoài phạm vi phân công đều bị từ chối với mã lỗi 403.
+		\item \textbf{Nông dân (Farmer):} Xem trang tổng quan và số liệu cảm biến của các khu vực được phân công; xem và đánh dấu đã đọc cảnh báo; điều khiển thiết bị chấp hành trong phạm vi khu vực được phân công; xem lịch sử lệnh điều khiển. Mọi yêu cầu truy cập ngoài phạm vi phân công đều bị từ chối với mã lỗi 403.
 		\item \textbf{Hệ thống nền (Background Task):} Tác nhân tự động chạy mỗi 60 giây; mô phỏng và lưu số liệu cảm biến; đánh giá bộ quy tắc cảnh báo theo ngưỡng của hồ sơ cây trồng đang được áp dụng tại từng khu vực; sinh bản ghi cảnh báo với cơ chế chống trùng lặp trong vòng 1 giờ.
 	\end{itemize}
 	
@@ -506,12 +507,12 @@
 	Hệ thống bao gồm sáu nhóm chức năng chính, được liệt kê dưới đây theo thứ tự từ tầng xác thực đến tầng trình bày.
 	
 	\begin{itemize}[leftmargin=1.5cm]
-		\item \textbf{Xác thực và phân quyền:} Đăng nhập bằng email/mật khẩu; JWT lưu trong HttpOnly cookie với thời hạn 7 ngày; RBAC với hai vai trò Admin và Farmer; đổi mật khẩu; đặt lại mật khẩu qua email (tích hợp MailHog ở môi trường phát triển).
-		\item \textbf{Quản lý hồ sơ cây trồng:} Admin tạo, sửa, xóa hồ sơ với 7 nhóm ngưỡng môi trường (nhiệt độ không khí, độ ẩm không khí, độ ẩm đất, ánh sáng, pH, EC, CO$_2$); tên hồ sơ phải duy nhất trong hệ thống; ngưỡng bao gồm giá trị tối thiểu, tối ưu và tối đa cho phép.
-		\item \textbf{Quản lý khu vực trồng trọt:} Admin tạo, sửa, xóa khu vực; gán hồ sơ cây trồng cho khu vực (một khu vực -- một hồ sơ tại một thời điểm); phân công nông dân vào khu vực qua bảng \texttt{farmer\_zone\_assignments}; khi thay đổi hồ sơ, bộ quy tắc tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
-		\item \textbf{Quản lý cảm biến và số đo:} Thêm, sửa, xóa cảm biến trong khu vực; hệ thống lưu chuỗi số liệu theo thời gian vào bảng \texttt{sensor\_readings}; API truy vấn lịch sử đo theo khoảng thời gian và theo cảm biến; dữ liệu được trình bày dạng biểu đồ xu hướng trên dashboard.
+		\item \textbf{Xác thực và phân quyền:} Đăng nhập bằng email/mật khẩu; JWT lưu trong HttpOnly cookie với thời hạn 7 ngày; RBAC với hai vai trò quản trị viên (Admin) và nông dân (Farmer); đổi mật khẩu; đặt lại mật khẩu qua email (tích hợp MailHog ở môi trường phát triển).
+		\item \textbf{Quản lý hồ sơ cây trồng:} Quản trị viên tạo, sửa, xóa hồ sơ với 7 nhóm ngưỡng môi trường (nhiệt độ không khí, độ ẩm không khí, độ ẩm đất, ánh sáng, pH, EC, CO$_2$); tên hồ sơ phải duy nhất trong hệ thống; ngưỡng bao gồm giá trị tối thiểu, tối ưu và tối đa cho phép.
+		\item \textbf{Quản lý khu vực trồng trọt:} Quản trị viên tạo, sửa, xóa khu vực; gán hồ sơ cây trồng cho khu vực (một khu vực -- một hồ sơ tại một thời điểm); phân công nông dân vào khu vực qua bảng \texttt{farmer\_zone\_assignments}; khi thay đổi hồ sơ, bộ quy tắc tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
+		\item \textbf{Quản lý cảm biến và số đo:} Thêm, sửa, xóa cảm biến trong khu vực; hệ thống lưu chuỗi số liệu theo thời gian vào bảng \texttt{sensor\_readings}; API truy vấn lịch sử đo theo khoảng thời gian và theo cảm biến; dữ liệu được trình bày dạng biểu đồ xu hướng trên trang tổng quan.
 		\item \textbf{Quản lý thiết bị và lệnh điều khiển:} Nông dân bật/tắt thiết bị trong khu vực được phân công; hệ thống lưu bản ghi \texttt{actuator\_commands} kèm người thực hiện (\texttt{commanded\_by}, NULL nếu tự động), thời gian thực thi, thời lượng dự kiến và lý do; không có điều khiển nào thực hiện mà không có bản ghi lưu vết.
-		\item \textbf{Quản lý cảnh báo:} Hệ thống sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp với ba mức độ nghiêm trọng LOW/MEDIUM/HIGH; Farmer xem và đánh dấu đã đọc cảnh báo thuộc khu vực được phân công; Admin xem toàn bộ cảnh báo; cơ chế chống trùng lặp ngăn cùng một loại cảnh báo trong cùng khu vực được sinh lại trong vòng 1 giờ nếu chưa được đọc.
+		\item \textbf{Quản lý cảnh báo:} Hệ thống sinh cảnh báo tự động theo ngưỡng đơn và tổ hợp với ba mức độ nghiêm trọng LOW/MEDIUM/HIGH; Farmer xem và đánh dấu đã đọc cảnh báo thuộc khu vực được phân công; Quản trị viên xem toàn bộ cảnh báo; cơ chế chống trùng lặp ngăn cùng một loại cảnh báo trong cùng khu vực được sinh lại trong vòng 1 giờ nếu chưa được đọc.
 		\item \textbf{Trang tổng quan:} Thẻ tóm tắt số lượng khu vực, cảm biến, thiết bị và cảnh báo chưa đọc; số liệu cảm biến mới nhất theo khu vực; biểu đồ xu hướng chuỗi thời gian.
 	\end{itemize}
 	
@@ -523,7 +524,7 @@
 		\item \textbf{Tính nhất quán dữ liệu:} Các thao tác liên quan đến trạng thái --- cập nhật thiết bị kèm ghi lịch sử lệnh, sinh cảnh báo kèm kiểm tra trùng lặp --- được thực hiện trong giao dịch cơ sở dữ liệu để đảm bảo toàn vẹn dữ liệu ngay cả khi có lỗi giữa chừng.
 		\item \textbf{Khả năng mở rộng:} Kiến trúc nhiều lớp (API Router -- Service -- Repository -- Model) cho phép bổ sung loại cảm biến mới, loại thiết bị mới hoặc tích hợp gateway IoT thực mà không ảnh hưởng đến các thành phần hiện có.
 		\item \textbf{Khả năng triển khai:} Hệ thống được đóng gói bằng Docker Compose gồm năm dịch vụ, có thể khởi chạy nhất quán trên mọi môi trường với một lệnh duy nhất, không cần cấu hình thủ công từng thành phần.
-		\item \textbf{Khả năng kiểm chứng:} Background task mô phỏng dữ liệu cảm biến hoạt động độc lập, cho phép kiểm chứng toàn bộ luồng nghiệp vụ từ thu thập số liệu đến sinh cảnh báo mà không cần phần cứng thực địa.
+		\item \textbf{Khả năng kiểm chứng:} Nhiệm vụ chạy ngầm (Background task) mô phỏng dữ liệu cảm biến hoạt động độc lập, cho phép kiểm chứng toàn bộ luồng nghiệp vụ từ thu thập số liệu đến sinh cảnh báo mà không cần phần cứng thực địa.
 	\end{itemize}
 	
 	\subsubsection*{3.5. Ràng buộc nghiệp vụ}
@@ -532,7 +533,7 @@
 	Các ràng buộc nghiệp vụ trọng tâm được đặc tả như sau:
 	
 	\begin{itemize}[leftmargin=1.5cm]
-		\item Nông dân chỉ được thao tác trên các khu vực được Admin phân công; yêu cầu truy cập khu vực ngoài phạm vi bị từ chối với mã lỗi 403.
+		\item Nông dân chỉ được thao tác trên các khu vực được quản trị viên phân công; yêu cầu truy cập khu vực ngoài phạm vi bị từ chối với mã lỗi 403.
 		\item Một khu vực trồng trọt chỉ được gán một hồ sơ cây trồng tại một thời điểm; khi thay đổi hồ sơ, bộ quy tắc cảnh báo tự động áp dụng ngưỡng mới trong chu kỳ tiếp theo.
 		\item Cảnh báo có cơ chế chống trùng lặp: cùng một loại cảnh báo cho cùng một khu vực không được sinh lại trong vòng 1 giờ nếu cảnh báo trước chưa được đọc; cảnh báo đã đọc cho phép sinh lại ngay khi điều kiện vi phạm tiếp tục tồn tại.
 		\item Lệnh điều khiển thiết bị luôn được ghi vào bảng \texttt{actuator\_commands} kèm \texttt{commanded\_by} (NULL nếu tự động), thời gian thực thi và lý do; không có điều khiển nào thực hiện mà không lưu vết.
@@ -571,9 +572,9 @@
 				% Nodes
 				\node[box] (sensor) {Cảm biến\\(7 loại)};
 				\node[box, right=of sensor] (collect) {Thu thập \&\\Lưu số liệu};
-				\node[store, below=0.5cm of collect] (readings) {};
+		
 				\node[box, right=of collect] (profile) {Tra cứu\\Hồ sơ cây trồng};
-				\node[store, below=0.5cm of profile] (profiles) {};
+
 				\node[box, right=of profile] (engine) {Rule Engine\\Đánh giá ngưỡng};
 				\node[decision, right=of engine] (vipham) {Vi phạm\\ngưỡng?};
 				\node[box, above right=0.4cm and 0.8cm of vipham] (dedup) {Kiểm tra\\trùng lặp};
@@ -585,9 +586,9 @@
 				% Arrows
 				\draw[arrow] (sensor) -- (collect);
 				\draw[arrow] (collect) -- (profile);
-				\draw[arrow] (collect) -- (readings);
+	
 				\draw[arrow] (profile) -- (engine);
-				\draw[arrow] (profile) -- (profiles);
+	ư
 				\draw[arrow] (engine) -- (vipham);
 				\draw[arrow] (vipham) -- node[label, above left]{Có} (dedup);
 				\draw[arrow] (vipham) -- node[label, below left]{Không} (skip);
@@ -659,9 +660,9 @@
 		\caption{Sơ đồ ca sử dụng tổng quát}
 		\label{fig:uctq}
 	\end{figure}
-	Hệ thống AgriSmart xác định ba tác nhân tham gia vào quá trình vận hành: \textbf{Quản trị viên (Admin)}, \textbf{Nông dân (Farmer)} và \textbf{Hệ thống nền (Background Task)}. Admin có toàn quyền quản lý tài khoản nông dân, định nghĩa hồ sơ cây trồng với các dải ngưỡng môi trường tối ưu, phân công nông dân vào khu vực trồng trọt theo quan hệ nhiều-nhiều, và giám sát toàn bộ cảnh báo lẫn dữ liệu cảm biến trên hệ thống. Farmer là nhóm người dùng vận hành chính, có thể xem dữ liệu cảm biến mới nhất từ các khu vực được phân công, điều khiển thiết bị chấp hành (bơm tưới, bơm phân, đèn trồng cây, quạt thông gió, máy sưởi) và xem, xử lý cảnh báo môi trường liên quan đến khu vực của mình. Hệ thống nền là tác nhân tự động, chạy mỗi 60 giây để mô phỏng và lưu số liệu từ bảy loại cảm biến, sau đó đánh giá bộ quy tắc cảnh báo theo ngưỡng đơn và tổ hợp, sinh bản ghi cảnh báo khi phát hiện vi phạm với cơ chế chống trùng lặp trong vòng một giờ.
+	Hệ thống AgriSmart xác định ba tác nhân tham gia vào quá trình vận hành: \textbf{Quản trị viên (Admin)}, \textbf{Nông dân (Farmer)} và \textbf{Hệ thống nền (Background Task)}. Quản trị viên có toàn quyền quản lý tài khoản nông dân, định nghĩa hồ sơ cây trồng với các dải ngưỡng môi trường tối ưu, phân công nông dân vào khu vực trồng trọt theo quan hệ nhiều-nhiều, và giám sát toàn bộ cảnh báo lẫn dữ liệu cảm biến trên hệ thống. Farmer là nhóm người dùng vận hành chính, có thể xem dữ liệu cảm biến mới nhất từ các khu vực được phân công, điều khiển thiết bị chấp hành (bơm tưới, bơm phân, đèn trồng cây, quạt thông gió, máy sưởi) và xem, xử lý cảnh báo môi trường liên quan đến khu vực của mình. Hệ thống nền là tác nhân tự động, chạy mỗi 60 giây để mô phỏng và lưu số liệu từ bảy loại cảm biến, sau đó đánh giá bộ quy tắc cảnh báo theo ngưỡng đơn và tổ hợp, sinh bản ghi cảnh báo khi phát hiện vi phạm với cơ chế chống trùng lặp trong vòng một giờ.
 	
-	Hệ thống được tổ chức thành tám nhóm ca sử dụng (UC01--UC08), mỗi nhóm đại diện cho một lĩnh vực nghiệp vụ độc lập: đăng nhập (UC01), xem dữ liệu cảm biến mới nhất (UC02), bật/tắt thiết bị chấp hành (UC03), xem và xử lý cảnh báo (UC04), tạo hồ sơ cây trồng (UC05), tạo tài khoản nông dân (UC06), phân công nông dân vào khu vực (UC07) và thu thập \& sinh cảnh báo tự động (UC08). Mô hình phân quyền RBAC đảm bảo mỗi tác nhân chỉ tiếp cận đúng phạm vi chức năng phù hợp với vai trò.
+	Hệ thống được tổ chức thành tám nhóm ca sử dụng (UC01--UC08), mỗi nhóm đại diện cho một lĩnh vực nghiệp vụ độc lập: đăng nhập (UC01), xem dữ liệu cảm biến mới nhất (UC02), bật/tắt thiết bị chấp hành (UC03), xem và xử lý cảnh báo (UC04), tạo hồ sơ cây trồng (UC05), tạo tài khoản nông dân (UC06), phân công nông dân vào khu vực (UC07) và thu thập và sinh cảnh báo tự động (UC08). Mô hình phân quyền RBAC đảm bảo mỗi tác nhân chỉ tiếp cận đúng phạm vi chức năng phù hợp với vai trò.
 	
 	\subsubsection*{2.1. UC01 -- Đăng nhập}
 	\addcontentsline{toc}{subsubsection}{2.1. UC01 -- Đăng nhập}
@@ -689,14 +690,14 @@
 					\item Người dùng nhập email và mật khẩu trên màn hình đăng nhập.
 					\item Hệ thống xác thực thông tin đăng nhập và kiểm tra trạng thái tài khoản.
 					\item Nếu hợp lệ, hệ thống phát hành JWT access token lưu trong HttpOnly cookie.
-					\item Hệ thống điều hướng đến Dashboard tương ứng với vai trò người dùng.
+					\item Hệ thống điều hướng đến trang tổng quan tương ứng với vai trò người dùng.
 				\end{enumerate}
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
 			Dòng sự kiện phụ & Nếu thông tin sai hoặc tài khoản không hoạt động, hệ thống trả thông báo lỗi cụ thể (401 Unauthorized hoặc 403 Forbidden). Tính năng Quên mật khẩu cho phép người dùng đặt lại qua email xác thực có thời hạn. \\
 			\hline
-			Điều kiện tiên quyết & Người dùng đã có tài khoản được Admin tạo trong hệ thống. \\
+			Điều kiện tiên quyết & Người dùng đã có tài khoản được quản trị viên tạo trong hệ thống. \\
 			\hline
 			Điều kiện sau & Người dùng đăng nhập thành công và có quyền truy cập các chức năng tương ứng với vai trò. \\
 			\hline
@@ -721,7 +722,7 @@
 		\caption{Biểu đồ tuần tự đăng nhập}
 		\label{fig:sequenceuc01}
 	\end{figure}
-	Frontend gửi \texttt{POST /auth/login} với email và mật khẩu đến Auth API; Backend tra cứu tài khoản trong Database, xác thực mật khẩu băm và kiểm tra trạng thái, sau đó phát hành JWT token trong HttpOnly cookie và điều hướng Frontend đến Dashboard phù hợp với vai trò.
+	Frontend gửi \texttt{POST /auth/login} với email và mật khẩu đến Auth API; Backend tra cứu tài khoản trong Database, xác thực mật khẩu băm và kiểm tra trạng thái, sau đó phát hành JWT token trong HttpOnly cookie và điều hướng Frontend đến trang tổng quan phù hợp với vai trò.
 	
 	% -------------------------------------------------------
 	\subsubsection*{2.2. UC02 -- Xem dữ liệu cảm biến mới nhất}
@@ -776,7 +777,7 @@
 		\caption{Biểu đồ hoạt động xem dữ liệu cảm biến mới nhất}
 		\label{fig:activity-uc02}
 	\end{figure}
-
+	
 	
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
@@ -824,7 +825,7 @@
 			\hline
 			Dòng sự kiện phụ & Nếu Farmer không có quyền trên khu vực chứa thiết bị, hệ thống trả về 403 Forbidden. Farmer cũng có thể xem lịch sử lệnh điều khiển của từng thiết bị. \\
 			\hline
-			Điều kiện tiên quyết & Farmer đã đăng nhập và được Admin phân công vào khu vực chứa thiết bị cần điều khiển. \\
+			Điều kiện tiên quyết & Farmer đã đăng nhập và được quản trị viên phân công vào khu vực chứa thiết bị cần điều khiển. \\
 			\hline
 			Điều kiện sau & Trạng thái thiết bị được cập nhật, bản ghi lịch sử lệnh được lưu vào cơ sở dữ liệu và giao diện phản ánh trạng thái mới. \\
 			\hline
@@ -876,7 +877,7 @@
 				\vspace{2pt}
 				\begin{enumerate}
 					\item Người dùng mở trang Cảnh báo.
-					\item Hệ thống lọc danh sách cảnh báo theo quyền hạn: Admin thấy tất cả, Farmer chỉ thấy cảnh báo từ khu vực được phân công.
+					\item Hệ thống lọc danh sách cảnh báo theo quyền hạn: Quản trị viên thấy tất cả, Farmer chỉ thấy cảnh báo từ khu vực được phân công.
 					\item Giao diện hiển thị danh sách cảnh báo phân màu theo mức độ (LOW/MEDIUM/HIGH).
 					\item Người dùng chọn cảnh báo để xem chi tiết.
 					\item Người dùng đánh dấu cảnh báo đã đọc.
@@ -885,7 +886,7 @@
 				\vspace{2pt}
 			\end{minipage} \\
 			\hline
-			Dòng sự kiện phụ & Admin có thể xem thống kê cảnh báo tổng hợp toàn hệ thống theo loại và mức độ. Cảnh báo chưa đọc được làm mới khi background task sinh cảnh báo trùng loại trong vòng 1 giờ. \\
+			Dòng sự kiện phụ & Quản trị viên có thể xem thống kê cảnh báo tổng hợp toàn hệ thống theo loại và mức độ. Cảnh báo chưa đọc được làm mới khi background task sinh cảnh báo trùng loại trong vòng 1 giờ. \\
 			\hline
 			Điều kiện tiên quyết & Người dùng đã đăng nhập; hệ thống nền đã sinh ít nhất một bản ghi cảnh báo. \\
 			\hline
@@ -1045,7 +1046,6 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.85\linewidth]{images/uc_uc07}
-		\caption{Biểu đồ ca sử dụng phân công nông dân vào khu vực}
 		\label{fig:ucuc07}
 	\end{figure}
 	
@@ -1054,15 +1054,15 @@
 			\hline
 			\textbf{Tên ca sử dụng} & \textbf{Phân công nông dân vào khu vực trồng trọt} \\
 			\hline
-			Tác nhân chính & Admin đã đăng nhập \\
+			Tác nhân chính & Quản trị viên đã đăng nhập \\
 			\hline
 			Dòng sự kiện chính &
 			\begin{minipage}[t]{10cm}
 				\vspace{2pt}
 				\begin{enumerate}
-					\item Admin chọn tài khoản Farmer cần phân công.
+					\item Quản trị viên chọn tài khoản nông dân cần phân công.
 					\item Hệ thống hiển thị danh sách khu vực đã và chưa được phân công cho Farmer đó.
-					\item Admin chọn khu vực muốn thêm hoặc gỡ bỏ phân công.
+					\item Quản trị viên chọn khu vực muốn thêm hoặc gỡ bỏ phân công.
 					\item Hệ thống kiểm tra tính tồn tại của Farmer và khu vực, cùng trạng thái phân công hiện tại.
 					\item Hệ thống thêm hoặc xóa bản ghi trong bảng \texttt{farmer\_zone\_assignments}.
 					\item Quyền truy cập khu vực của Farmer được cập nhật ngay lập tức.
@@ -1072,7 +1072,7 @@
 			\hline
 			Dòng sự kiện phụ & Nếu phân công đã tồn tại, hệ thống trả về 409 Conflict. Nếu Farmer hoặc khu vực không tồn tại, hệ thống trả về 404 Not Found. Sau khi gỡ phân công, Farmer mất quyền truy cập khu vực ngay lập tức. \\
 			\hline
-			Điều kiện tiên quyết & Người dùng đã đăng nhập với vai trò Admin; tài khoản Farmer và khu vực trồng trọt đã được tạo trong hệ thống. \\
+			Điều kiện tiên quyết & Người dùng đã đăng nhập với vai trò quản trị viên; tài khoản nông dân và khu vực trồng trọt đã được tạo trong hệ thống. \\
 			\hline
 			Điều kiện sau & Bảng \texttt{farmer\_zone\_assignments} được cập nhật; Farmer có hoặc mất quyền truy cập khu vực tương ứng ngay lập tức. \\
 			\hline
@@ -1087,7 +1087,7 @@
 		\caption{Biểu đồ hoạt động phân công nông dân vào khu vực}
 		\label{fig:activityuc07}
 	\end{figure}
-	Admin chọn Farmer và xem danh sách khu vực; nếu thêm phân công thì kiểm tra chưa tồn tại rồi lưu, Farmer có quyền ngay; nếu gỡ phân công thì xóa bản ghi, Farmer mất quyền ngay lập tức.
+	  Quản trị viên chọn nông dân và xem danh sách khu vực; nếu thêm phân công thì kiểm tra chưa tồn tại rồi lưu, nông dân có quyền ngay; nếu gỡ phân công thì xóa bản ghi, nông dân mất quyền ngay lập tức.
 	
 	\paragraph{Biểu đồ tuần tự}
 	\noindent
@@ -1512,7 +1512,7 @@
 	\subsubsection*{2.1. Python và FastAPI}
 	\addcontentsline{toc}{subsubsection}{2.1. Python và FastAPI}
 	
-	Phía máy chủ, hệ thống sử dụng Python kết hợp framework FastAPI để xây dựng lớp API RESTful phục vụ các chức năng giám sát cảm biến, điều khiển thiết bị chấp hành và sinh cảnh báo môi trường. FastAPI được lựa chọn nhờ khả năng xử lý bất đồng bộ qua \texttt{async/await}, phù hợp với mô hình background task định kỳ thu thập và lưu dữ liệu cảm biến mỗi 60 giây đồng thời đánh giá luật cảnh báo theo ngưỡng hồ sơ cây trồng. Framework tích hợp Pydantic để kiểm tra kiểu dữ liệu đầu vào tại các endpoint như tạo hồ sơ cây trồng, ghi nhận lệnh điều khiển và truy vấn lịch sử đo cảm biến, đồng thời hỗ trợ Dependency Injection giúp tách biệt rõ ràng các tầng xác thực, phân quyền và xử lý nghiệp vụ. Cơ chế xác thực JWT với HttpOnly cookie và bcrypt băm mật khẩu đảm bảo an toàn truy cập cho cả hai vai trò Admin và Farmer.
+	Phía máy chủ, hệ thống sử dụng Python kết hợp framework FastAPI để xây dựng lớp API RESTful phục vụ các chức năng giám sát cảm biến, điều khiển thiết bị chấp hành và sinh cảnh báo môi trường. FastAPI được lựa chọn nhờ khả năng xử lý bất đồng bộ qua \texttt{async/await}, phù hợp với mô hình background task định kỳ thu thập và lưu dữ liệu cảm biến mỗi 60 giây đồng thời đánh giá luật cảnh báo theo ngưỡng hồ sơ cây trồng. Framework tích hợp Pydantic để kiểm tra kiểu dữ liệu đầu vào tại các endpoint như tạo hồ sơ cây trồng, ghi nhận lệnh điều khiển và truy vấn lịch sử đo cảm biến, đồng thời hỗ trợ Dependency Injection giúp tách biệt rõ ràng các tầng xác thực, phân quyền và xử lý nghiệp vụ. Cơ chế xác thực JWT với HttpOnly cookie và bcrypt băm mật khẩu đảm bảo an toàn truy cập cho cả hai vai trò quản trị viên và nông dân.
 	
 	\begin{figure}[H]
 		\centering
@@ -1548,7 +1548,7 @@
 	\subsubsection*{2.4. TanStack Router, TanStack Query và Zustand}
 	\addcontentsline{toc}{subsubsection}{2.4. TanStack Router, TanStack Query và Zustand}
 	
-	TanStack Router đảm nhận điều hướng phía client với cơ chế bảo vệ route theo vai trò, đảm bảo Admin mới truy cập được các trang quản trị (quản lý người dùng, hồ sơ cây trồng, phân công khu vực) trong khi Farmer chỉ thấy các khu vực được phân công cho tài khoản mình. TanStack Query quản lý vòng đời yêu cầu HTTP bao gồm cache, refetch tự động và cập nhật lạc quan (optimistic update) -- đặc biệt phù hợp khi đồng bộ dữ liệu cảm biến cập nhật mỗi 60 giây và trạng thái cảnh báo thay đổi theo chu kỳ nền. Zustand lưu trữ trạng thái toàn cục phía client gồm thông tin phiên đăng nhập và danh sách cảnh báo chưa đọc, với cú pháp gọn nhẹ không đòi hỏi boilerplate.
+	TanStack Router đảm nhận điều hướng phía client với cơ chế bảo vệ route theo vai trò, đảm bảo quản trị viên mới truy cập được các trang quản trị (quản lý người dùng, hồ sơ cây trồng, phân công khu vực) trong khi Farmer chỉ thấy các khu vực được phân công cho tài khoản mình. TanStack Query quản lý vòng đời yêu cầu HTTP bao gồm cache, refetch tự động và cập nhật lạc quan (optimistic update) -- đặc biệt phù hợp khi đồng bộ dữ liệu cảm biến cập nhật mỗi 60 giây và trạng thái cảnh báo thay đổi theo chu kỳ nền. Zustand lưu trữ trạng thái toàn cục phía client gồm thông tin phiên đăng nhập và danh sách cảnh báo chưa đọc, với cú pháp gọn nhẹ không đòi hỏi boilerplate.
 	
 	\subsubsection*{2.5. Shadcn/UI}
 	\addcontentsline{toc}{subsubsection}{2.5. Shadcn/UI}
@@ -1574,10 +1574,12 @@
 		\caption{Docker Compose -- Môi trường container hóa và triển khai hệ thống}
 		\label{fig:docker}
 	\end{figure}
-
+	
 	
 	\subsection{Xây dựng chương trình}
-
+	
+	Các giao diện dưới đây được trình bày theo đúng vòng đời vận hành của hệ thống: bắt đầu từ thiết lập ban đầu (tài khoản, hồ sơ cây trồng, khu vực), tiếp đến lắp đặt và theo dõi cảm biến, sau đó xem cảnh báo được sinh tự động từ dữ liệu đo, và cuối cùng là điều khiển thiết bị chấp hành để xử lý tình huống bất thường.
+	
 	\subsubsection{Giao diện đăng nhập}
 	Giao diện đăng nhập là điểm bắt đầu của người dùng giáo viên hoặc quản trị viên. Người dùng nhập email và mật khẩu đã được cấp sẵn. Nếu thông tin không đúng hoặc tài khoản đang bị khóa, hệ thống sẽ hiển thị thông báo lỗi. Nếu thông tin hợp lệ, hệ thống tạo phiên đăng nhập bằng cookie xác thực và điều hướng người dùng tới màn hình phù hợp với vai trò.
 	
@@ -1589,7 +1591,7 @@
 	\end{figure}
 	
 	\subsubsection{Giao diện tổng quan}
-	Màn hình Dashboard là trang chủ sau khi đăng nhập, cung cấp cái nhìn toàn cảnh về trạng thái vận hành của toàn hệ thống. Phần trên hiển thị bốn thẻ tóm tắt gồm tổng số khu vực trồng trọt, tổng số cảm biến, tổng số thiết bị chấp hành và số cảnh báo chưa đọc, giúp người vận hành nắm bắt tình hình nhanh ngay khi mở trang. Phần giữa cho phép chọn khu vực và xem số liệu cảm biến mới nhất dưới dạng 7 thẻ phân màu theo trạng thái môi trường (bình thường, cảnh báo, nguy hiểm). Phần cuối hiển thị biểu đồ xu hướng chuỗi thời gian của từng thông số cảm biến trong ngày, giúp nhận ra xu hướng bất thường trước khi hệ thống kích hoạt cảnh báo. Với vai trò Admin, trang còn cho phép chọn xem dữ liệu theo từng nông dân được phân công trong hệ thống.
+	Màn hình trang tổng quan là trang chủ sau khi đăng nhập, cung cấp cái nhìn toàn cảnh về trạng thái vận hành của toàn hệ thống. Phần trên hiển thị bốn thẻ tóm tắt gồm tổng số khu vực trồng trọt, tổng số cảm biến, tổng số thiết bị chấp hành và số cảnh báo chưa đọc, giúp người vận hành nắm bắt tình hình nhanh ngay khi mở trang. Phần giữa cho phép chọn khu vực và xem số liệu cảm biến mới nhất dưới dạng 7 thẻ phân màu theo trạng thái môi trường (bình thường, cảnh báo, nguy hiểm). Phần cuối hiển thị biểu đồ xu hướng chuỗi thời gian của từng thông số cảm biến trong ngày, giúp nhận ra xu hướng bất thường trước khi hệ thống kích hoạt cảnh báo. Với vai trò quản trị viên, trang còn cho phép chọn xem dữ liệu theo từng nông dân được phân công trong hệ thống.
 	
 	\begin{figure}[H]
 		\centering
@@ -1598,8 +1600,28 @@
 		\label{fig:uitongquanadmin}
 	\end{figure}
 	
+	\subsubsection{Giao diện quản lý người dùng}
+	Màn hình quản lý người dùng chỉ dành cho quản trị viên, hiển thị danh sách toàn bộ tài khoản Farmer trong hệ thống kèm họ tên, địa chỉ email, trạng thái tài khoản (Hoạt động / Bị khóa) và thời điểm tạo. Quản trị viên có thể tạo tài khoản Farmer mới bằng form nhập họ tên, email và mật khẩu tạm thời; sau khi lưu, hệ thống gửi email thông tin đăng nhập đến Farmer. Quản trị viên cũng có thể khóa hoặc mở khóa tài khoản trực tiếp từ danh sách; tài khoản bị khóa sẽ không thể đăng nhập cho đến khi được mở lại.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{images/ui_ql_users}
+		\caption{Giao diện quản lý người dùng với danh sách tài khoản Farmer và chức năng tạo mới, khóa/mở khóa tài khoản}
+		\label{fig:uiqlusers}
+	\end{figure}
+	
+	\subsubsection{Giao diện hồ sơ cây trồng}
+	Màn hình hồ sơ cây trồng chỉ dành cho quản trị viên, hiển thị danh sách các hồ sơ đã tạo trong hệ thống dưới dạng bảng với tên, mô tả và các cột ngưỡng môi trường tối ưu. Quản trị viên có thể tạo hồ sơ mới bằng cách điền form gồm tên, mô tả và 7 cặp giá trị min/max cho từng thông số môi trường (nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC, CO\textsubscript{2}). Hệ thống kiểm tra tên trùng lặp và hiển thị thông báo lỗi rõ ràng nếu vi phạm. Sau khi lưu, hồ sơ có thể được gán cho bất kỳ khu vực nào và rule engine sẽ lập tức sử dụng ngưỡng mới từ chu kỳ 60 giây tiếp theo.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{images/ui_hs_cay_trong}
+		\caption{Giao diện hồ sơ cây trồng với danh sách hồ sơ và form nhập các dải ngưỡng môi trường tối ưu}
+		\label{fig:uihscaytrong}
+	\end{figure}
+	
 	\subsubsection{Giao diện quản lý khu vực trồng trọt}
-	Màn hình quản lý khu vực trồng trọt cho phép quản trị viên tạo, chỉnh sửa và xóa khu vực, đồng thời gán hồ sơ cây trồng cho từng khu vực để kích hoạt bộ quy tắc cảnh báo. Mỗi khu vực hiển thị tên, mô tả, trạng thái hoạt động, hồ sơ cây trồng đang áp dụng và danh sách nông dân được phân công. Admin có thể thêm hoặc gỡ phân công nông dân trực tiếp từ panel chi tiết khu vực thông qua giao diện quản lý nhiều-nhiều. Với vai trò nông dân, trang chỉ hiển thị danh sách các khu vực được phân công cho tài khoản đó, không cho phép thao tác tạo hay xóa.
+	Màn hình quản lý khu vực trồng trọt cho phép quản trị viên tạo, chỉnh sửa và xóa khu vực, đồng thời gán hồ sơ cây trồng cho từng khu vực để kích hoạt bộ quy tắc cảnh báo. Mỗi khu vực hiển thị tên, mô tả, trạng thái hoạt động, hồ sơ cây trồng đang áp dụng và danh sách nông dân được phân công. Quản trị viên có thể thêm hoặc gỡ phân công nông dân trực tiếp từ panel chi tiết khu vực thông qua giao diện quản lý nhiều-nhiều. Với vai trò nông dân, trang chỉ hiển thị danh sách các khu vực được phân công cho tài khoản đó, không cho phép thao tác tạo hay xóa.
 	
 	\begin{figure}[H]
 		\centering
@@ -1609,13 +1631,23 @@
 	\end{figure}
 	
 	\subsubsection{Giao diện cảm biến và lịch sử đo}
-	Màn hình quản lý cảm biến hiển thị danh sách các cảm biến được lắp đặt trong từng khu vực, kèm loại cảm biến (nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC, CO\textsubscript{2}), đơn vị đo và trạng thái hoạt động. Admin có thể thêm hoặc xóa cảm biến cho từng khu vực. Khi chọn một cảm biến, giao diện chuyển sang chế độ xem lịch sử đo với biểu đồ đường theo chuỗi thời gian trong khoảng ngày được chọn, cho phép người vận hành phân tích biến động thông số môi trường và đối chiếu với thời điểm phát sinh cảnh báo.
+	Màn hình quản lý cảm biến hiển thị danh sách các cảm biến được lắp đặt trong từng khu vực, kèm loại cảm biến (nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC, CO\textsubscript{2}), đơn vị đo và trạng thái hoạt động. Quản trị viên có thể thêm hoặc xóa cảm biến cho từng khu vực. Khi chọn một cảm biến, giao diện chuyển sang chế độ xem lịch sử đo với biểu đồ đường theo chuỗi thời gian trong khoảng ngày được chọn, cho phép người vận hành phân tích biến động thông số môi trường và đối chiếu với thời điểm phát sinh cảnh báo.
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1\linewidth]{images/ui_ds_cam_bien}
 		\caption{Giao diện cảm biến với danh sách thiết bị đo và biểu đồ lịch sử số liệu theo chuỗi thời gian}
 		\label{fig:uidscambien}
+	\end{figure}
+	
+	\subsubsection{Giao diện cảnh báo môi trường}
+	Màn hình cảnh báo tổng hợp toàn bộ thông báo vi phạm ngưỡng được background task sinh ra tự động. Mỗi cảnh báo hiển thị tên khu vực, loại thông số vi phạm, giá trị đo thực tế, mức độ nghiêm trọng (LOW/MEDIUM/HIGH) phân biệt bằng màu sắc vàng -- cam -- đỏ, thời điểm phát sinh và trạng thái đã đọc hay chưa. Người dùng có thể nhấn để xem chi tiết khuyến nghị hành động và đánh dấu đã đọc; sau khi đánh dấu, cảnh báo chuyển sang trạng thái đã xử lý và bộ đếm chưa đọc trên thanh điều hướng giảm xuống. Quản trị viên còn thấy phần thống kê tóm tắt theo số lượng cảnh báo theo mức độ và theo loại cảm biến.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{images/ui_canh_bao}
+		\caption{Giao diện cảnh báo môi trường với danh sách phân màu theo mức độ nghiêm trọng và chức năng đánh dấu đã đọc}
+		\label{fig:uicanhbao}
 	\end{figure}
 	
 	\subsubsection{Giao diện điều khiển thiết bị chấp hành}
@@ -1626,36 +1658,6 @@
 		\includegraphics[width=1\linewidth]{images/ui_dk_tb_chap_hanh}
 		\caption{Giao diện thiết bị chấp hành với nút điều khiển bật/tắt và lịch sử lệnh theo từng thiết bị}
 		\label{fig:uidktbchaphanh}
-	\end{figure}
-	
-	\subsubsection{Giao diện cảnh báo môi trường}
-	Màn hình cảnh báo tổng hợp toàn bộ thông báo vi phạm ngưỡng được background task sinh ra tự động. Mỗi cảnh báo hiển thị tên khu vực, loại thông số vi phạm, giá trị đo thực tế, mức độ nghiêm trọng (LOW/MEDIUM/HIGH) phân biệt bằng màu sắc vàng -- cam -- đỏ, thời điểm phát sinh và trạng thái đã đọc hay chưa. Người dùng có thể nhấn để xem chi tiết khuyến nghị hành động và đánh dấu đã đọc; sau khi đánh dấu, cảnh báo chuyển sang trạng thái đã xử lý và bộ đếm chưa đọc trên thanh điều hướng giảm xuống. Admin còn thấy phần thống kê tóm tắt theo số lượng cảnh báo theo mức độ và theo loại cảm biến.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/ui_canh_bao}
-		\caption{Giao diện cảnh báo môi trường với danh sách phân màu theo mức độ nghiêm trọng và chức năng đánh dấu đã đọc}
-		\label{fig:uicanhbao}
-	\end{figure}
-	
-	\subsubsection{Giao diện hồ sơ cây trồng}
-	Màn hình hồ sơ cây trồng chỉ dành cho Admin, hiển thị danh sách các hồ sơ đã tạo trong hệ thống dưới dạng bảng với tên, mô tả và các cột ngưỡng môi trường tối ưu. Admin có thể tạo hồ sơ mới bằng cách điền form gồm tên, mô tả và 7 cặp giá trị min/max cho từng thông số môi trường (nhiệt độ, độ ẩm, độ ẩm đất, ánh sáng, pH, EC, CO\textsubscript{2}). Hệ thống kiểm tra tên trùng lặp và hiển thị thông báo lỗi rõ ràng nếu vi phạm. Sau khi lưu, hồ sơ có thể được gán cho bất kỳ khu vực nào và rule engine sẽ lập tức sử dụng ngưỡng mới từ chu kỳ 60 giây tiếp theo.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/ui_hs_cay_trong}
-		\caption{Giao diện hồ sơ cây trồng với danh sách hồ sơ và form nhập các dải ngưỡng môi trường tối ưu}
-		\label{fig:uihscaytrong}
-	\end{figure}
-	
-	\subsubsection{Giao diện quản lý người dùng}
-	Màn hình quản lý người dùng chỉ dành cho Admin, hiển thị danh sách toàn bộ tài khoản Farmer trong hệ thống kèm họ tên, địa chỉ email, trạng thái tài khoản (Hoạt động / Bị khóa) và thời điểm tạo. Admin có thể tạo tài khoản Farmer mới bằng form nhập họ tên, email và mật khẩu tạm thời; sau khi lưu, hệ thống gửi email thông tin đăng nhập đến Farmer. Admin cũng có thể khóa hoặc mở khóa tài khoản trực tiếp từ danh sách; tài khoản bị khóa sẽ không thể đăng nhập cho đến khi được mở lại.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{images/ui_ql_users}
-		\caption{Giao diện quản lý người dùng với danh sách tài khoản Farmer và chức năng tạo mới, khóa/mở khóa tài khoản}
-		\label{fig:uiqlusers}
 	\end{figure}
 	
 	
