@@ -29,10 +29,6 @@ htmlcov/
 # Docker
 .docker/
 
-# Alembic
-alembic/versions/*.py
-!alembic/versions/.gitkeep
-
 # Logs
 *.log
 logs/
