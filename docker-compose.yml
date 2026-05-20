@@ -28,6 +28,7 @@ services:
   db:
     image: postgres:16-alpine
     container_name: agri_app_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -47,6 +48,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: fastapi_redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     healthcheck:
@@ -62,6 +64,7 @@ services:
   mailhog:
     image: mailhog/mailhog:v1.0.1
     container_name: fastapi_mailhog
+    restart: unless-stopped
     ports:
       - "1025:1025"
       - "8025:8025"
@@ -77,6 +80,7 @@ services:
       - "5176:5173"
     volumes:
       - ./fe:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
     restart: unless-stopped
@@ -85,7 +89,6 @@ services:
 volumes:
   postgres_data:
   redis_data:
-
 
 networks:
   app_network:

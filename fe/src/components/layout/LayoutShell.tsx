@@ -47,12 +47,12 @@ export function LayoutShell({
     }
 
     return (
-        <div className="flex min-h-dvh overflow-x-hidden bg-background text-foreground">
-            <aside className="z-20 hidden w-72 flex-col border-r border-border/50 bg-card/60 backdrop-blur-xl transition-all lg:flex">
-                <div className="p-6">
+        <div className="flex h-dvh min-h-0 overflow-hidden bg-background text-foreground">
+            <aside className="z-20 hidden h-dvh w-72 shrink-0 flex-col border-r border-border/50 bg-card/60 backdrop-blur-xl transition-all lg:flex">
+                <div className="shrink-0 p-6">
                     <div className="flex items-center gap-3 text-primary">
                         <Leaf className="h-8 w-8" />
-                        <div>
+                        <div className="min-w-0">
                             <h1 className="text-xl font-bold tracking-tight">AgriSmart</h1>
                             <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
                                 {roleLabel}
@@ -60,7 +60,7 @@ export function LayoutShell({
                         </div>
                     </div>
 
-                    <div className="mt-5 rounded-2xl border border-border/50 bg-background/60 p-4">
+                    <div className="mt-5 rounded-lg border border-border/50 bg-background/60 p-4">
                         <p className="text-sm font-semibold text-foreground">{title}</p>
                         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                             {subtitle}
@@ -68,13 +68,13 @@ export function LayoutShell({
                     </div>
                 </div>
 
-                <nav className="mt-2 flex-1 space-y-2 overflow-y-auto px-4">
+                <nav className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-4">
                     {navItems.map(item => (
                         <NavLink key={item.to} to={item.to} icon={item.icon} label={item.label} />
                     ))}
                 </nav>
 
-                <div className="flex flex-col gap-3 border-t border-border/50 p-4 pb-6">
+                <div className="shrink-0 border-t border-border/50 p-4">
                     <div className="mb-1 flex items-center justify-between gap-3">
                         <div className="flex min-w-0 items-center gap-2 text-sm font-medium">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 font-bold text-primary">
@@ -101,7 +101,7 @@ export function LayoutShell({
 
                     <Button
                         variant="destructive"
-                        className="w-full justify-start gap-2 rounded-xl shadow-sm"
+                        className="mt-3 w-full justify-start gap-2 rounded-lg shadow-sm"
                         onClick={handleLogout}
                     >
                         <LogOut size={18} />
@@ -110,22 +110,22 @@ export function LayoutShell({
                 </div>
             </aside>
 
-            <div className="flex min-w-0 flex-1 flex-col">
-                <header className="sticky top-0 z-30 border-b border-border/50 bg-background/90 backdrop-blur lg:hidden">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                <header className="z-30 shrink-0 border-b border-border/50 bg-background/90 backdrop-blur lg:hidden">
                     <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
                         <div className="flex min-w-0 items-center gap-3">
                             <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
                                 <SheetTrigger asChild>
-                                    <Button variant="outline" size="icon-sm" className="rounded-xl">
+                                    <Button variant="outline" size="icon-sm" className="rounded-lg">
                                         <Menu size={18} />
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent side="left" className="w-[min(88vw,22rem)] p-0">
-                                    <div className="flex h-full flex-col">
+                                    <div className="flex h-full min-h-0 flex-col">
                                         <SheetHeader className="border-b border-border/50 p-6 text-left">
                                             <div className="flex items-center gap-3 text-primary">
                                                 <Leaf className="h-8 w-8" />
-                                                <div>
+                                                <div className="min-w-0">
                                                     <p className="text-xl font-bold tracking-tight">AgriSmart</p>
                                                     <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
                                                         {roleLabel}
@@ -138,7 +138,7 @@ export function LayoutShell({
                                             </SheetDescription>
                                         </SheetHeader>
 
-                                        <nav className="flex-1 space-y-2 overflow-y-auto p-4">
+                                        <nav className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
                                             {navItems.map(item => (
                                                 <NavLink
                                                     key={item.to}
@@ -165,7 +165,7 @@ export function LayoutShell({
                                             <div className="flex gap-2">
                                                 <Button
                                                     variant="outline"
-                                                    className="flex-1 gap-2 rounded-xl"
+                                                    className="flex-1 gap-2 rounded-lg"
                                                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                                                 >
                                                     {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
@@ -175,7 +175,7 @@ export function LayoutShell({
                                                 <SheetClose asChild>
                                                     <Button
                                                         variant="destructive"
-                                                        className="flex-1 gap-2 rounded-xl shadow-sm"
+                                                        className="flex-1 gap-2 rounded-lg shadow-sm"
                                                         onClick={handleLogout}
                                                     >
                                                         <LogOut size={16} />
@@ -218,7 +218,7 @@ export function LayoutShell({
                     </div>
                 </header>
 
-                <main className="relative flex-1 overflow-y-auto overflow-x-hidden">
+                <main className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
                     <div className="pointer-events-none absolute right-0 top-0 hidden h-[500px] w-[500px] -translate-y-1/2 translate-x-1/3 rounded-full bg-primary/5 blur-3xl lg:block" />
 
                     <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
@@ -247,7 +247,7 @@ function NavLink({
         <Link
             to={to}
             className={cn(
-                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary active:scale-95 [&.active]:bg-primary [&.active]:font-medium [&.active]:text-primary-foreground [&.active]:shadow-md [&.active]:shadow-primary/20',
+                'flex min-w-0 items-center gap-3 rounded-lg px-3 py-2.5 text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary active:scale-95 [&.active]:bg-primary [&.active]:font-medium [&.active]:text-primary-foreground [&.active]:shadow-md [&.active]:shadow-primary/20',
                 mobile && 'px-4 py-3 text-base',
             )}
             activeProps={{ className: 'active' }}
