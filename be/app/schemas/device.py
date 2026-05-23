@@ -53,6 +53,9 @@ class DeviceResponse(DeviceBase):
     connection_status: DeviceConnectionStatus
     last_command: str | None
     last_seen_at: datetime | None
+    is_auto_running: bool = False
+    auto_remaining_seconds: int | None = None
+    auto_shutdown_at: datetime | None = None
     linked_sensor_name: str | None = None
     linked_sensor_type: str | None = None
     linked_zone_id: UUID | None = None

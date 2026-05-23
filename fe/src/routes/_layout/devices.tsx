@@ -227,7 +227,12 @@ function DevicesPage() {
                         <div className="max-w-[13rem] truncate text-xs text-muted-foreground">{device.state_topic}</div>
                       </TableCell>
                       <TableCell><ConnectionBadge device={device} /></TableCell>
-                      <TableCell>{isAdmin ? <ReadonlyDeviceState device={device} /> : <DeviceControlWidget device={device} />}</TableCell>
+                      <TableCell>
+                        <div className="space-y-2">
+                          {isAdmin ? <ReadonlyDeviceState device={device} /> : <DeviceControlWidget device={device} />}
+                          <DeviceRuntimeNote device={device} />
+                        </div>
+                      </TableCell>
                       {!isAdmin && (
                         <TableCell className="text-right">
                           <Button variant="ghost" size="icon" onClick={() => handleEdit(device)}>
@@ -373,6 +378,7 @@ function DeviceMobileCard({
 
       <div className="mt-4">
         <DeviceControlWidget device={device} compact />
+        <DeviceRuntimeNote device={device} className="mt-2" />
       </div>
 
       <div className="mt-4 flex gap-2">
@@ -411,6 +417,7 @@ function AdminDeviceMobileCard({ device }: { device: Device }) {
       {device.linked_sensor_name && (
         <div className="mt-3 text-xs text-muted-foreground">Trigger: {device.linked_sensor_name}</div>
       )}
+      <DeviceRuntimeNote device={device} className="mt-3" />
     </div>
   )
 }
@@ -492,6 +499,44 @@ function DeviceControlWidget({ device, compact = false }: { device: Device; comp
       />
     </div>
   )
+}
+
+function DeviceRuntimeNote({ device, className }: { device: Device; className?: string }) {
+  const command = device.last_command || ''
+
+  if (device.is_auto_running) {
+    return (
+      <div className={cn('max-w-56 rounded-md bg-sky-50 px-2 py-1 text-xs font-medium text-sky-700', className)}>
+        Auto đang chạy - tự tắt sau {device.auto_remaining_seconds ?? 0}s
+      </div>
+    )
+  }
+
+  if (command.startsWith('AUTO OFF')) {
+    return (
+      <div className={cn('max-w-56 rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700', className)}>
+        Đã tự tắt sau chu kỳ auto
+      </div>
+    )
+  }
+
+  if (command.startsWith('AUTO ')) {
+    return (
+      <div className={cn('max-w-56 truncate text-xs text-sky-700', className)}>
+        Lệnh tự động gần nhất: {command}
+      </div>
+    )
+  }
+
+  if (command.startsWith('MANUAL ')) {
+    return (
+      <div className={cn('max-w-56 truncate text-xs text-muted-foreground', className)}>
+        Điều khiển thủ công: {command.replace('MANUAL ', '')}
+      </div>
+    )
+  }
+
+  return null
 }
 
 function ReadonlyDeviceState({ device }: { device: Device }) {
@@ -806,7 +851,7 @@ function DeviceWizard({ device, onSuccess }: { device: Device | null; onSuccess:
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Timeout</Label>
+              <Label>Thời gian chạy auto</Label>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} value={form.timeout_seconds} onChange={e => setForm(f => ({ ...f, timeout_seconds: e.target.value }))} />
                 <span className="text-sm text-muted-foreground">giây</span>
@@ -844,7 +889,7 @@ function DeviceWizard({ device, onSuccess }: { device: Device | null; onSuccess:
                 <PreviewItem label="Công suất" value={form.power_watt ? `${form.power_watt} W` : '—'} />
                 <PreviewItem label="Command topic" value={form.command_topic} wide />
                 <PreviewItem label="State topic" value={form.state_topic} wide />
-                <PreviewItem label="QoS / timeout" value={`${form.qos} / ${form.timeout_seconds}s`} />
+                <PreviewItem label="QoS / thời gian auto" value={`${form.qos} / ${form.timeout_seconds}s`} />
               </div>
             </div>
             <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">

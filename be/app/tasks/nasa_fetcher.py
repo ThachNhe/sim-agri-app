@@ -621,6 +621,60 @@ def _automation_value_for_device(control_mode: str) -> tuple[str, float, str]:
     return "on", 1.0, "ON"
 
 
+def _is_device_auto_running(device: Device) -> bool:
+    last_command = device.last_command or ""
+    is_running = device.current_state == "on" or device.current_value > 0
+    return is_running and last_command.startswith("AUTO ") and not last_command.startswith("AUTO OFF")
+
+
+def _aware_utc(value: datetime | None) -> datetime | None:
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
+def _auto_shutdown_at(device: Device) -> datetime | None:
+    if not _is_device_auto_running(device):
+        return None
+
+    started_at = _aware_utc(device.last_seen_at)
+    if started_at is None:
+        return None
+
+    return started_at + timedelta(seconds=max(device.timeout_seconds, 1))
+
+
+async def _expire_finished_automation_devices(db) -> int:
+    devices_res = await db.execute(
+        select(Device).where(
+            Device.is_active.is_(True),
+            Device.automation_enabled.is_(True),
+        )
+    )
+    devices = list(devices_res.scalars().all())
+    now = datetime.now(timezone.utc)
+    expired_count = 0
+
+    for device in devices:
+        shutdown_at = _auto_shutdown_at(device)
+        if shutdown_at is None or shutdown_at > now:
+            continue
+
+        device.current_state = "off"
+        device.current_value = 0
+        device.connection_status = DeviceConnectionStatus.ONLINE.value
+        device.last_seen_at = now
+        device.last_command = f"AUTO OFF sau {device.timeout_seconds}s"
+        expired_count += 1
+
+    if expired_count:
+        await db.flush()
+
+    return expired_count
+
+
 async def _apply_automation(
     db,
     *,
@@ -687,6 +741,7 @@ async def generate_sensor_data():
     while True:
         try:
             async with AsyncSessionLocal() as db:
+                expired_devices = await _expire_finished_automation_devices(db)
                 sensors_res = await db.execute(
                     select(Sensor).where(Sensor.is_active.is_(True))
                 )
@@ -847,7 +902,7 @@ async def generate_sensor_data():
                 await db.commit()
                 logger.debug(
                     f"Cập nhật dữ liệu cho {len(sensors)} cảm biến, "
-                    f"{len(zone_readings)} zone."
+                    f"{len(zone_readings)} zone, tự tắt {expired_devices} thiết bị."
                 )
         except Exception as e:
             logger.error(f"Lỗi Sensor Simulator: {e}", exc_info=True)

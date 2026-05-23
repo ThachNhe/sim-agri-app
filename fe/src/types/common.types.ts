@@ -298,6 +298,9 @@ export interface Device {
   connection_status: DeviceConnectionStatus
   last_command?: string
   last_seen_at?: string
+  is_auto_running: boolean
+  auto_remaining_seconds?: number
+  auto_shutdown_at?: string
   is_active: boolean
   created_at: string
   updated_at: string
@@ -323,5 +326,4 @@ export interface DashboardSummary {
   high_severity_alerts: number
   zones_health: ZoneHealthItem[]
 }
-
 
