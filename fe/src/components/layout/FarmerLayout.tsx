@@ -5,7 +5,7 @@ const farmerNavItems: LayoutNavItem[] = [
     { to: '/', icon: <LayoutDashboard size={20} />, label: 'Tổng quan' },
     { to: '/zones', icon: <MapPin size={20} />, label: 'Khu vực trồng trọt' },
     { to: '/sensors', icon: <Radio size={20} />, label: 'Cảm biến & Dữ liệu' },
-    { to: '/actuators', icon: <Settings2 size={20} />, label: 'Điều khiển thiết bị' },
+    { to: '/devices', icon: <Settings2 size={20} />, label: 'Điều khiển thiết bị' },
     { to: '/alerts', icon: <BellRing size={20} />, label: 'Cảnh báo' },
 ]
 

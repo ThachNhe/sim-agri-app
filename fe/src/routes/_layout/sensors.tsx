@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Plus, Radio, Trash2 } from 'lucide-react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import type { Sensor, SensorType } from '@/types/common.types'
+import type { SensorType } from '@/types/common.types'
 import { SENSOR_LABEL, SENSOR_UNIT } from '@/types/common.types'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -51,10 +51,14 @@ function SensorsPage() {
 
     const { data: adminZonesRes } = useAdminZones(isAdmin && canLoad)
     const { data: farmerZonesRes } = useZones(!isAdmin && canLoad)
-    const allAdminZones = adminZonesRes?.data || []
-    const zones = isAdmin
-        ? allAdminZones.filter(z => z.assigned_farmers.some(f => f.id === ownerId))
-        : (farmerZonesRes?.data || [])
+    const allAdminZones = adminZonesRes?.data
+    const farmerZones = farmerZonesRes?.data
+    const zones = useMemo(
+        () => isAdmin
+            ? (allAdminZones || []).filter(z => z.assigned_farmers.some(f => f.id === ownerId))
+            : (farmerZones || []),
+        [allAdminZones, farmerZones, isAdmin, ownerId],
+    )
 
     const [selectedZoneId, setSelectedZoneId] = useState('')
     useEffect(() => {
@@ -140,7 +144,9 @@ function SensorsPage() {
                                         <TableRow>
                                             <TableHead>Tên</TableHead>
                                             <TableHead>Loại</TableHead>
-                                            <TableHead>Đơn vị</TableHead>
+                                            <TableHead>Vị trí</TableHead>
+                                            <TableHead>Địa chỉ</TableHead>
+                                            <TableHead>Chu kỳ</TableHead>
                                             <TableHead>Trạng thái</TableHead>
                                             {!isAdmin && <TableHead />}
                                         </TableRow>
@@ -150,7 +156,9 @@ function SensorsPage() {
                                             <TableRow key={s.id}>
                                                 <TableCell className="font-medium">{s.name}</TableCell>
                                                 <TableCell>{SENSOR_LABEL[s.sensor_type]}</TableCell>
-                                                <TableCell>{s.unit || '—'}</TableCell>
+                                                <TableCell>{s.location || zones.find(z => z.id === s.zone_id)?.name || '—'}</TableCell>
+                                                <TableCell className="max-w-[12rem] truncate text-xs text-muted-foreground">{s.device_address || '—'}</TableCell>
+                                                <TableCell>{s.update_interval_seconds ?? 60}s</TableCell>
                                                 <TableCell>
                                                     <Badge variant={s.is_active ? 'default' : 'secondary'}>
                                                         {s.is_active ? 'Hoạt động' : 'Tắt'}
@@ -208,7 +216,7 @@ function SensorsPage() {
                                             <XAxis dataKey="time" axisLine={false} tickLine={false} minTickGap={30} />
                                             <YAxis axisLine={false} tickLine={false}
                                                 label={{ value: chartSensor?.unit ?? '', angle: -90, position: 'insideLeft', offset: 10 }} />
-                                            <Tooltip formatter={(v: number) => [`${v} ${chartSensor?.unit ?? ''}`, SENSOR_LABEL[chartSensor?.sensor_type ?? 'temperature']]} />
+                                            <Tooltip formatter={(value) => [`${value ?? ''} ${chartSensor?.unit ?? ''}`, SENSOR_LABEL[chartSensor?.sensor_type ?? 'temperature']]} />
                                             <Line type="monotone" dataKey="value" stroke="#22c55e" dot={false} strokeWidth={2} />
                                         </LineChart>
                                     </ResponsiveContainer>
@@ -223,35 +231,82 @@ function SensorsPage() {
                 open={isOpen}
                 onClose={() => setIsOpen(false)}
                 zoneId={selectedZoneId}
+                zones={zones}
+                onCreatedZone={setSelectedZoneId}
             />
         </Dialog>
     )
 }
 
-function AddSensorDialog({ open, onClose, zoneId }: { open: boolean; onClose: () => void; zoneId: string }) {
+function AddSensorDialog({
+    open,
+    onClose,
+    zoneId,
+    zones,
+    onCreatedZone,
+}: {
+    open: boolean
+    onClose: () => void
+    zoneId: string
+    zones: Array<{ id: string; name: string; location?: string }>
+    onCreatedZone: (zoneId: string) => void
+}) {
     const createSensor = useCreateSensor()
-    const [form, setForm] = useState({ name: '', sensor_type: '' as SensorType | '' })
+    const [form, setForm] = useState({
+        name: '',
+        sensor_type: '' as SensorType | '',
+        zone_id: zoneId,
+        location: '',
+        device_address: '',
+        update_interval_seconds: '60',
+    })
 
-    useEffect(() => { if (open) setForm({ name: '', sensor_type: '' }) }, [open])
+    useEffect(() => {
+        if (!open) return
+        const selectedZone = zones.find(z => z.id === zoneId)
+        setForm({
+            name: '',
+            sensor_type: '',
+            zone_id: zoneId,
+            location: selectedZone?.name || '',
+            device_address: '',
+            update_interval_seconds: '60',
+        })
+    }, [open, zoneId, zones])
 
     const handleSubmit = () => {
-        if (!form.name || !form.sensor_type) return
+        if (!form.name || !form.sensor_type || !form.zone_id || !form.device_address || !form.update_interval_seconds) return
+        const interval = Math.max(5, Number(form.update_interval_seconds) || 60)
         createSensor.mutate(
-            { name: form.name, sensor_type: form.sensor_type as SensorType, zone_id: zoneId },
-            { onSuccess: () => { toast.success('Thêm cảm biến thành công!'); onClose() }, onError: () => toast.error('Thất bại') }
+            {
+                name: form.name,
+                sensor_type: form.sensor_type as SensorType,
+                zone_id: form.zone_id,
+                location: form.location,
+                device_address: form.device_address,
+                update_interval_seconds: interval,
+            },
+            {
+                onSuccess: () => {
+                    onCreatedZone(form.zone_id)
+                    toast.success('Thêm cảm biến thành công!')
+                    onClose()
+                },
+                onError: () => toast.error('Thất bại'),
+            }
         )
     }
 
     return (
-        <DialogContent>
+        <DialogContent className="sm:max-w-2xl">
             <DialogHeader><DialogTitle>Thêm cảm biến mới</DialogTitle></DialogHeader>
-            <div className="space-y-4 py-2">
-                <div>
+            <div className="grid gap-4 py-2 sm:grid-cols-2">
+                <div className="space-y-2">
                     <Label>Tên cảm biến *</Label>
                     <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="VD: Cảm biến nhiệt độ khu A" />
                 </div>
-                <div>
-                    <Label>Loại thông số *</Label>
+                <div className="space-y-2">
+                    <Label>Loại cảm biến *</Label>
                     <Select value={form.sensor_type} onValueChange={v => setForm(f => ({ ...f, sensor_type: v as SensorType }))}>
                         <SelectTrigger><SelectValue placeholder="Chọn loại cảm biến..." /></SelectTrigger>
                         <SelectContent>
@@ -263,10 +318,43 @@ function AddSensorDialog({ open, onClose, zoneId }: { open: boolean; onClose: ()
                         </SelectContent>
                     </Select>
                 </div>
+                <div className="space-y-2">
+                    <Label>Vị trí / khu vực *</Label>
+                    <Select
+                        value={form.zone_id}
+                        onValueChange={v => {
+                            const selectedZone = zones.find(z => z.id === v)
+                            setForm(f => ({ ...f, zone_id: v, location: selectedZone?.name || f.location }))
+                        }}
+                    >
+                        <SelectTrigger><SelectValue placeholder="Chọn khu vực..." /></SelectTrigger>
+                        <SelectContent>
+                            {zones.map(z => (
+                                <SelectItem key={z.id} value={z.id}>{z.name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="space-y-2">
+                    <Label>Nhãn vị trí</Label>
+                    <Input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} placeholder="VD: Luống 1 - cửa Đông" />
+                </div>
+                <div className="space-y-2">
+                    <Label>Địa chỉ thiết bị *</Label>
+                    <Input value={form.device_address} onChange={e => setForm(f => ({ ...f, device_address: e.target.value }))} placeholder="VD: farm/A/temp-01 hoặc greenhouse/a/temp" />
+                </div>
+                <div className="space-y-2">
+                    <Label>Khoảng thời gian cập nhật *</Label>
+                    <div className="flex items-center gap-2">
+                        <Input type="number" min={5} step={5} value={form.update_interval_seconds}
+                            onChange={e => setForm(f => ({ ...f, update_interval_seconds: e.target.value }))} />
+                        <span className="text-sm text-muted-foreground">giây</span>
+                    </div>
+                </div>
             </div>
             <DialogFooter>
                 <Button variant="outline" onClick={onClose}>Hủy</Button>
-                <Button onClick={handleSubmit} disabled={!form.name || !form.sensor_type || createSensor.isPending}>
+                <Button onClick={handleSubmit} disabled={!form.name || !form.sensor_type || !form.zone_id || !form.device_address || createSensor.isPending}>
                     Thêm cảm biến
                 </Button>
             </DialogFooter>

@@ -18,11 +18,11 @@ export function useLogin() {
       authService.login({ email, password }),
 
     onSuccess: (data) => {
-      login(data.user)
+      login(data.data.user)
       addToast({
         type: 'success',
         title: 'Đăng nhập thành công',
-        description: `Chào mừng trở lại, ${data.user.name}!`,
+        description: `Chào mừng trở lại, ${data.data.user.name}!`,
       })
       router.navigate({ to: ROUTES.DASHBOARD })
     },

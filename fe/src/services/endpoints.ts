@@ -47,6 +47,15 @@ export const API_ENDPOINTS = {
     COMMANDS: (id: string) => `/actuators/${id}/commands`,
   },
 
+  // ─── MQTT Control Devices ───────────────────────────────────────────────
+  DEVICES: {
+    LIST: '/devices',
+    CREATE: '/devices',
+    BY_ID: (id: string) => `/devices/${id}`,
+    UPDATE: (id: string) => `/devices/${id}`,
+    DELETE: (id: string) => `/devices/${id}`,
+  },
+
   // ─── Readings ────────────────────────────────────────────────────────────
   READINGS: {
     LIST: '/readings',           // requires ?sensor_id=&from_date=&to_date=
@@ -84,4 +93,3 @@ export const API_ENDPOINTS = {
       `/admin/zones/${zoneId}/farmers/${farmerId}`,
   },
 } as const
-

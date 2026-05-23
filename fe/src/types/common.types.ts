@@ -143,6 +143,9 @@ export interface Sensor {
   name: string
   sensor_type: SensorType
   unit: string
+  location?: string
+  device_address?: string
+  update_interval_seconds: number
   zone_id: string
   is_active: boolean
   created_at: string
@@ -206,7 +209,10 @@ export type AlertSeverity = 'low' | 'medium' | 'high'
 export interface Alert {
   id: string
   zone_id: string
+  zone_name?: string
   sensor_id?: string
+  sensor_name?: string
+  sensor_unit?: string
   alert_type: AlertType
   severity: AlertSeverity
   parameter?: SensorType
@@ -214,6 +220,11 @@ export interface Alert {
   threshold_value?: number
   message: string
   recommended_action?: string
+  automation_status: 'none' | 'executed' | 'pending' | string
+  automation_action?: string
+  automation_device_id?: string
+  automation_device_name?: string
+  automation_command?: string
   is_read: boolean
   triggered_at: string
 }
@@ -222,6 +233,74 @@ export interface AlertSummary {
   total_alerts: number
   read_alerts: number
   unread_alerts: number
+  auto_executed_alerts: number
+}
+
+// ─── MQTT Control Device ──────────────────────────────────────────────────
+
+export type DeviceType =
+  | 'pump'
+  | 'light'
+  | 'fan'
+  | 'heater'
+  | 'fertilizer_pump'
+  | 'co2_injector'
+  | 'shade_net'
+  | 'valve'
+  | 'sensor'
+  | 'actuator'
+  | 'gateway'
+
+export type DeviceControlMode = 'on_off' | 'percentage' | 'multi_speed'
+export type DeviceConnectionStatus = 'online' | 'connecting' | 'offline'
+
+export const DEVICE_TYPE_LABEL: Record<DeviceType, string> = {
+  pump: 'Bơm',
+  light: 'Đèn',
+  fan: 'Quạt',
+  heater: 'Máy sưởi',
+  fertilizer_pump: 'Bơm phân',
+  co2_injector: 'Bổ sung CO₂',
+  shade_net: 'Lưới che',
+  valve: 'Van',
+  sensor: 'Cảm biến',
+  actuator: 'Thiết bị tác động',
+  gateway: 'Gateway',
+}
+
+export const DEVICE_CONTROL_LABEL: Record<DeviceControlMode, string> = {
+  on_off: 'Bật / tắt',
+  percentage: 'Điều chỉnh %',
+  multi_speed: 'Nhiều tốc độ',
+}
+
+export interface Device {
+  id: string
+  name: string
+  location: string
+  type: DeviceType
+  control_mode: DeviceControlMode
+  power_watt?: number
+  owner_id: string
+  linked_sensor_id?: string
+  linked_sensor_name?: string
+  linked_sensor_type?: SensorType
+  linked_zone_id?: string
+  automation_enabled: boolean
+  command_topic: string
+  state_topic: string
+  qos: number
+  timeout_seconds: number
+  payload_on: string
+  payload_off: string
+  current_state: string
+  current_value: number
+  connection_status: DeviceConnectionStatus
+  last_command?: string
+  last_seen_at?: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
 }
 
 // ─── Dashboard ─────────────────────────────────────────────────────────────
@@ -244,7 +323,5 @@ export interface DashboardSummary {
   high_severity_alerts: number
   zones_health: ZoneHealthItem[]
 }
-
-
 
 

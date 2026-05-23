@@ -10,6 +10,7 @@ export const useDevices = (ownerId?: string, enabled = true) => {
     queryFn: () =>
       apiGet<ApiResponse<Device[]>>(API_ENDPOINTS.DEVICES.LIST, ownerId ? { owner_id: ownerId } : undefined),
     enabled,
+    refetchInterval: 10000,
   })
 }
 

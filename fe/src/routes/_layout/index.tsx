@@ -16,7 +16,7 @@ import { useZones } from '@/hooks/useZones'
 import { useAdminZones } from '@/hooks/useAdminZones'
 import { useUsers } from '@/hooks/useUsers'
 import { useAuthStore } from '@/stores/useAuthStore'
-import { SENSOR_LABEL, SENSOR_UNIT, type SensorType } from '@/types/common.types'
+import { SENSOR_LABEL } from '@/types/common.types'
 import {
   CartesianGrid,
   Line,
@@ -166,16 +166,6 @@ function ZoneHealthCard({ zoneId, zoneName, plantName }: { zoneId: string; zoneN
   const { data: readingsRes } = useLatestReadings(zoneId)
   const readings = readingsRes?.data || []
 
-  const latestMap = useMemo(() => {
-    const m: Partial<Record<SensorType, number>> = {}
-    for (const r of readings) {
-      // readings here are SensorReading[], we need to join with sensor type
-      // The backend returns sensor_id + value, we can't know type without sensors
-      // so we just show count
-    }
-    return m
-  }, [readings])
-
   return (
     <Card className="border-border/50 bg-card/60 shadow-sm backdrop-blur">
       <CardHeader className="pb-2">
@@ -269,7 +259,7 @@ function SensorChartPanel({ ownerId, canLoad }: { ownerId: string | undefined; c
                 <XAxis dataKey="time" axisLine={false} tickLine={false} minTickGap={30} tick={{ fontSize: 10 }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10 }}
                   label={{ value: sensor?.unit ?? '', angle: -90, position: 'insideLeft', offset: 8, style: { fontSize: 10 } }} />
-                <Tooltip formatter={(v: number) => [`${v} ${sensor?.unit ?? ''}`, sensor ? SENSOR_LABEL[sensor.sensor_type] : '']} />
+                <Tooltip formatter={(value) => [`${value ?? ''} ${sensor?.unit ?? ''}`, sensor ? SENSOR_LABEL[sensor.sensor_type] : '']} />
                 <Line type="monotone" dataKey="value" stroke="#22c55e" dot={false} strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>

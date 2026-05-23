@@ -20,7 +20,14 @@ from app.models.sensor_reading import SensorReading
 from app.models.alert import Alert
 from app.models.growing_zone import GrowingZone
 from app.models.plant_profile import PlantProfile
-from app.constants.enums import SensorType, AlertType, AlertSeverity
+from app.models.device import Device
+from app.constants.enums import (
+    DeviceConnectionStatus,
+    DeviceControlMode,
+    SensorType,
+    AlertType,
+    AlertSeverity,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -550,6 +557,11 @@ async def _upsert_alert(
     threshold_value: float | None,
     message: str,
     recommended_action: str | None,
+    automation_status: str = "none",
+    automation_action: str | None = None,
+    automation_device_id: UUID | None = None,
+    automation_device_name: str | None = None,
+    automation_command: str | None = None,
     dedupe_key: str | None = None,
 ) -> None:
     now = datetime.now(timezone.utc)
@@ -570,6 +582,11 @@ async def _upsert_alert(
             recent_alert.threshold_value = threshold_value
             recent_alert.message = message
             recent_alert.recommended_action = recommended_action
+            recent_alert.automation_status = automation_status
+            recent_alert.automation_action = automation_action
+            recent_alert.automation_device_id = automation_device_id
+            recent_alert.automation_device_name = automation_device_name
+            recent_alert.automation_command = automation_command
             recent_alert.triggered_at = now
             return
 
@@ -587,7 +604,76 @@ async def _upsert_alert(
             threshold_value=threshold_value,
             message=message,
             recommended_action=recommended_action,
+            automation_status=automation_status,
+            automation_action=automation_action,
+            automation_device_id=automation_device_id,
+            automation_device_name=automation_device_name,
+            automation_command=automation_command,
         )
+    )
+
+
+def _automation_value_for_device(control_mode: str) -> tuple[str, float, str]:
+    if control_mode == DeviceControlMode.PERCENTAGE.value:
+        return "on", 80.0, "SET 80%"
+    if control_mode == DeviceControlMode.MULTI_SPEED.value:
+        return "on", 3.0, "SPEED 3"
+    return "on", 1.0, "ON"
+
+
+async def _apply_automation(
+    db,
+    *,
+    sensor: Sensor,
+    alert_type: AlertType,
+    severity: AlertSeverity,
+) -> tuple[str, str | None, UUID | None, str | None, str | None]:
+    devices_res = await db.execute(
+        select(Device).where(
+            Device.linked_sensor_id == sensor.id,
+            Device.is_active.is_(True),
+            Device.automation_enabled.is_(True),
+        )
+    )
+    devices = list(devices_res.scalars().all())
+    if not devices:
+        return "none", None, None, None, None
+
+    now = datetime.now(timezone.utc)
+    actions: list[str] = []
+    command_labels: list[str] = []
+
+    for device in devices:
+        state, value, command = _automation_value_for_device(device.control_mode)
+        device.current_state = state
+        device.current_value = value
+        device.connection_status = DeviceConnectionStatus.ONLINE.value
+        device.last_seen_at = now
+        device.last_command = (
+            f"AUTO {command} do {sensor.name} "
+            f"{'vượt ngưỡng cao' if alert_type == AlertType.ABOVE_MAX else 'dưới ngưỡng thấp'}"
+        )
+        command_labels.append(command)
+        actions.append(
+            f"{device.name}: gửi `{command}` tới {device.command_topic or 'command topic'}"
+        )
+
+    first = devices[0]
+    severity_label = {
+        AlertSeverity.LOW: "mức thấp",
+        AlertSeverity.MEDIUM: "mức trung bình",
+        AlertSeverity.HIGH: "mức cao",
+    }[severity]
+    action_text = (
+        f"Tự động hóa đã chạy ({severity_label}): "
+        + "; ".join(actions)
+    )
+    return (
+        "executed",
+        action_text,
+        first.id,
+        first.name,
+        ", ".join(command_labels),
     )
 
 
@@ -646,6 +732,18 @@ async def generate_sensor_data():
                             if rule_set
                             else "Kiểm tra và điều chỉnh thông số."
                         )
+                        (
+                            automation_status,
+                            automation_action,
+                            automation_device_id,
+                            automation_device_name,
+                            automation_command,
+                        ) = await _apply_automation(
+                            db,
+                            sensor=sensor,
+                            alert_type=AlertType.ABOVE_MAX,
+                            severity=severity,
+                        )
                         await _upsert_alert(
                             db,
                             zone_id=zone.id,
@@ -661,6 +759,11 @@ async def generate_sensor_data():
                                 f"– lệch {deviation * 100:.1f}%"
                             ),
                             recommended_action=action,
+                            automation_status=automation_status,
+                            automation_action=automation_action,
+                            automation_device_id=automation_device_id,
+                            automation_device_name=automation_device_name,
+                            automation_command=automation_command,
                         )
 
                     # --- Kiểm tra dưới ngưỡng tối thiểu ---
@@ -671,6 +774,18 @@ async def generate_sensor_data():
                             _get_tiered_action(rule_set, "below", severity)
                             if rule_set
                             else "Kiểm tra và điều chỉnh thông số."
+                        )
+                        (
+                            automation_status,
+                            automation_action,
+                            automation_device_id,
+                            automation_device_name,
+                            automation_command,
+                        ) = await _apply_automation(
+                            db,
+                            sensor=sensor,
+                            alert_type=AlertType.BELOW_MIN,
+                            severity=severity,
                         )
                         await _upsert_alert(
                             db,
@@ -687,6 +802,11 @@ async def generate_sensor_data():
                                 f"– lệch {deviation * 100:.1f}%"
                             ),
                             recommended_action=action,
+                            automation_status=automation_status,
+                            automation_action=automation_action,
+                            automation_device_id=automation_device_id,
+                            automation_device_name=automation_device_name,
+                            automation_command=automation_command,
                         )
 
                 # --- Kiểm tra compound conditions theo từng zone ---

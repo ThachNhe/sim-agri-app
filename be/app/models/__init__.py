@@ -7,6 +7,7 @@ from app.models.actuator import Actuator
 from app.models.actuator_command import ActuatorCommand
 from app.models.sensor_reading import SensorReading
 from app.models.alert import Alert
+from app.models.device import Device
 
 __all__ = [
     "User",
@@ -18,4 +19,5 @@ __all__ = [
     "ActuatorCommand",
     "SensorReading",
     "Alert",
+    "Device",
 ]

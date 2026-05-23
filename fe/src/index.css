@@ -122,10 +122,14 @@
     html,
     body,
     #root {
-        min-height: 100%;
+        height: 100%;
     }
 
     body {
-        @apply bg-background text-foreground overflow-x-hidden antialiased;
+        @apply bg-background text-foreground overflow-hidden antialiased;
+    }
+
+    #root {
+        @apply overflow-hidden;
     }
 }

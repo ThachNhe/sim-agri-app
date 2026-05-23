@@ -6,6 +6,7 @@ import asyncio
 import sys
 import os
 from datetime import date
+from datetime import datetime, timezone
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -16,7 +17,17 @@ from app.models.plant_profile import PlantProfile
 from app.models.growing_zone import GrowingZone
 from app.models.sensor import Sensor
 from app.models.actuator import Actuator
-from app.constants.enums import UserRole, UserStatus, SensorType, ActuatorType, SENSOR_UNIT
+from app.models.device import Device
+from app.constants.enums import (
+    DeviceConnectionStatus,
+    DeviceControlMode,
+    DeviceType,
+    UserRole,
+    UserStatus,
+    SensorType,
+    ActuatorType,
+    SENSOR_UNIT,
+)
 from app.utils.security import hash_password
 from app.models.farmer_zone_assignment import FarmerZoneAssignment
 
@@ -274,10 +285,15 @@ async def seed(db: AsyncSession) -> None:
                 name=s_name,
                 sensor_type=s_type,
                 unit=SENSOR_UNIT.get(s_type, ""),
+                location=zone.location,
+                device_address=f"sensor/{zone.id.hex[:8]}/{s_type.value}",
+                update_interval_seconds=60,
                 zone_id=zone.id,
             )
             db.add(sensor)
             print(f"      + Cảm biến: {s_name} ({s_type.value})")
+
+        await db.flush()
 
         for a_type, a_name in entry["actuators"]:
             actuator = Actuator(
@@ -287,6 +303,59 @@ async def seed(db: AsyncSession) -> None:
             )
             db.add(actuator)
             print(f"      + Thiết bị: {a_name} ({a_type.value})")
+
+    print("\n── Ensure MQTT Demo Devices ──")
+    demo_device_specs = [
+        (SensorType.SOIL_MOISTURE, DeviceType.PUMP, DeviceControlMode.ON_OFF, "Bơm tưới tự động", 750.0),
+        (SensorType.TEMPERATURE, DeviceType.FAN, DeviceControlMode.MULTI_SPEED, "Quạt thông gió tự động", 120.0),
+        (SensorType.LIGHT, DeviceType.LIGHT, DeviceControlMode.PERCENTAGE, "Đèn LED bổ sung", 180.0),
+        (SensorType.CO2, DeviceType.CO2_INJECTOR, DeviceControlMode.ON_OFF, "Bộ bổ sung CO₂", 60.0),
+    ]
+    zones_res = await db.execute(select(GrowingZone))
+    all_zones = list(zones_res.scalars().all())
+    for zone in all_zones:
+        assignment = (await db.execute(
+            select(FarmerZoneAssignment).where(FarmerZoneAssignment.zone_id == zone.id)
+        )).scalars().first()
+        if assignment is None:
+            continue
+
+        sensors_res = await db.execute(select(Sensor).where(Sensor.zone_id == zone.id))
+        sensors_by_type = {sensor.sensor_type: sensor for sensor in sensors_res.scalars().all()}
+
+        existing_res = await db.execute(
+            select(Device.linked_sensor_id).where(Device.owner_id == assignment.farmer_id)
+        )
+        existing_linked_sensor_ids = {sensor_id for sensor_id in existing_res.scalars().all() if sensor_id}
+
+        for sensor_type, device_type, control_mode, name, power_watt in demo_device_specs:
+            linked_sensor = sensors_by_type.get(sensor_type)
+            if linked_sensor is None or linked_sensor.id in existing_linked_sensor_ids:
+                continue
+
+            topic_base = f"farm/{assignment.farmer_id.hex[:8]}/{zone.id.hex[:8]}/{device_type.value}"
+            db.add(
+                Device(
+                    name=f"{name} - {zone.name}",
+                    location=zone.location or zone.name,
+                    type=device_type.value,
+                    control_mode=control_mode.value,
+                    power_watt=power_watt,
+                    owner_id=assignment.farmer_id,
+                    linked_sensor_id=linked_sensor.id,
+                    command_topic=f"{topic_base}/cmd",
+                    state_topic=f"{topic_base}/state",
+                    qos=1,
+                    timeout_seconds=10,
+                    payload_on='{"cmd":"ON"}',
+                    payload_off='{"cmd":"OFF"}',
+                    connection_status=DeviceConnectionStatus.ONLINE.value,
+                    last_command="CONNECTED",
+                    last_seen_at=datetime.now(timezone.utc),
+                )
+            )
+            existing_linked_sensor_ids.add(linked_sensor.id)
+            print(f"  ✅ Thiết bị MQTT: {name} -> {linked_sensor.name}")
 
     await db.commit()
 

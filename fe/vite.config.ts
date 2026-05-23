@@ -1,13 +1,20 @@
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
   base: '/',
+  cacheDir: '/tmp/agri-app-vite-cache',
   plugins: [
-    tanstackRouter({ autoCodeSplitting: true }),
+    tanstackRouter({
+      autoCodeSplitting: true,
+      tmpDir: '/tmp/agri-app-tanstack-router',
+    }),
     react(),
     tailwindcss(),
   ],

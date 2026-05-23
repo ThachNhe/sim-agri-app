@@ -38,6 +38,32 @@ SENSOR_UNIT: dict[SensorType, str] = {
 }
 
 
+class DeviceType(str, Enum):
+    PUMP = "pump"
+    LIGHT = "light"
+    FAN = "fan"
+    HEATER = "heater"
+    FERTILIZER_PUMP = "fertilizer_pump"
+    CO2_INJECTOR = "co2_injector"
+    SHADE_NET = "shade_net"
+    VALVE = "valve"
+    SENSOR = "sensor"
+    ACTUATOR = "actuator"
+    GATEWAY = "gateway"
+
+
+class DeviceControlMode(str, Enum):
+    ON_OFF = "on_off"
+    PERCENTAGE = "percentage"
+    MULTI_SPEED = "multi_speed"
+
+
+class DeviceConnectionStatus(str, Enum):
+    ONLINE = "online"
+    CONNECTING = "connecting"
+    OFFLINE = "offline"
+
+
 class ActuatorType(str, Enum):
     IRRIGATION = "irrigation"             # Hệ thống tưới nước
     FERTILIZER_PUMP = "fertilizer_pump"   # Bơm phân bón

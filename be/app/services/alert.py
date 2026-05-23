@@ -3,6 +3,7 @@ from typing import List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.alert import Alert
 from app.models.user import User
 from app.constants.enums import UserRole
 from app.repositories.alert import AlertRepository
@@ -25,17 +26,18 @@ class AlertService:
                 alerts = await self.alert_repo.get_all_ordered(skip, limit)
         else:
             alerts = await self.alert_repo.get_by_owner(user.id, skip, limit)
-        return [AlertResponse.model_validate(a) for a in alerts]
+        return [self._to_response(a) for a in alerts]
 
     async def get_summary(
         self, user: User, farmer_id: UUID | None = None
     ) -> AlertSummaryResponse:
         summary_farmer_id = farmer_id if user.role == UserRole.ADMIN else user.id
-        total_alerts, read_alerts = await self.alert_repo.get_summary(summary_farmer_id)
+        total_alerts, read_alerts, auto_executed_alerts = await self.alert_repo.get_summary(summary_farmer_id)
         return AlertSummaryResponse(
             total_alerts=total_alerts,
             read_alerts=read_alerts,
             unread_alerts=max(total_alerts - read_alerts, 0),
+            auto_executed_alerts=auto_executed_alerts,
         )
 
     async def mark_as_read(self, alert_id: UUID, user: User) -> AlertResponse:
@@ -51,4 +53,13 @@ class AlertService:
         if not updated_alert:
             raise NotFoundException("Cảnh báo không tồn tại")
 
-        return AlertResponse.model_validate(updated_alert)
+        return self._to_response(updated_alert)
+
+    def _to_response(self, alert: Alert) -> AlertResponse:
+        response = AlertResponse.model_validate(alert)
+        if alert.zone is not None:
+            response.zone_name = alert.zone.name
+        if alert.sensor is not None:
+            response.sensor_name = alert.sensor.name
+            response.sensor_unit = alert.sensor.unit
+        return response

@@ -42,6 +42,15 @@ class Alert(Base):
     threshold_value: Mapped[float | None] = mapped_column(Float, nullable=True)
     message: Mapped[str] = mapped_column(String(500), nullable=False)
     recommended_action: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    automation_status: Mapped[str] = mapped_column(String(30), default="none")
+    automation_action: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    automation_device_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("devices.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    automation_device_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    automation_command: Mapped[str | None] = mapped_column(String(255), nullable=True)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False)
     triggered_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), index=True

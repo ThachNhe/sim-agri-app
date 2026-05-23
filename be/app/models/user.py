@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from app.models.farmer_zone_assignment import FarmerZoneAssignment
     from app.models.actuator_command import ActuatorCommand
+    from app.models.device import Device
 
 from app.core.database import Base
 from app.constants.enums import UserRole, UserStatus
@@ -44,6 +45,9 @@ class User(Base):
     )
     commands: Mapped[list["ActuatorCommand"]] = relationship(
         "ActuatorCommand", back_populates="user"
+    )
+    devices: Mapped[list["Device"]] = relationship(
+        "Device", back_populates="owner", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

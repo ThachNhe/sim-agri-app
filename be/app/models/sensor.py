@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import String, Boolean, Enum as SAEnum, DateTime, func, ForeignKey
+from sqlalchemy import String, Boolean, Enum as SAEnum, DateTime, func, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -26,6 +26,9 @@ class Sensor(Base):
         SAEnum(SensorType, values_callable=lambda x: [e.value for e in x]), nullable=False
     )
     unit: Mapped[str] = mapped_column(String(50), nullable=False, default="")
+    location: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    device_address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    update_interval_seconds: Mapped[int] = mapped_column(Integer, nullable=False, default=60)
     zone_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("growing_zones.id", ondelete="CASCADE"),

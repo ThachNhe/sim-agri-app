@@ -1,5 +1,6 @@
 
 import type { User } from '@/types/common.types'
+import type { ApiResponse } from '@/types/api.types'
 
 // ─── Auth State ────────────────────────────────────────────────────────────
 
@@ -39,11 +40,5 @@ export type RegisterPayload = Omit<RegisterFormValues, 'confirmPassword'>
 
 // ─── API Responses ─────────────────────────────────────────────────────────
 
-export interface LoginApiResponse {
-  user: User
-}
-
-export interface RegisterApiResponse {
-  user: User
-  message: string
-}
+export type LoginApiResponse = ApiResponse<{ user: User }>
+export type RegisterApiResponse = ApiResponse<{ user: User }>

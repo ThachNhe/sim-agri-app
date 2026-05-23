@@ -8,6 +8,9 @@ class SensorBase(BaseModel):
     name: str
     sensor_type: SensorType
     unit: str = ""
+    location: str | None = None
+    device_address: str | None = None
+    update_interval_seconds: int = 60
     zone_id: UUID
 
 
@@ -17,6 +20,9 @@ class SensorCreate(SensorBase):
 
 class SensorUpdate(BaseModel):
     name: str | None = None
+    location: str | None = None
+    device_address: str | None = None
+    update_interval_seconds: int | None = None
     is_active: bool | None = None
 
 
