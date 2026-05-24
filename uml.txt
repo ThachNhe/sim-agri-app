@@ -1,560 +1,472 @@
 ' ╔══════════════════════════════════════════════════════════╗
-' ║  UC00 – TỔNG THỂ HỆ THỐNG AGRISMART                     ║
+' ║  UC00 - TỔNG THỂ HỆ THỐNG AGRISMART                     ║
 ' ╚══════════════════════════════════════════════════════════╝
 
 @startuml UC00_Tong_The
 left to right direction
-title Biểu đồ Use Case Tổng thể – Hệ thống Giám sát Nông nghiệp Thông minh AgriSmart
 
-actor "Quản trị viên\n(Admin)"          as ADMIN
-actor "Nông dân\n(Farmer)"              as FARMER
+actor "Quản trị viên\n(Admin)" as ADMIN
+actor "Nông dân\n(Farmer)" as FARMER
 actor "Hệ thống nền\n(Background Task)" as SYS
 
-rectangle "AgriSmart – Hệ thống Giám sát Nông nghiệp Thông minh" {
-  usecase "UC01 – Đăng nhập"                        as UC01
-  usecase "UC02 – Xem dữ liệu cảm biến mới nhất"   as UC02
-  usecase "UC03 – Bật / Tắt thiết bị chấp hành"    as UC03
-  usecase "UC04 – Xem và xử lý cảnh báo"           as UC04
-  usecase "UC05 – Tạo hồ sơ cây trồng"             as UC05
-  usecase "UC06 – Tạo tài khoản nông dân"          as UC06
-  usecase "UC07 – Phân công nông dân vào khu vực"  as UC07
-  usecase "UC08 – Thu thập & sinh cảnh báo tự động" as UC08
+rectangle "Hệ thống giám sát nông nghiệp thông minh" {
+  usecase "UC01 - Đăng nhập" as UC01
+  usecase "UC02 - Tạo hồ sơ cây trồng" as UC02
+  usecase "UC03 - Tạo khu vực trồng trọt" as UC03
+  usecase "UC04 - Phân công nông dân\nvào khu vực" as UC04
+  usecase "UC05 - Thêm cảm biến" as UC05
+  usecase "UC06 - Thêm thiết bị thông minh" as UC06
+  usecase "UC07 - Tự động kích hoạt\nthiết bị thông minh" as UC07
 }
 
-ADMIN  --> UC01
-ADMIN  --> UC02
-ADMIN  --> UC04
-ADMIN  --> UC05
-ADMIN  --> UC06
-ADMIN  --> UC07
+ADMIN --> UC01
+ADMIN --> UC02
+ADMIN --> UC03
+ADMIN --> UC04
+ADMIN --> UC05
 
 FARMER --> UC01
-FARMER --> UC02
-FARMER --> UC03
-FARMER --> UC04
+FARMER --> UC05
+FARMER --> UC06
 
-SYS    --> UC08
+SYS --> UC07
 @enduml
 
 
 ' ╔══════════════════════════════════════════════════════════╗
-' ║  UC01 – ĐĂNG NHẬP                                        ║
+' ║  UC01 - ĐĂNG NHẬP                                       ║
 ' ╚══════════════════════════════════════════════════════════╝
+
 @startuml UC01_Dang_Nhap_UseCase
 left to right direction
-title UC01 – Đăng nhập
+title UC01 - Đăng nhập
 
-actor "Admin"  as ADMIN
+actor "Admin" as ADMIN
 actor "Farmer" as FARMER
 
-usecase "Đăng nhập"                  as UC01
-usecase "Nhập email & mật khẩu"      as UC01a
-usecase "Xác thực thông tin"         as UC01b
-usecase "Phát hành JWT token"        as UC01c
-usecase "Điều hướng theo vai trò"    as UC01d
-usecase "Quên mật khẩu"             as UC01e
+usecase "Đăng nhập" as UC01
+usecase "Nhập email và mật khẩu" as UC01a
+usecase "Kiểm tra tài khoản" as UC01b
+usecase "Tạo phiên đăng nhập" as UC01c
 
-ADMIN  --> UC01
+ADMIN --> UC01
 FARMER --> UC01
-UC01   ..> UC01a : <<include>>
-UC01   ..> UC01b : <<include>>
-UC01   ..> UC01c : <<include>>
-UC01   ..> UC01d : <<include>>
-UC01e  ..> UC01  : <<extend>>
+UC01 ..> UC01a : <<include>>
+UC01 ..> UC01b : <<include>>
+UC01 ..> UC01c : <<include>>
 @enduml
 
-
 @startuml UC01_Dang_Nhap_Activity
+title UC01 - Hoạt động đăng nhập
 
 start
 :Người dùng nhập email và mật khẩu;
 :Gửi yêu cầu đăng nhập;
-if (Email tồn tại & mật khẩu đúng & tài khoản ACTIVE?) then (Không)
-  :Thông báo lỗi tương ứng;
+if (Thông tin hợp lệ?) then (Không)
+  :Hiển thị lỗi đăng nhập;
   stop
 else (Có)
+  :Tạo JWT và lưu cookie;
+  :Chuyển vào hệ thống;
 endif
-:Phát hành JWT token (7 ngày), lưu HttpOnly cookie;
-:Điều hướng đến Dashboard theo vai trò;
 stop
 @enduml
 
 @startuml UC01_Dang_Nhap_Sequence
+title UC01 - Tuần tự đăng nhập
 
-actor       "Người dùng"  as USER
-participant "Giao diện"   as UI
-participant "Auth API"    as API
-database    "Database"    as DB
+actor "Người dùng" as USER
+participant "Giao diện" as UI
+participant "Auth API" as API
+database "Database" as DB
 
-USER -> UI  : Nhập email + mật khẩu, nhấn Đăng nhập
-UI   -> API : POST /auth/login {email, password}
-API  -> DB  : Tra cứu tài khoản, kiểm tra mật khẩu & trạng thái
+USER -> UI : Nhập email, mật khẩu
+UI -> API : POST /auth/login
+API -> DB : Kiểm tra tài khoản
 
-alt Thông tin không hợp lệ hoặc tài khoản bị khóa
-  API --> UI  : 401/403 – Thông báo lỗi
-  UI  --> USER: Hiển thị lỗi
+alt Sai thông tin
+  API --> UI : 401/403
+  UI --> USER : Hiển thị lỗi
 else Hợp lệ
-  API -> API  : Tạo JWT token (7 ngày)
-  API --> UI  : 200 OK + Set-Cookie: access_token (HttpOnly)
-  UI  --> USER: Chuyển hướng Dashboard theo vai trò
+  API --> UI : 200 OK + cookie
+  UI --> USER : Vào dashboard
 end
 @enduml
 
 
 ' ╔══════════════════════════════════════════════════════════╗
-' ║  UC02 – XEM DỮ LIỆU CẢM BIẾN MỚI NHẤT                  ║
-' ╚══════════════════════════════════════════════════════════╝
-@startuml UC04_Cam_Bien_Moi_Nhat_UseCase
-left to right direction
-
-actor "Admin"  as ADMIN
-actor "Farmer" as FARMER
-
-usecase "Xem dữ liệu cảm biến mới nhất" as UC04
-usecase "Chọn khu vực trồng trọt"        as UC04a
-usecase "Lấy số liệu mới nhất / cảm biến" as UC04b
-usecase "Hiển thị trạng thái so với ngưỡng" as UC04c
-
-ADMIN  --> UC04
-FARMER --> UC04
-UC04   ..> UC04a : <<include>>
-UC04   ..> UC04b : <<include>>
-UC04   ..> UC04c : <<include>>
-@enduml
-
-
-@startuml UC02_Cam_Bien_Moi_Nhat_Activity
-
-start
-:Người dùng chọn khu vực trồng trọt;
-:Gửi yêu cầu lấy số liệu mới nhất;
-if (Có quyền truy cập khu vực?) then (Không)
-  :Thông báo không có quyền;
-  stop
-else (Có)
-endif
-:Lấy số liệu mới nhất của từng cảm biến;
-:So sánh với ngưỡng hồ sơ cây trồng;
-:Hiển thị 7 card cảm biến kèm trạng thái màu sắc;
-stop
-@enduml
-
-@startuml UC02_Cam_Bien_Moi_Nhat_Sequence
-
-actor       "Người dùng"   as USER
-participant "Giao diện"    as UI
-participant "Readings API" as API
-database    "Database"     as DB
-
-USER -> UI  : Chọn khu vực
-UI   -> API : GET /readings/latest?zone_id={id}
-API  -> DB  : Lấy số liệu mới nhất & ngưỡng hồ sơ cây trồng
-
-alt Không có quyền truy cập
-  API --> UI  : 403 Forbidden
-  UI  --> USER: Thông báo không có quyền
-else Có quyền
-  DB  --> API : Số liệu cảm biến + ngưỡng
-  API -> API  : Tính trạng thái NORMAL / WARNING / CRITICAL
-  API --> UI  : 200 OK – [{sensor_type, value, unit, status}]
-  UI  --> USER: Hiển thị 7 card cảm biến với màu trạng thái
-end
-@enduml
-
-
-' ╔══════════════════════════════════════════════════════════╗
-' ║  UC03 – BẬT / TẮT THIẾT BỊ CHẤP HÀNH                   ║
-' ╚══════════════════════════════════════════════════════════╝
-@startuml UC06_Dieu_Khien_Thiet_Bi_UseCase
-left to right direction
-
-actor "Farmer" as FARMER
-
-usecase "Bật / Tắt thiết bị chấp hành" as UC06
-usecase "Xem danh sách thiết bị"       as UC06a
-usecase "Kiểm tra quyền khu vực"       as UC06b
-usecase "Gửi lệnh ON / OFF"            as UC06c
-usecase "Lưu lịch sử lệnh"            as UC06d
-usecase "Xem lịch sử lệnh"            as UC06e
-
-FARMER --> UC06
-FARMER --> UC06e
-UC06   ..> UC06a : <<include>>
-UC06   ..> UC06b : <<include>>
-UC06   ..> UC06c : <<include>>
-UC06   ..> UC06d : <<include>>
-@enduml
-
-
-@startuml UC03_Dieu_Khien_Thiet_Bi_Activity
-
-start
-:Farmer chọn thiết bị trong khu vực được phân công;
-:Nhấn Bật hoặc Tắt;
-if (Có quyền khu vực của thiết bị?) then (Không)
-  :Thông báo không có quyền;
-  stop
-else (Có)
-endif
-:Cập nhật trạng thái thiết bị;
-:Ghi lịch sử lệnh điều khiển;
-:Cập nhật giao diện;
-stop
-@enduml
-
-@startuml UC03_Dieu_Khien_Thiet_Bi_Sequence
-
-actor       "Farmer"        as USER
-participant "Giao diện"     as UI
-participant "Actuators API" as API
-database    "Database"      as DB
-
-USER -> UI  : Nhấn Bật / Tắt thiết bị
-UI   -> API : POST /actuators/{id}/command {command: "on"|"off"}
-API  -> DB  : Kiểm tra quyền khu vực của Farmer
-
-alt Không có quyền
-  API --> UI  : 403 Forbidden
-  UI  --> USER: Thông báo không có quyền
-else Có quyền
-  API -> DB  : UPDATE current_state + INSERT actuator_command
-  DB --> API : Thành công
-  API --> UI  : 200 OK – {actuator_id, current_state}
-  UI  --> USER: Cập nhật trạng thái thiết bị trên giao diện
-end
-@enduml
-
-
-' ╔══════════════════════════════════════════════════════════╗
-' ║  UC04 – XEM VÀ XỬ LÝ CẢNH BÁO                          ║
-' ╚══════════════════════════════════════════════════════════╝
-@startuml UC07_Xem_Canh_Bao_UseCase
-left to right direction
-
-actor "Admin"  as ADMIN
-actor "Farmer" as FARMER
-
-usecase "Xem và xử lý cảnh báo"         as UC07
-usecase "Lọc cảnh báo theo quyền hạn"   as UC07a
-usecase "Xem chi tiết cảnh báo"         as UC07b
-usecase "Đánh dấu đã đọc"              as UC07c
-usecase "Xem thống kê cảnh báo"        as UC07d
-
-ADMIN  --> UC07
-FARMER --> UC07
-ADMIN  --> UC07d
-UC07   ..> UC07a : <<include>>
-UC07   ..> UC07b : <<include>>
-UC07c  ..> UC07  : <<extend>>
-@enduml
-
-
-@startuml UC04_Xem_Canh_Bao_Activity
-
-start
-:Người dùng mở trang Cảnh báo;
-if (Là Admin?) then (Có)
-  :Lấy tất cả cảnh báo hệ thống;
-else (Không – Farmer)
-  :Lấy cảnh báo của khu vực được phân công;
-endif
-:Hiển thị danh sách phân màu theo mức độ;
-:Người dùng xem chi tiết và đánh dấu đã đọc;
-:Cập nhật is_read = true;
-stop
-@enduml
-
-@startuml UC04_Xem_Canh_Bao_Sequence
-
-actor       "Người dùng"  as USER
-participant "Giao diện"   as UI
-participant "Alerts API"  as API
-database    "Database"    as DB
-
-USER -> UI  : Mở trang Cảnh báo
-UI   -> API : GET /alerts
-API  -> DB  : Truy vấn cảnh báo theo quyền\n(Admin: tất cả, Farmer: khu vực được phân công)
-DB  --> API : Danh sách cảnh báo
-API --> UI  : 200 OK – [{severity, message, is_read, ...}]
-UI  --> USER: Hiển thị danh sách phân màu theo mức độ
-
-USER -> UI  : Đánh dấu đã đọc
-UI   -> API : PATCH /alerts/{id}/read
-API  -> DB  : UPDATE is_read = true
-API --> UI  : 200 OK
-UI  --> USER: Cập nhật trạng thái
-@enduml
-
-
-' ╔══════════════════════════════════════════════════════════╗
-' ║  UC05 – TẠO HỒ SƠ CÂY TRỒNG                            ║
+' ║  UC02 - TẠO HỒ SƠ CÂY TRỒNG                            ║
 ' ╚══════════════════════════════════════════════════════════╝
 
-@startuml UC08_Tao_Ho_So_Cay_Trong_UseCase
+@startuml UC02_Tao_Ho_So_Cay_Trong_UseCase
 left to right direction
+title UC02 - Tạo hồ sơ cây trồng
 
 actor "Admin" as ADMIN
 
-usecase "Tạo hồ sơ cây trồng"           as UC08
-usecase "Nhập tên và mô tả cây trồng"   as UC08a
-usecase "Nhập các dải ngưỡng môi trường" as UC08b
-usecase "Kiểm tra trùng tên hồ sơ"      as UC08c
-usecase "Lưu hồ sơ vào DB"             as UC08d
-usecase "Rule engine sử dụng ngưỡng"   as UC08e
+usecase "Tạo hồ sơ cây trồng" as UC02
+usecase "Nhập tên và mô tả" as UC02a
+usecase "Nhập các ngưỡng môi trường" as UC02b
+usecase "Kiểm tra dữ liệu" as UC02c
+usecase "Lưu hồ sơ" as UC02d
 
-ADMIN --> UC08
-UC08  ..> UC08a : <<include>>
-UC08  ..> UC08b : <<include>>
-UC08  ..> UC08c : <<include>>
-UC08  ..> UC08d : <<include>>
-UC08e ..> UC08  : <<extend>>
+ADMIN --> UC02
+UC02 ..> UC02a : <<include>>
+UC02 ..> UC02b : <<include>>
+UC02 ..> UC02c : <<include>>
+UC02 ..> UC02d : <<include>>
 @enduml
 
-
-@startuml UC05_Tao_Ho_So_Activity
+@startuml UC02_Tao_Ho_So_Cay_Trong_Activity
 
 start
-:Admin nhập tên, mô tả và 7 dải ngưỡng môi trường;
-if (Dữ liệu hợp lệ & tên chưa trùng?) then (Không)
-  :Thông báo lỗi validation hoặc trùng tên;
-  stop
-else (Có)
-endif
-:Lưu hồ sơ vào DB;
-:Rule engine tự động áp dụng ngưỡng mới;
-stop
-@enduml
-
-@startuml UC05_Tao_Ho_So_Sequence
-
-actor       "Admin"              as ADMIN
-participant "Giao diện"          as UI
-participant "Plant Profiles API" as API
-database    "Database"           as DB
-
-ADMIN -> UI  : Điền form hồ sơ cây trồng
-UI   -> API  : POST /plant-profiles {name, description, thresholds...}
-API  -> DB   : Kiểm tra tên trùng lặp
-
-alt Tên đã tồn tại hoặc dữ liệu không hợp lệ
-  API --> UI   : 409/422 – Lỗi
-  UI  --> ADMIN: Thông báo lỗi
-else Hợp lệ
-  API -> DB   : INSERT INTO plant_profiles
-  DB --> API  : plant_profile mới
-  API --> UI  : 201 Created
-  UI  --> ADMIN: Thông báo tạo thành công
-end
-@enduml
-
-
-' ╔══════════════════════════════════════════════════════════╗
-' ║  UC06 – TẠO TÀI KHOẢN NÔNG DÂN                          ║
-' ╚══════════════════════════════════════════════════════════╝
-@startuml UC10_Tao_Tai_Khoan_UseCase
-left to right direction
-
-actor "Admin" as ADMIN
-
-usecase "Tạo tài khoản nông dân"      as UC10
-usecase "Nhập thông tin tài khoản"    as UC10a
-usecase "Kiểm tra email trùng lặp"   as UC10b
-usecase "Băm mật khẩu tạm thời"      as UC10c
-usecase "Gửi email thông tin đăng nhập" as UC10d
-usecase "Thay đổi trạng thái tài khoản" as UC10e
-
-ADMIN --> UC10
-ADMIN --> UC10e
-UC10  ..> UC10a : <<include>>
-UC10  ..> UC10b : <<include>>
-UC10  ..> UC10c : <<include>>
-UC10d ..> UC10  : <<extend>>
-@enduml
-
-
-@startuml UC06_Tao_Tai_Khoan_Activity
-
-start
-:Admin nhập họ tên, email và mật khẩu tạm thời;
-if (Email hợp lệ & chưa tồn tại?) then (Không)
+:Admin nhập thông tin hồ sơ;
+:Nhập ngưỡng nhiệt độ, độ ẩm, ánh sáng, pH, EC, CO2;
+if (Dữ liệu hợp lệ?) then (Không)
   :Thông báo lỗi;
   stop
 else (Có)
+  :Lưu hồ sơ cây trồng;
 endif
-:Băm mật khẩu, tạo tài khoản với vai trò FARMER;
-:Gửi email thông tin đăng nhập;
 stop
 @enduml
 
-@startuml UC06_Tao_Tai_Khoan_Sequence
+@startuml UC02_Tao_Ho_So_Cay_Trong_Sequence
 
-actor       "Admin"         as ADMIN
-participant "Giao diện"     as UI
-participant "Admin API"     as API
-database    "Database"      as DB
-participant "Email Service" as MAIL
+actor "Admin" as ADMIN
+participant "Giao diện" as UI
+participant "Plant Profiles API" as API
+database "Database" as DB
 
-ADMIN -> UI  : Điền form tạo tài khoản Farmer
-UI   -> API  : POST /admin/users {full_name, email, password}
-API  -> DB   : Kiểm tra email trùng lặp
+ADMIN -> UI : Điền form hồ sơ cây trồng
+UI -> API : POST /plant-profiles
+API -> DB : Kiểm tra trùng tên
 
-alt Email đã tồn tại hoặc không hợp lệ
-  API --> UI   : 409/422 – Lỗi
-  UI  --> ADMIN: Thông báo lỗi
+alt Dữ liệu không hợp lệ
+  API --> UI : 409/422
+  UI --> ADMIN : Hiển thị lỗi
 else Hợp lệ
-  API -> DB   : INSERT user (role=FARMER, status=ACTIVE)
-  API -> MAIL : Gửi email thông tin đăng nhập
-  API --> UI  : 201 Created
-  UI  --> ADMIN: Farmer xuất hiện trong danh sách
+  API -> DB : INSERT plant_profiles
+  API --> UI : 201 Created
+  UI --> ADMIN : Tạo thành công
 end
 @enduml
 
 
 ' ╔══════════════════════════════════════════════════════════╗
-' ║  UC07 – PHÂN CÔNG NÔNG DÂN VÀO KHU VỰC                 ║
+' ║  UC03 - TẠO KHU VỰC TRỒNG TRỌT                         ║
 ' ╚══════════════════════════════════════════════════════════╝
 
-@startuml UC11_Phan_Cong_UseCase
+@startuml UC03_Tao_Khu_Vuc_Trong_Trot_UseCase
 left to right direction
 
 actor "Admin" as ADMIN
 
-usecase "Phân công nông dân vào khu vực"   as UC11
-usecase "Chọn nông dân"                    as UC11a
-usecase "Xem khu vực đã & chưa phân công" as UC11b
-usecase "Thêm / gỡ phân công"             as UC11c
-usecase "Cập nhật farmer_zone_assignments" as UC11d
-usecase "Cấp quyền truy cập khu vực"      as UC11e
+usecase "Tạo khu vực trồng trọt" as UC03
+usecase "Nhập thông tin khu vực" as UC03a
+usecase "Chọn hồ sơ cây trồng" as UC03b
+usecase "Kiểm tra dữ liệu" as UC03c
+usecase "Lưu khu vực" as UC03d
 
-ADMIN --> UC11
-UC11  ..> UC11a : <<include>>
-UC11  ..> UC11b : <<include>>
-UC11  ..> UC11c : <<include>>
-UC11  ..> UC11d : <<include>>
-UC11e ..> UC11  : <<extend>>
+ADMIN --> UC03
+UC03 ..> UC03a : <<include>>
+UC03 ..> UC03b : <<include>>
+UC03 ..> UC03c : <<include>>
+UC03 ..> UC03d : <<include>>
 @enduml
 
-
-@startuml UC07_Phan_Cong_Activity
+@startuml UC03_Tao_Khu_Vuc_Trong_Trot_Activity
 
 start
-:Admin chọn nông dân;
-:Xem danh sách khu vực đã và chưa phân công;
-if (Thêm khu vực?) then (Có)
-  :Gửi yêu cầu phân công;
-  if (Chưa phân công?) then (Có)
-    :Lưu phân công, Farmer có quyền ngay lập tức;
-  else (Đã phân công rồi)
-    :Bỏ qua;
-  endif
-else (Gỡ khu vực)
-  :Xóa phân công, Farmer mất quyền ngay lập tức;
+:Admin nhập tên, vị trí, diện tích;
+:Chọn hồ sơ cây trồng;
+if (Dữ liệu hợp lệ?) then (Không)
+  :Thông báo lỗi;
+  stop
+else (Có)
+  :Lưu khu vực trồng trọt;
 endif
 stop
 @enduml
 
-@startuml UC07_Phan_Cong_Sequence
+@startuml UC03_Tao_Khu_Vuc_Trong_Trot_Sequence
 
-actor       "Admin"      as ADMIN
-participant "Giao diện"  as UI
-participant "Admin API"  as API
-database    "Database"   as DB
+actor "Admin" as ADMIN
+participant "Giao diện" as UI
+participant "Admin API" as API
+database "Database" as DB
 
-ADMIN -> UI  : Chọn Farmer + khu vực, nhấn Phân công
-UI   -> API  : POST /admin/zone-assignments {farmer_id, zone_id}
-API  -> DB   : Kiểm tra tồn tại & chưa phân công
+ADMIN -> UI : Điền form khu vực
+UI -> API : POST /admin/zones
+API -> DB : Kiểm tra hồ sơ cây trồng
 
-alt Đã phân công hoặc không tìm thấy
-  API --> UI   : 409/404 – Lỗi
-  UI  --> ADMIN: Thông báo lỗi
+alt Dữ liệu không hợp lệ
+  API --> UI : 400/422
+  UI --> ADMIN : Hiển thị lỗi
 else Hợp lệ
-  API -> DB   : INSERT farmer_zone_assignments
-  API --> UI  : 201 Created
-  UI  --> ADMIN: Khu vực xuất hiện trong danh sách Farmer
+  API -> DB : INSERT growing_zones
+  API --> UI : 201 Created
+  UI --> ADMIN : Khu vực xuất hiện trong danh sách
 end
-
-ADMIN -> UI  : Nhấn Gỡ phân công
-UI   -> API  : DELETE /admin/zone-assignments {farmer_id, zone_id}
-API  -> DB   : DELETE FROM farmer_zone_assignments
-API --> UI   : 200 OK
-UI  --> ADMIN: Khu vực biến mất khỏi danh sách Farmer
 @enduml
 
 
 ' ╔══════════════════════════════════════════════════════════╗
-' ║  UC08 – THU THẬP & SINH CẢNH BÁO TỰ ĐỘNG               ║
+' ║  UC04 - PHÂN CÔNG NÔNG DÂN VÀO KHU VỰC                 ║
 ' ╚══════════════════════════════════════════════════════════╝
-@startuml UC12_Background_Task_UseCase
+
+@startuml UC04_Phan_Cong_Nong_Dan_UseCase
+left to right direction
+
+actor "Admin" as ADMIN
+
+usecase "Phân công nông dân\nvào khu vực" as UC04
+usecase "Chọn khu vực" as UC04a
+usecase "Chọn nông dân" as UC04b
+usecase "Kiểm tra phân công trùng" as UC04c
+usecase "Lưu phân công" as UC04d
+usecase "Gỡ phân công" as UC04e
+
+ADMIN --> UC04
+ADMIN --> UC04e
+UC04 ..> UC04a : <<include>>
+UC04 ..> UC04b : <<include>>
+UC04 ..> UC04c : <<include>>
+UC04 ..> UC04d : <<include>>
+@enduml
+
+@startuml UC04_Phan_Cong_Nong_Dan_Activity
+
+start
+:Admin chọn khu vực;
+:Admin chọn nông dân;
+if (Đã phân công?) then (Có)
+  :Thông báo phân công đã tồn tại;
+  stop
+else (Chưa)
+  :Lưu phân công;
+  :Farmer có quyền thao tác khu vực;
+endif
+stop
+@enduml
+
+@startuml UC04_Phan_Cong_Nong_Dan_Sequence
+
+actor "Admin" as ADMIN
+participant "Giao diện" as UI
+participant "Admin API" as API
+database "Database" as DB
+
+ADMIN -> UI : Chọn khu vực và nông dân
+UI -> API : POST /admin/zones/{zone_id}/farmers
+API -> DB : Kiểm tra khu vực, nông dân, phân công
+
+alt Không hợp lệ hoặc bị trùng
+  API --> UI : 404/409
+  UI --> ADMIN : Hiển thị lỗi
+else Hợp lệ
+  API -> DB : INSERT farmer_zone_assignments
+  API --> UI : 201 Created
+  UI --> ADMIN : Phân công thành công
+end
+@enduml
+
+
+' ╔══════════════════════════════════════════════════════════╗
+' ║  UC05 - THÊM CẢM BIẾN                                   ║
+' ╚══════════════════════════════════════════════════════════╝
+
+@startuml UC05_Them_Cam_Bien_UseCase
+left to right direction
+
+actor "Admin" as ADMIN
+actor "Farmer" as FARMER
+
+usecase "Thêm cảm biến" as UC05
+usecase "Chọn khu vực" as UC05a
+usecase "Nhập thông tin cảm biến" as UC05b
+usecase "Kiểm tra quyền khu vực" as UC05c
+usecase "Lưu cảm biến" as UC05d
+
+ADMIN --> UC05
+FARMER --> UC05
+UC05 ..> UC05a : <<include>>
+UC05 ..> UC05b : <<include>>
+UC05 ..> UC05c : <<include>>
+UC05 ..> UC05d : <<include>>
+@enduml
+
+@startuml UC05_Them_Cam_Bien_Activity
+
+start
+:Người dùng chọn khu vực;
+:Nhập tên, loại, vị trí cảm biến;
+if (Có quyền khu vực?) then (Không)
+  :Thông báo không có quyền;
+  stop
+else (Có)
+  :Lưu cảm biến;
+endif
+stop
+@enduml
+
+@startuml UC05_Them_Cam_Bien_Sequence
+
+actor "Người dùng" as USER
+participant "Giao diện" as UI
+participant "Sensors API" as API
+database "Database" as DB
+
+USER -> UI : Điền form cảm biến
+UI -> API : POST /sensors
+API -> DB : Kiểm tra quyền khu vực
+
+alt Không có quyền hoặc dữ liệu sai
+  API --> UI : 403/422
+  UI --> USER : Hiển thị lỗi
+else Hợp lệ
+  API -> DB : INSERT sensors
+  API --> UI : 201 Created
+  UI --> USER : Cảm biến xuất hiện trong danh sách
+end
+@enduml
+
+
+' ╔══════════════════════════════════════════════════════════╗
+' ║  UC06 - THÊM THIẾT BỊ THÔNG MINH                       ║
+' ╚══════════════════════════════════════════════════════════╝
+
+@startuml UC06_Them_Thiet_Bi_Thong_Minh_UseCase
+left to right direction
+
+actor "Farmer" as FARMER
+
+usecase "Thêm thiết bị thông minh" as UC06
+usecase "Nhập thông tin thiết bị" as UC06a
+usecase "Liên kết cảm biến" as UC06b
+usecase "Chọn điều kiện tự động" as UC06c
+usecase "Đặt thời gian chạy" as UC06d
+usecase "Lưu thiết bị" as UC06e
+
+FARMER --> UC06
+UC06 ..> UC06a : <<include>>
+UC06 ..> UC06b : <<include>>
+UC06 ..> UC06c : <<include>>
+UC06 ..> UC06d : <<include>>
+UC06 ..> UC06e : <<include>>
+@enduml
+
+@startuml UC06_Them_Thiet_Bi_Thong_Minh_Activity
+
+start
+:Farmer nhập thông tin thiết bị;
+:Chọn cảm biến liên kết;
+:Chọn trigger dưới ngưỡng / vượt ngưỡng / cả hai;
+:Nhập thời gian chạy;
+if (Có quyền với cảm biến?) then (Không)
+  :Thông báo không có quyền;
+  stop
+else (Có)
+  :Lưu thiết bị;
+endif
+stop
+@enduml
+
+@startuml UC06_Them_Thiet_Bi_Thong_Minh_Sequence
+
+actor "Farmer" as FARMER
+participant "Giao diện" as UI
+participant "Devices API" as API
+database "Database" as DB
+
+FARMER -> UI : Điền form thiết bị
+UI -> API : POST /devices
+API -> DB : Kiểm tra quyền với linked_sensor_id
+
+alt Không có quyền hoặc dữ liệu sai
+  API --> UI : 403/422
+  UI --> FARMER : Hiển thị lỗi
+else Hợp lệ
+  API -> DB : INSERT devices
+  API --> UI : 201 Created
+  UI --> FARMER : Thiết bị xuất hiện trong danh sách
+end
+@enduml
+
+
+' ╔══════════════════════════════════════════════════════════╗
+' ║  UC07 - TỰ ĐỘNG KÍCH HOẠT THIẾT BỊ THÔNG MINH          ║
+' ╚══════════════════════════════════════════════════════════╝
+
+@startuml UC07_Tu_Dong_Kich_Hoat_Thiet_Bi_UseCase
 left to right direction
 
 actor "Hệ thống nền\n(Background Task)" as SYS
 
-usecase "Thu thập & sinh cảnh báo tự động" as UC12
-usecase "Mô phỏng & lưu số liệu cảm biến" as UC12a
-usecase "Tra cứu hồ sơ cây trồng"         as UC12b
-usecase "Đánh giá ngưỡng đơn (7 quy tắc)" as UC12c
-usecase "Đánh giá điều kiện tổ hợp (4 quy tắc)" as UC12d
-usecase "Kiểm tra trùng lặp 1h"           as UC12e
-usecase "Phân mức nghiêm trọng"           as UC12f
-usecase "Ghi cảnh báo + khuyến nghị"      as UC12g
+usecase "Tự động kích hoạt\nthiết bị thông minh" as UC07
+usecase "Lưu dữ liệu cảm biến" as UC07a
+usecase "Kiểm tra ngưỡng" as UC07b
+usecase "Sinh cảnh báo" as UC07c
+usecase "Tìm thiết bị phù hợp" as UC07d
+usecase "Bật thiết bị" as UC07e
+usecase "Tự tắt sau timeout" as UC07f
 
-SYS  --> UC12
-UC12 ..> UC12a : <<include>>
-UC12 ..> UC12b : <<include>>
-UC12 ..> UC12c : <<include>>
-UC12 ..> UC12d : <<include>>
-UC12 ..> UC12e : <<include>>
-UC12 ..> UC12f : <<include>>
-UC12 ..> UC12g : <<include>>
+SYS --> UC07
+UC07 ..> UC07a : <<include>>
+UC07 ..> UC07b : <<include>>
+UC07 ..> UC07c : <<include>>
+UC07 ..> UC07d : <<include>>
+UC07e ..> UC07 : <<extend>>
+UC07f ..> UC07e : <<include>>
 @enduml
 
-
-@startuml UC08_Background_Task_Activity
+@startuml UC07_Tu_Dong_Kich_Hoat_Thiet_Bi_Activity
 
 start
-:Background Task kích hoạt mỗi 60 giây;
-:Lấy danh sách khu vực đang hoạt động;
-
-repeat
-  :Mô phỏng & lưu số liệu 7 loại cảm biến;
-  if (Khu vực có hồ sơ cây trồng?) then (Có)
-    :Đánh giá 7 ngưỡng đơn & 4 điều kiện tổ hợp;
-    if (Phát hiện vi phạm & chưa có cảnh báo trong 1h?) then (Có)
-      :Tạo cảnh báo với mức độ và khuyến nghị hành động;
-    else (Không)
-      :Bỏ qua;
-    endif
-  else (Không)
-  endif
-repeat while (Còn khu vực?)
-
-:Ngủ 60 giây, lặp lại;
+:Background Task chạy mỗi 60 giây;
+:Lưu dữ liệu cảm biến;
+:Lấy ngưỡng hồ sơ cây trồng;
+if (Có vi phạm ngưỡng?) then (Không)
+  :Không bật thiết bị;
+  stop
+else (Có)
+  :Sinh hoặc cập nhật cảnh báo;
+  :Tìm thiết bị linked_sensor_id khớp;
+endif
+if (Trigger thiết bị phù hợp?) then (Không)
+  :Chỉ lưu cảnh báo;
+  stop
+else (Có)
+  :Bật thiết bị;
+  :Ghi trạng thái tự động hóa;
+  :Tự tắt sau timeout_seconds;
+endif
 stop
 @enduml
 
-@startuml UC08_Background_Task_Sequence
+@startuml UC07_Tu_Dong_Kich_Hoat_Thiet_Bi_Sequence
 
-participant "Scheduler"       as SCHED
+participant "Scheduler" as SCHED
 participant "Background Task" as BG
-database    "Database"        as DB
+database "Database" as DB
 
 SCHED -> BG : Kích hoạt mỗi 60 giây
-BG    -> DB : Lấy danh sách khu vực đang hoạt động
+BG -> DB : INSERT sensor_readings
+BG -> DB : Lấy ngưỡng hồ sơ cây trồng
+BG -> BG : Kiểm tra thấp hơn / cao hơn ngưỡng
 
-loop Mỗi khu vực
-  BG  -> DB : INSERT sensor_readings (7 loại cảm biến)
-  BG  -> DB : Lấy ngưỡng hồ sơ cây trồng
+alt Không vi phạm ngưỡng
+  BG -> SCHED : Kết thúc chu kỳ
+else Có vi phạm ngưỡng
+  BG -> DB : Tạo/cập nhật alerts
+  BG -> DB : Tìm devices theo linked_sensor_id và automation_trigger
 
-  alt Có hồ sơ cây trồng
-    BG  -> BG : Đánh giá ngưỡng đơn & điều kiện tổ hợp
-    BG  -> DB : Kiểm tra cảnh báo tương tự trong 1h gần nhất
-
-    alt Chưa có cảnh báo chưa đọc
-      BG -> DB : INSERT INTO alerts (severity, message, khuyến nghị)
-    else Đã có – bỏ qua tránh spam
-    end
+  alt Có thiết bị phù hợp
+    BG -> DB : UPDATE devices current_state = on
+    BG -> DB : Ghi automation_status vào alerts
+    BG -> DB : UPDATE devices current_state = off sau timeout_seconds
+  else Không có thiết bị phù hợp
+    BG -> DB : Chỉ lưu cảnh báo
   end
 end
-
-BG -> SCHED : Hoàn thành, ngủ 60s
 @enduml
