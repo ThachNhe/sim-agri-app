@@ -35,6 +35,8 @@ class GrowingZoneService:
         return GrowingZoneResponse.model_validate(zone)
 
     async def update_zone(self, zone_id: UUID, payload: GrowingZoneUpdate, user: User) -> GrowingZoneResponse:
+        if user.role != UserRole.ADMIN:
+            raise ForbiddenException("Chỉ admin mới có quyền cập nhật khu vực trồng trọt")
         zone = await self._get_and_check(zone_id, user)
         for field, value in payload.model_dump(exclude_unset=True).items():
             setattr(zone, field, value)

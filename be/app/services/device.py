@@ -132,7 +132,7 @@ class DeviceService:
 
     async def _expire_finished_auto_runs(self, devices: List[Device]) -> None:
         now = datetime.now(timezone.utc)
-        changed = False
+        changed_devices: list[Device] = []
 
         for device in devices:
             if not self._is_auto_running(device):
@@ -147,10 +147,25 @@ class DeviceService:
             device.connection_status = DeviceConnectionStatus.ONLINE.value
             device.last_seen_at = now
             device.last_command = f"AUTO OFF sau {device.timeout_seconds}s"
-            changed = True
+            changed_devices.append(device)
 
-        if changed:
-            await self.db.flush()
+        if not changed_devices:
+            return
+
+        await self.db.flush()
+        for device in changed_devices:
+            await self.db.refresh(
+                device,
+                attribute_names=[
+                    "current_state",
+                    "current_value",
+                    "connection_status",
+                    "last_seen_at",
+                    "last_command",
+                    "updated_at",
+                    "linked_sensor",
+                ],
+            )
 
     @staticmethod
     def _is_auto_running(device: Device) -> bool:

@@ -8,7 +8,7 @@ import {
     useAssignFarmer,
     useUnassignFarmer,
 } from '@/hooks/useAdminZones'
-import { useZones, useUpdateZone } from '@/hooks/useZones'
+import { useZones } from '@/hooks/useZones'
 import { usePlantProfiles } from '@/hooks/usePlantProfiles'
 import { useUsers } from '@/hooks/useUsers'
 import { Card, CardContent } from '@/components/ui/card'
@@ -20,7 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Pencil, Trash2, Leaf, UserPlus, Users, X } from 'lucide-react'
-import type { GrowingZone, GrowingZoneAdminResponse } from '@/types/common.types'
+import type { GrowingZoneAdminResponse } from '@/types/common.types'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/useAuthStore'
 
@@ -425,195 +425,70 @@ function FarmerZonesPage() {
     const { data: profilesRes } = usePlantProfiles()
     const profiles = profilesRes?.data || []
 
-    const updateZone = useUpdateZone()
-    const [editDialog, setEditDialog] = useState<{ open: boolean; zone: GrowingZone | null }>({
-        open: false, zone: null,
-    })
-
     const profileName = (id?: string) => profiles.find(p => p.id === id)?.name ?? '—'
 
     return (
-        <>
-            <div className="space-y-6">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Khu vực trồng trọt</h2>
-                    <p className="text-muted-foreground mt-1">
-                        Danh sách khu vực canh tác được phân công cho bạn.
-                    </p>
-                </div>
-
-                {isLoading ? (
-                    <Card><CardContent className="py-10 text-center text-muted-foreground">Đang tải...</CardContent></Card>
-                ) : zones.length === 0 ? (
-                    <Card>
-                        <CardContent className="py-12 text-center">
-                            <Leaf className="mx-auto mb-3 h-10 w-10 text-muted-foreground/50" />
-                            <p className="text-muted-foreground">Bạn chưa được phân công khu vực nào.</p>
-                            <p className="text-sm text-muted-foreground mt-1">Liên hệ admin để được phân công khu vực.</p>
-                        </CardContent>
-                    </Card>
-                ) : (
-                    <Card>
-                        <CardContent className="p-0">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Tên khu vực</TableHead>
-                                        <TableHead>Vị trí</TableHead>
-                                        <TableHead>Cây trồng</TableHead>
-                                        <TableHead>Diện tích</TableHead>
-                                        <TableHead>Ngày trồng</TableHead>
-                                        <TableHead>Trạng thái</TableHead>
-                                        <TableHead className="text-right">Thao tác</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {zones.map(zone => (
-                                        <TableRow key={zone.id}>
-                                            <TableCell className="font-medium">{zone.name}</TableCell>
-                                            <TableCell>{zone.location ?? '—'}</TableCell>
-                                            <TableCell>
-                                                {zone.plant_profile_id ? (
-                                                    <Badge variant="outline" className="gap-1">
-                                                        <Leaf className="h-3 w-3" />
-                                                        {profileName(zone.plant_profile_id)}
-                                                    </Badge>
-                                                ) : (
-                                                    <span className="text-muted-foreground text-sm">Chưa chọn</span>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>{zone.area_sqm ? `${zone.area_sqm} m²` : '—'}</TableCell>
-                                            <TableCell>{zone.planting_date ?? '—'}</TableCell>
-                                            <TableCell>
-                                                <Badge variant={zone.is_active ? 'default' : 'secondary'}>
-                                                    {zone.is_active ? 'Đang hoạt động' : 'Tạm dừng'}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <Button size="icon" variant="ghost"
-                                                    onClick={() => setEditDialog({ open: true, zone })}>
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                )}
+        <div className="space-y-6">
+            <div>
+                <h2 className="text-3xl font-bold tracking-tight">Khu vực trồng trọt</h2>
+                <p className="text-muted-foreground mt-1">
+                    Danh sách khu vực canh tác được phân công cho bạn. Quyền chỉnh sửa thuộc về admin.
+                </p>
             </div>
 
-            <FarmerZoneEditDialog
-                open={editDialog.open}
-                zone={editDialog.zone}
-                profiles={profiles}
-                onClose={() => setEditDialog({ open: false, zone: null })}
-                updateZone={updateZone}
-            />
-        </>
-    )
-}
-
-function FarmerZoneEditDialog({
-    open,
-    zone,
-    profiles,
-    onClose,
-    updateZone,
-}: {
-    open: boolean
-    zone: GrowingZone | null
-    profiles: import('@/types/common.types').PlantProfile[]
-    onClose: () => void
-    updateZone: ReturnType<typeof useUpdateZone>
-}) {
-    const [form, setForm] = useState({
-        name: '', description: '', location: '', area_sqm: '',
-        plant_profile_id: '', planting_date: '', expected_harvest_date: '',
-    })
-
-    useEffect(() => {
-        if (zone) {
-            setForm({
-                name: zone.name,
-                description: zone.description ?? '',
-                location: zone.location ?? '',
-                area_sqm: zone.area_sqm?.toString() ?? '',
-                plant_profile_id: zone.plant_profile_id ?? '',
-                planting_date: zone.planting_date ?? '',
-                expected_harvest_date: zone.expected_harvest_date ?? '',
-            })
-        }
-    }, [zone, open])
-
-    const handleSubmit = () => {
-        if (!zone) return
-        const payload = {
-            name: form.name,
-            description: form.description || undefined,
-            location: form.location || undefined,
-            area_sqm: form.area_sqm ? parseFloat(form.area_sqm) : undefined,
-            plant_profile_id: form.plant_profile_id || undefined,
-            planting_date: form.planting_date || undefined,
-            expected_harvest_date: form.expected_harvest_date || undefined,
-        }
-        updateZone.mutate({ id: zone.id, data: payload }, {
-            onSuccess: () => { toast.success('Cập nhật thành công!'); onClose() },
-            onError: () => toast.error('Cập nhật thất bại'),
-        })
-    }
-
-    return (
-        <Dialog open={open} onOpenChange={v => { if (!v) onClose() }}>
-            <DialogContent className="max-w-lg">
-                <DialogHeader>
-                    <DialogTitle>Cập nhật khu vực</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-2">
-                    <div>
-                        <Label>Tên khu vực *</Label>
-                        <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-                    </div>
-                    <div>
-                        <Label>Loại cây trồng</Label>
-                        <Select value={form.plant_profile_id} onValueChange={v => setForm(f => ({ ...f, plant_profile_id: v }))}>
-                            <SelectTrigger><SelectValue placeholder="Chọn cây trồng..." /></SelectTrigger>
-                            <SelectContent>
-                                {profiles.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div>
-                        <Label>Vị trí</Label>
-                        <Input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div>
-                            <Label>Diện tích (m²)</Label>
-                            <Input type="number" value={form.area_sqm} onChange={e => setForm(f => ({ ...f, area_sqm: e.target.value }))} />
-                        </div>
-                        <div>
-                            <Label>Ngày trồng</Label>
-                            <Input type="date" value={form.planting_date} onChange={e => setForm(f => ({ ...f, planting_date: e.target.value }))} />
-                        </div>
-                    </div>
-                    <div>
-                        <Label>Ngày thu hoạch dự kiến</Label>
-                        <Input type="date" value={form.expected_harvest_date} onChange={e => setForm(f => ({ ...f, expected_harvest_date: e.target.value }))} />
-                    </div>
-                    <div>
-                        <Label>Mô tả</Label>
-                        <Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
-                    </div>
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={onClose}>Hủy</Button>
-                    <Button onClick={handleSubmit} disabled={!form.name || updateZone.isPending}>
-                        Cập nhật
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+            {isLoading ? (
+                <Card><CardContent className="py-10 text-center text-muted-foreground">Đang tải...</CardContent></Card>
+            ) : zones.length === 0 ? (
+                <Card>
+                    <CardContent className="py-12 text-center">
+                        <Leaf className="mx-auto mb-3 h-10 w-10 text-muted-foreground/50" />
+                        <p className="text-muted-foreground">Bạn chưa được phân công khu vực nào.</p>
+                        <p className="text-sm text-muted-foreground mt-1">Liên hệ admin để được phân công khu vực.</p>
+                    </CardContent>
+                </Card>
+            ) : (
+                <Card>
+                    <CardContent className="p-0">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Tên khu vực</TableHead>
+                                    <TableHead>Vị trí</TableHead>
+                                    <TableHead>Cây trồng</TableHead>
+                                    <TableHead>Diện tích</TableHead>
+                                    <TableHead>Ngày trồng</TableHead>
+                                    <TableHead>Trạng thái</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {zones.map(zone => (
+                                    <TableRow key={zone.id}>
+                                        <TableCell className="font-medium">{zone.name}</TableCell>
+                                        <TableCell>{zone.location ?? '—'}</TableCell>
+                                        <TableCell>
+                                            {zone.plant_profile_id ? (
+                                                <Badge variant="outline" className="gap-1">
+                                                    <Leaf className="h-3 w-3" />
+                                                    {profileName(zone.plant_profile_id)}
+                                                </Badge>
+                                            ) : (
+                                                <span className="text-muted-foreground text-sm">Chưa chọn</span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>{zone.area_sqm ? `${zone.area_sqm} m²` : '—'}</TableCell>
+                                        <TableCell>{zone.planting_date ?? '—'}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={zone.is_active ? 'default' : 'secondary'}>
+                                                {zone.is_active ? 'Đang hoạt động' : 'Tạm dừng'}
+                                            </Badge>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
     )
 }
