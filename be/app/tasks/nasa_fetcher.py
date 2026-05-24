@@ -23,6 +23,7 @@ from app.models.plant_profile import PlantProfile
 from app.models.device import Device
 from app.constants.enums import (
     DeviceConnectionStatus,
+    DeviceAutomationTrigger,
     DeviceControlMode,
     SensorType,
     AlertType,
@@ -615,10 +616,15 @@ async def _upsert_alert(
 
 def _automation_value_for_device(control_mode: str) -> tuple[str, float, str]:
     if control_mode == DeviceControlMode.PERCENTAGE.value:
-        return "on", 80.0, "SET 80%"
+        return "on", 100.0, "ON"
     if control_mode == DeviceControlMode.MULTI_SPEED.value:
-        return "on", 3.0, "SPEED 3"
+        return "on", 3.0, "ON"
     return "on", 1.0, "ON"
+
+
+def _device_matches_automation_trigger(device: Device, alert_type: AlertType) -> bool:
+    trigger = device.automation_trigger or DeviceAutomationTrigger.BOTH.value
+    return trigger in {DeviceAutomationTrigger.BOTH.value, alert_type.value}
 
 
 def _is_device_auto_running(device: Device) -> bool:
@@ -690,6 +696,11 @@ async def _apply_automation(
         )
     )
     devices = list(devices_res.scalars().all())
+    devices = [
+        device
+        for device in devices
+        if _device_matches_automation_trigger(device, alert_type)
+    ]
     if not devices:
         return "none", None, None, None, None
 

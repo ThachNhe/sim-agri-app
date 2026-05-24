@@ -20,6 +20,7 @@ from app.models.actuator import Actuator
 from app.models.device import Device
 from app.constants.enums import (
     DeviceConnectionStatus,
+    DeviceAutomationTrigger,
     DeviceControlMode,
     DeviceType,
     UserRole,
@@ -306,10 +307,11 @@ async def seed(db: AsyncSession) -> None:
 
     print("\n── Ensure MQTT Demo Devices ──")
     demo_device_specs = [
-        (SensorType.SOIL_MOISTURE, DeviceType.PUMP, DeviceControlMode.ON_OFF, "Bơm tưới tự động", 750.0),
-        (SensorType.TEMPERATURE, DeviceType.FAN, DeviceControlMode.MULTI_SPEED, "Quạt thông gió tự động", 120.0),
-        (SensorType.LIGHT, DeviceType.LIGHT, DeviceControlMode.PERCENTAGE, "Đèn LED bổ sung", 180.0),
-        (SensorType.CO2, DeviceType.CO2_INJECTOR, DeviceControlMode.ON_OFF, "Bộ bổ sung CO₂", 60.0),
+        (SensorType.SOIL_MOISTURE, DeviceType.PUMP, DeviceControlMode.ON_OFF, DeviceAutomationTrigger.BELOW_MIN, "Bơm tưới tự động", 750.0),
+        (SensorType.TEMPERATURE, DeviceType.FAN, DeviceControlMode.MULTI_SPEED, DeviceAutomationTrigger.ABOVE_MAX, "Quạt thông gió tự động", 120.0),
+        (SensorType.TEMPERATURE, DeviceType.HEATER, DeviceControlMode.ON_OFF, DeviceAutomationTrigger.BELOW_MIN, "Máy sưởi tự động", 1500.0),
+        (SensorType.LIGHT, DeviceType.LIGHT, DeviceControlMode.PERCENTAGE, DeviceAutomationTrigger.BELOW_MIN, "Đèn LED bổ sung", 180.0),
+        (SensorType.CO2, DeviceType.CO2_INJECTOR, DeviceControlMode.ON_OFF, DeviceAutomationTrigger.BELOW_MIN, "Bộ bổ sung CO₂", 60.0),
     ]
     zones_res = await db.execute(select(GrowingZone))
     all_zones = list(zones_res.scalars().all())
@@ -324,13 +326,19 @@ async def seed(db: AsyncSession) -> None:
         sensors_by_type = {sensor.sensor_type: sensor for sensor in sensors_res.scalars().all()}
 
         existing_res = await db.execute(
-            select(Device.linked_sensor_id).where(Device.owner_id == assignment.farmer_id)
+            select(Device.linked_sensor_id, Device.type, Device.automation_trigger)
+            .where(Device.owner_id == assignment.farmer_id)
         )
-        existing_linked_sensor_ids = {sensor_id for sensor_id in existing_res.scalars().all() if sensor_id}
+        existing_links = {
+            (sensor_id, device_type, trigger)
+            for sensor_id, device_type, trigger in existing_res.all()
+            if sensor_id
+        }
 
-        for sensor_type, device_type, control_mode, name, power_watt in demo_device_specs:
+        for sensor_type, device_type, control_mode, automation_trigger, name, power_watt in demo_device_specs:
             linked_sensor = sensors_by_type.get(sensor_type)
-            if linked_sensor is None or linked_sensor.id in existing_linked_sensor_ids:
+            existing_key = (linked_sensor.id if linked_sensor else None, device_type.value, automation_trigger.value)
+            if linked_sensor is None or existing_key in existing_links:
                 continue
 
             topic_base = f"farm/{assignment.farmer_id.hex[:8]}/{zone.id.hex[:8]}/{device_type.value}"
@@ -343,6 +351,7 @@ async def seed(db: AsyncSession) -> None:
                     power_watt=power_watt,
                     owner_id=assignment.farmer_id,
                     linked_sensor_id=linked_sensor.id,
+                    automation_trigger=automation_trigger.value,
                     command_topic=f"{topic_base}/cmd",
                     state_topic=f"{topic_base}/state",
                     qos=1,
@@ -354,7 +363,7 @@ async def seed(db: AsyncSession) -> None:
                     last_seen_at=datetime.now(timezone.utc),
                 )
             )
-            existing_linked_sensor_ids.add(linked_sensor.id)
+            existing_links.add(existing_key)
             print(f"  ✅ Thiết bị MQTT: {name} -> {linked_sensor.name}")
 
     await db.commit()

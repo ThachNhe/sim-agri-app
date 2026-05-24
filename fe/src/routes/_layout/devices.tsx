@@ -23,6 +23,7 @@ import {
   Flame,
   Gauge,
   Lightbulb,
+  MapPin,
   Pencil,
   Plus,
   Power,
@@ -34,8 +35,8 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react'
-import type { Device, DeviceControlMode, DeviceType, GrowingZoneAdminResponse, SensorType } from '@/types/common.types'
-import { DEVICE_CONTROL_LABEL, DEVICE_TYPE_LABEL, SENSOR_LABEL } from '@/types/common.types'
+import type { Device, DeviceAutomationTrigger, DeviceControlMode, DeviceType, GrowingZone, GrowingZoneAdminResponse, SensorType } from '@/types/common.types'
+import { DEVICE_AUTOMATION_TRIGGER_LABEL, DEVICE_CONTROL_LABEL, DEVICE_TYPE_LABEL, SENSOR_LABEL } from '@/types/common.types'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/useAuthStore'
 
@@ -55,15 +56,32 @@ const DEVICE_TYPE_OPTIONS: Array<{ value: DeviceType; icon: LucideIcon }> = [
 ]
 
 const CONTROL_OPTIONS: DeviceControlMode[] = ['on_off', 'percentage', 'multi_speed']
+const TRIGGER_OPTIONS: DeviceAutomationTrigger[] = ['below_min', 'above_max', 'both']
 const STEPS = ['Loại thiết bị', 'Thông tin', 'Kết nối', 'Xác nhận']
+const ALL_ZONES_VALUE = 'all'
+
+function defaultTriggerForDeviceType(type: DeviceType): DeviceAutomationTrigger {
+  if (type === 'fan' || type === 'shade_net') return 'above_max'
+  if (type === 'heater' || type === 'pump' || type === 'valve' || type === 'light' || type === 'co2_injector') {
+    return 'below_min'
+  }
+  return 'both'
+}
+
+function getDeviceZoneLabel(device: Device) {
+  return device.linked_zone_name || 'Chưa có khu vực'
+}
 
 function DevicesPage() {
   const user = useAuthStore(s => s.user)
   const isAdmin = user?.role === 'admin'
 
   const { data: adminZonesRes, isLoading: isAdminZonesLoading } = useAdminZones(Boolean(isAdmin))
+  const { data: farmerZonesRes, isLoading: isFarmerZonesLoading } = useZones(!isAdmin)
   const adminZones = adminZonesRes?.data || []
+  const farmerZones = farmerZonesRes?.data || []
   const [selectedFarmId, setSelectedFarmId] = useState('')
+  const [selectedZoneId, setSelectedZoneId] = useState(ALL_ZONES_VALUE)
 
   useEffect(() => {
     if (!isAdmin) return
@@ -76,6 +94,13 @@ function DevicesPage() {
     }
   }, [adminZones, isAdmin, selectedFarmId])
 
+  useEffect(() => {
+    if (isAdmin || selectedZoneId === ALL_ZONES_VALUE) return
+    if (!farmerZones.some(zone => zone.id === selectedZoneId)) {
+      setSelectedZoneId(ALL_ZONES_VALUE)
+    }
+  }, [farmerZones, isAdmin, selectedZoneId])
+
   const selectedFarm = adminZones.find(farm => farm.id === selectedFarmId)
   const canLoadFarmData = !isAdmin || Boolean(selectedFarmId)
 
@@ -83,7 +108,9 @@ function DevicesPage() {
   const allDevices = res?.data || []
   const devices = isAdmin
     ? allDevices.filter(device => device.linked_zone_id === selectedFarmId)
-    : allDevices
+    : selectedZoneId === ALL_ZONES_VALUE
+      ? allDevices
+      : allDevices.filter(device => device.linked_zone_id === selectedZoneId)
   const deleteDev = useDeleteDevice()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -137,15 +164,30 @@ function DevicesPage() {
               className="w-full md:max-w-md"
             />
           ) : (
-            <Button
-              className="w-full gap-2 md:w-auto"
-              onClick={() => {
-                setEditingDevice(null)
-                setIsOpen(true)
-              }}
-            >
-              <Plus size={16} /> Thêm thiết bị
-            </Button>
+            <div className="flex w-full flex-col gap-3 md:w-auto md:min-w-[24rem] md:flex-row md:items-start">
+              <FarmFilterCard
+                farms={farmerZones}
+                value={selectedZoneId}
+                onValueChange={setSelectedZoneId}
+                title="Lọc khu vực"
+                description="Chỉ hiển thị thiết bị thuộc khu vực được chọn."
+                placeholder="Chọn khu vực..."
+                emptyMessage="Chưa có khu vực nào."
+                loadingMessage="Đang tải khu vực..."
+                isLoading={isFarmerZonesLoading}
+                allOptionLabel="Tất cả khu vực"
+                className="w-full md:min-w-64"
+              />
+              <Button
+                className="w-full gap-2 md:w-auto"
+                onClick={() => {
+                  setEditingDevice(null)
+                  setIsOpen(true)
+                }}
+              >
+                <Plus size={16} /> Thêm thiết bị
+              </Button>
+            </div>
           )}
         </div>
 
@@ -185,6 +227,7 @@ function DevicesPage() {
                 <TableHeader className="bg-muted/50">
                   <TableRow>
                     <TableHead>Tên thiết bị</TableHead>
+                    <TableHead>Khu vực</TableHead>
                     <TableHead>Loại</TableHead>
                     <TableHead>Cảm biến trigger</TableHead>
                     <TableHead>MQTT</TableHead>
@@ -196,19 +239,25 @@ function DevicesPage() {
                 <TableBody>
                   {!canLoadFarmData ? (
                     <TableRow>
-                      <TableCell colSpan={isAdmin ? 6 : 7} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={isAdmin ? 7 : 8} className="text-center py-8 text-muted-foreground">
                         Chọn farm để xem thiết bị.
                       </TableCell>
                     </TableRow>
                   ) : isLoading ? (
-                    <TableRow><TableCell colSpan={isAdmin ? 6 : 7} className="text-center py-8 text-muted-foreground">Đang tải...</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={isAdmin ? 7 : 8} className="text-center py-8 text-muted-foreground">Đang tải...</TableCell></TableRow>
                   ) : devices.length === 0 ? (
-                    <TableRow><TableCell colSpan={isAdmin ? 6 : 7} className="text-center py-8 text-muted-foreground">Không có thiết bị nào</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={isAdmin ? 7 : 8} className="text-center py-8 text-muted-foreground">Không có thiết bị nào</TableCell></TableRow>
                   ) : devices.map(device => (
                     <TableRow key={device.id}>
                       <TableCell>
                         <div className="font-medium">{device.name}</div>
                         <div className="mt-1 text-xs text-muted-foreground">{device.location}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex max-w-[12rem] items-center gap-1.5 text-sm">
+                          <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                          <span className="truncate">{getDeviceZoneLabel(device)}</span>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
@@ -220,6 +269,11 @@ function DevicesPage() {
                         <div className="max-w-[12rem] truncate text-sm">{device.linked_sensor_name || '—'}</div>
                         {device.linked_sensor_type && (
                           <div className="text-xs text-muted-foreground">{SENSOR_LABEL[device.linked_sensor_type as SensorType]}</div>
+                        )}
+                        {device.automation_enabled && (
+                          <div className="mt-1 text-xs text-emerald-700 dark:text-emerald-300">
+                            {DEVICE_AUTOMATION_TRIGGER_LABEL[device.automation_trigger || 'both']}
+                          </div>
                         )}
                       </TableCell>
                       <TableCell>
@@ -264,10 +318,11 @@ function FarmFilterCard({
   placeholder,
   emptyMessage,
   loadingMessage,
+  allOptionLabel,
   isLoading = false,
   className,
 }: {
-  farms: GrowingZoneAdminResponse[]
+  farms: Array<Pick<GrowingZone | GrowingZoneAdminResponse, 'id' | 'name'>>
   value: string
   onValueChange: (value: string) => void
   title: string
@@ -275,6 +330,7 @@ function FarmFilterCard({
   placeholder: string
   emptyMessage: string
   loadingMessage: string
+  allOptionLabel?: string
   isLoading?: boolean
   className?: string
 }) {
@@ -299,6 +355,11 @@ function FarmFilterCard({
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
+              {allOptionLabel && (
+                <SelectItem value={ALL_ZONES_VALUE}>
+                  {allOptionLabel}
+                </SelectItem>
+              )}
               {farms.map(farm => (
                 <SelectItem key={farm.id} value={farm.id}>
                   {farm.name}
@@ -362,6 +423,10 @@ function DeviceMobileCard({
         <div className="min-w-0">
           <p className="truncate text-base font-semibold">{device.name}</p>
           <p className="mt-1 text-sm text-muted-foreground">{device.location}</p>
+          <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+            <MapPin className="h-3.5 w-3.5" />
+            {getDeviceZoneLabel(device)}
+          </p>
         </div>
         <ConnectionBadge device={device} />
       </div>
@@ -372,7 +437,9 @@ function DeviceMobileCard({
           {device.automation_enabled ? 'Auto' : 'Manual'}
         </Badge>
         {device.linked_sensor_name && (
-          <span className="text-xs text-muted-foreground">Trigger: {device.linked_sensor_name}</span>
+          <span className="text-xs text-muted-foreground">
+            Trigger: {device.linked_sensor_name} - {DEVICE_AUTOMATION_TRIGGER_LABEL[device.automation_trigger || 'both']}
+          </span>
         )}
       </div>
 
@@ -404,6 +471,10 @@ function AdminDeviceMobileCard({ device }: { device: Device }) {
         <div className="min-w-0">
           <p className="truncate text-base font-semibold">{device.name}</p>
           <p className="mt-1 text-sm text-muted-foreground">{device.location}</p>
+          <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+            <MapPin className="h-3.5 w-3.5" />
+            {getDeviceZoneLabel(device)}
+          </p>
         </div>
         <ConnectionBadge device={device} />
       </div>
@@ -415,7 +486,9 @@ function AdminDeviceMobileCard({ device }: { device: Device }) {
         <ReadonlyDeviceState device={device} />
       </div>
       {device.linked_sensor_name && (
-        <div className="mt-3 text-xs text-muted-foreground">Trigger: {device.linked_sensor_name}</div>
+        <div className="mt-3 text-xs text-muted-foreground">
+          Trigger: {device.linked_sensor_name} - {DEVICE_AUTOMATION_TRIGGER_LABEL[device.automation_trigger || 'both']}
+        </div>
       )}
       <DeviceRuntimeNote device={device} className="mt-3" />
     </div>
@@ -575,6 +648,7 @@ type DeviceFormState = {
   zone_id: string
   linked_sensor_id: string
   automation_enabled: boolean
+  automation_trigger: DeviceAutomationTrigger
   command_topic: string
   state_topic: string
   qos: string
@@ -593,6 +667,7 @@ function buildInitialForm(device: Device | null): DeviceFormState {
     zone_id: device?.linked_zone_id || '',
     linked_sensor_id: device?.linked_sensor_id || '',
     automation_enabled: device?.automation_enabled ?? true,
+    automation_trigger: device?.automation_trigger || 'both',
     command_topic: device?.command_topic || '',
     state_topic: device?.state_topic || '',
     qos: device?.qos != null ? String(device.qos) : '1',
@@ -666,6 +741,7 @@ function DeviceWizard({ device, onSuccess }: { device: Device | null; onSuccess:
     power_watt: form.power_watt ? Number(form.power_watt) : undefined,
     linked_sensor_id: form.linked_sensor_id,
     automation_enabled: form.automation_enabled,
+    automation_trigger: form.automation_trigger,
     command_topic: form.command_topic,
     state_topic: form.state_topic,
     qos: Number(form.qos) || 0,
@@ -733,7 +809,11 @@ function DeviceWizard({ device, onSuccess }: { device: Device | null; onSuccess:
                       type="button"
                       variant={form.type === option.value ? 'default' : 'outline'}
                       className="h-16 justify-start"
-                      onClick={() => setForm(f => ({ ...f, type: option.value }))}
+                      onClick={() => setForm(f => ({
+                        ...f,
+                        type: option.value,
+                        automation_trigger: defaultTriggerForDeviceType(option.value),
+                      }))}
                     >
                       <Icon className="h-4 w-4" />
                       {DEVICE_TYPE_LABEL[option.value]}
@@ -820,8 +900,23 @@ function DeviceWizard({ device, onSuccess }: { device: Device | null; onSuccess:
                 checked={form.automation_enabled}
                 onCheckedChange={checked => setForm(f => ({ ...f, automation_enabled: checked === true }))}
               />
-              <span className="text-sm font-medium">Cho phép tự động điều khiển khi cảm biến vượt ngưỡng</span>
+              <span className="text-sm font-medium">Cho phép tự động điều khiển khi cảm biến ra ngoài ngưỡng</span>
             </label>
+            {form.automation_enabled && (
+              <div className="space-y-2 sm:col-span-2">
+                <Label>Điều kiện kích hoạt auto *</Label>
+                <Select value={form.automation_trigger} onValueChange={v => setForm(f => ({ ...f, automation_trigger: v as DeviceAutomationTrigger }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {TRIGGER_OPTIONS.map(trigger => (
+                      <SelectItem key={trigger} value={trigger}>
+                        {DEVICE_AUTOMATION_TRIGGER_LABEL[trigger]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         )}
 
@@ -890,6 +985,7 @@ function DeviceWizard({ device, onSuccess }: { device: Device | null; onSuccess:
                 <PreviewItem label="Command topic" value={form.command_topic} wide />
                 <PreviewItem label="State topic" value={form.state_topic} wide />
                 <PreviewItem label="QoS / thời gian auto" value={`${form.qos} / ${form.timeout_seconds}s`} />
+                <PreviewItem label="Điều kiện auto" value={DEVICE_AUTOMATION_TRIGGER_LABEL[form.automation_trigger]} />
               </div>
             </div>
             <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">

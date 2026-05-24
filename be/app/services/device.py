@@ -55,6 +55,7 @@ class DeviceService:
             owner_id=user.id,
             linked_sensor_id=payload.linked_sensor_id,
             automation_enabled=payload.automation_enabled,
+            automation_trigger=payload.automation_trigger.value,
             command_topic=payload.command_topic,
             state_topic=payload.state_topic,
             qos=payload.qos,
@@ -79,7 +80,7 @@ class DeviceService:
             await self._check_linked_sensor_access(payload.linked_sensor_id, user)
 
         for field, value in data.items():
-            if field in {"type", "control_mode", "connection_status"} and value is not None:
+            if field in {"type", "control_mode", "connection_status", "automation_trigger"} and value is not None:
                 value = value.value
             setattr(device, field, value)
 
@@ -128,6 +129,8 @@ class DeviceService:
             response.linked_sensor_name = device.linked_sensor.name
             response.linked_sensor_type = device.linked_sensor.sensor_type.value
             response.linked_zone_id = device.linked_sensor.zone_id
+            if device.linked_sensor.zone is not None:
+                response.linked_zone_name = device.linked_sensor.zone.name
         return response
 
     async def _expire_finished_auto_runs(self, devices: List[Device]) -> None:
@@ -163,7 +166,6 @@ class DeviceService:
                     "last_seen_at",
                     "last_command",
                     "updated_at",
-                    "linked_sensor",
                 ],
             )
 

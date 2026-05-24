@@ -35,6 +35,7 @@ class Device(Base):
         UUID(as_uuid=True), ForeignKey("sensors.id", ondelete="SET NULL"), nullable=True
     )
     automation_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    automation_trigger: Mapped[str] = mapped_column(String(30), default="both", nullable=False)
     command_topic: Mapped[str] = mapped_column(String(255), nullable=False, default="")
     state_topic: Mapped[str] = mapped_column(String(255), nullable=False, default="")
     qos: Mapped[int] = mapped_column(Integer, default=1)

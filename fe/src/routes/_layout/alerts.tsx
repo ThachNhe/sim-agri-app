@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAdminZones } from '@/hooks/useAdminZones'
 import { useAlerts, useMarkAlertRead } from '@/hooks/useAlerts'
+import { useZones } from '@/hooks/useZones'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { SENSOR_LABEL, SENSOR_UNIT } from '@/types/common.types'
-import type { Alert, AlertSeverity, AlertType, GrowingZoneAdminResponse, SensorType } from '@/types/common.types'
+import type { Alert, AlertSeverity, AlertType, GrowingZone, GrowingZoneAdminResponse, SensorType } from '@/types/common.types'
 import { createFileRoute } from '@tanstack/react-router'
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, Lightbulb, MapPin, Zap } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -37,12 +38,17 @@ const SENSOR_RANGE: Record<SensorType, { min: number; max: number }> = {
   co2: { min: 0, max: 2000 },
 }
 
+const ALL_ZONES_VALUE = 'all'
+
 function AlertsPage() {
   const user = useAuthStore(s => s.user)
   const isAdmin = user?.role === 'admin'
   const { data: adminZonesRes, isLoading: isAdminZonesLoading } = useAdminZones(Boolean(isAdmin))
+  const { data: farmerZonesRes, isLoading: isFarmerZonesLoading } = useZones(!isAdmin)
   const adminZones = adminZonesRes?.data || []
+  const farmerZones = farmerZonesRes?.data || []
   const [selectedFarmId, setSelectedFarmId] = useState('')
+  const [selectedZoneId, setSelectedZoneId] = useState(ALL_ZONES_VALUE)
 
   useEffect(() => {
     if (!isAdmin) return
@@ -55,14 +61,24 @@ function AlertsPage() {
     }
   }, [adminZones, isAdmin, selectedFarmId])
 
+  useEffect(() => {
+    if (isAdmin || selectedZoneId === ALL_ZONES_VALUE) return
+    if (!farmerZones.some(zone => zone.id === selectedZoneId)) {
+      setSelectedZoneId(ALL_ZONES_VALUE)
+    }
+  }, [farmerZones, isAdmin, selectedZoneId])
+
   const selectedFarm = adminZones.find(farm => farm.id === selectedFarmId)
+  const selectedZone = farmerZones.find(zone => zone.id === selectedZoneId)
   const canLoadFarmData = !isAdmin || Boolean(selectedFarmId)
 
   const { data: res, isLoading: isAlertsLoading } = useAlerts(undefined, canLoadFarmData)
   const allAlerts = res?.data || []
   const alerts = isAdmin
     ? allAlerts.filter(alert => alert.zone_id === selectedFarmId)
-    : allAlerts
+    : selectedZoneId === ALL_ZONES_VALUE
+      ? allAlerts
+      : allAlerts.filter(alert => alert.zone_id === selectedZoneId)
 
   const alertSummary = useMemo(() => ({
     total_alerts: alerts.length,
@@ -93,7 +109,7 @@ function AlertsPage() {
           </p>
         </div>
 
-        {isAdmin && (
+        {isAdmin ? (
           <FarmFilterCard
             farms={adminZones}
             value={selectedFarmId}
@@ -106,6 +122,14 @@ function AlertsPage() {
             isLoading={isAdminZonesLoading}
             className="w-full xl:max-w-md"
           />
+        ) : (
+          <ZoneFilterSelect
+            zones={farmerZones}
+            value={selectedZoneId}
+            onValueChange={setSelectedZoneId}
+            isLoading={isFarmerZonesLoading}
+            className="w-full sm:w-60 xl:w-64"
+          />
         )}
       </div>
 
@@ -114,7 +138,7 @@ function AlertsPage() {
           title="Tổng cảnh báo"
           value={alertSummary.total_alerts}
           icon={<AlertCircle className="h-4 w-4 text-destructive" />}
-          description={selectedFarm ? `Farm: ${selectedFarm.name}` : 'Theo dữ liệu hiện tại'}
+          description={selectedFarm ? `Farm: ${selectedFarm.name}` : selectedZone ? `Khu vực: ${selectedZone.name}` : 'Theo dữ liệu hiện tại'}
         />
         <MetricCard
           title={isAdmin ? 'Nghiêm trọng' : 'Đã đọc'}
@@ -156,6 +180,39 @@ function AlertsPage() {
         </div>
       )}
     </div>
+  )
+}
+
+function ZoneFilterSelect({
+  zones,
+  value,
+  onValueChange,
+  isLoading,
+  className,
+}: {
+  zones: GrowingZone[]
+  value: string
+  onValueChange: (value: string) => void
+  isLoading: boolean
+  className?: string
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange} disabled={isLoading}>
+      <SelectTrigger className={cn('h-9 border-border/60 bg-card/70 text-sm shadow-sm', className)}>
+        <div className="flex min-w-0 items-center gap-2">
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+          <SelectValue placeholder={isLoading ? 'Đang tải khu vực...' : 'Lọc khu vực'} />
+        </div>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={ALL_ZONES_VALUE}>Tất cả khu vực</SelectItem>
+        {zones.map(zone => (
+          <SelectItem key={zone.id} value={zone.id}>
+            {zone.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }
 

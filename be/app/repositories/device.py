@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.models.device import Device
+from app.models.sensor import Sensor
 from app.repositories.base import BaseRepository
 
 
@@ -18,7 +19,7 @@ class DeviceRepository(BaseRepository[Device]):
     async def get_by_id(self, id) -> Device | None:
         result = await self.db.execute(
             select(Device)
-            .options(selectinload(Device.linked_sensor))
+            .options(selectinload(Device.linked_sensor).selectinload(Sensor.zone))
             .where(Device.id == id)
         )
         return result.scalar_one_or_none()
@@ -26,7 +27,7 @@ class DeviceRepository(BaseRepository[Device]):
     async def get_all_ordered(self) -> List[Device]:
         result = await self.db.execute(
             select(Device)
-            .options(selectinload(Device.linked_sensor))
+            .options(selectinload(Device.linked_sensor).selectinload(Sensor.zone))
             .order_by(Device.created_at.desc())
         )
         return list(result.scalars().all())
@@ -34,7 +35,7 @@ class DeviceRepository(BaseRepository[Device]):
     async def get_by_owner_ordered(self, owner_id: UUID) -> List[Device]:
         result = await self.db.execute(
             select(Device)
-            .options(selectinload(Device.linked_sensor))
+            .options(selectinload(Device.linked_sensor).selectinload(Sensor.zone))
             .where(Device.owner_id == owner_id)
             .order_by(Device.created_at.desc())
         )

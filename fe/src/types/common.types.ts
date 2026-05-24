@@ -252,6 +252,7 @@ export type DeviceType =
   | 'gateway'
 
 export type DeviceControlMode = 'on_off' | 'percentage' | 'multi_speed'
+export type DeviceAutomationTrigger = 'above_max' | 'below_min' | 'both'
 export type DeviceConnectionStatus = 'online' | 'connecting' | 'offline'
 
 export const DEVICE_TYPE_LABEL: Record<DeviceType, string> = {
@@ -274,6 +275,12 @@ export const DEVICE_CONTROL_LABEL: Record<DeviceControlMode, string> = {
   multi_speed: 'Nhiều tốc độ',
 }
 
+export const DEVICE_AUTOMATION_TRIGGER_LABEL: Record<DeviceAutomationTrigger, string> = {
+  above_max: 'Khi vượt ngưỡng cao',
+  below_min: 'Khi dưới ngưỡng thấp',
+  both: 'Cả hai hướng ngưỡng',
+}
+
 export interface Device {
   id: string
   name: string
@@ -286,7 +293,9 @@ export interface Device {
   linked_sensor_name?: string
   linked_sensor_type?: SensorType
   linked_zone_id?: string
+  linked_zone_name?: string
   automation_enabled: boolean
+  automation_trigger: DeviceAutomationTrigger
   command_topic: string
   state_topic: string
   qos: number
@@ -326,4 +335,3 @@ export interface DashboardSummary {
   high_severity_alerts: number
   zones_health: ZoneHealthItem[]
 }
-

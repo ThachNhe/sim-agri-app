@@ -1,7 +1,12 @@
 from pydantic import BaseModel, ConfigDict
 from uuid import UUID
 from datetime import datetime
-from app.constants.enums import DeviceConnectionStatus, DeviceControlMode, DeviceType
+from app.constants.enums import (
+    DeviceAutomationTrigger,
+    DeviceConnectionStatus,
+    DeviceControlMode,
+    DeviceType,
+)
 
 
 class DeviceBase(BaseModel):
@@ -12,6 +17,7 @@ class DeviceBase(BaseModel):
     power_watt: float | None = None
     linked_sensor_id: UUID | None = None
     automation_enabled: bool = True
+    automation_trigger: DeviceAutomationTrigger = DeviceAutomationTrigger.BOTH
     command_topic: str
     state_topic: str
     qos: int = 1
@@ -32,6 +38,7 @@ class DeviceUpdate(BaseModel):
     power_watt: float | None = None
     linked_sensor_id: UUID | None = None
     automation_enabled: bool | None = None
+    automation_trigger: DeviceAutomationTrigger | None = None
     command_topic: str | None = None
     state_topic: str | None = None
     qos: int | None = None
@@ -59,6 +66,7 @@ class DeviceResponse(DeviceBase):
     linked_sensor_name: str | None = None
     linked_sensor_type: str | None = None
     linked_zone_id: UUID | None = None
+    linked_zone_name: str | None = None
     is_active: bool
     created_at: datetime
     updated_at: datetime

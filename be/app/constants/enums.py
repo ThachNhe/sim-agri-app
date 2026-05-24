@@ -58,6 +58,12 @@ class DeviceControlMode(str, Enum):
     MULTI_SPEED = "multi_speed"
 
 
+class DeviceAutomationTrigger(str, Enum):
+    ABOVE_MAX = "above_max"
+    BELOW_MIN = "below_min"
+    BOTH = "both"
+
+
 class DeviceConnectionStatus(str, Enum):
     ONLINE = "online"
     CONNECTING = "connecting"
