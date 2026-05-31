@@ -2,5 +2,5 @@
 set -e
 
 echo "🌱 Chạy seed data..."
-python alembic/seed_data.py
+${PYTHON:-python3} alembic/seed_data.py --reset
 echo "✅ Xong!"
